@@ -1,0 +1,7 @@
+// এই ফাইলের একটি কপি config.js নামে তৈরি করে নিজের Supabase project তথ্য বসান.
+// এই ব্রাউজার-সাইড ফাইলে শুধু Supabase URL এবং Publishable/anon key ব্যবহার করুন.
+// service_role key বা database password কখনো এখানে রাখবেন না.
+window.DRISHIPAT_CONFIG = {
+  SUPABASE_URL: "https://YOUR-PROJECT.supabase.co",
+  SUPABASE_ANON_KEY: "YOUR_SUPABASE_PUBLISHABLE_OR_ANON_KEY"
+};
