@@ -23,10 +23,13 @@ function render(){
  $('popularNews').innerHTML=items.slice(0,5).map(a=>`<a href="#article-${esc(a.id)}" data-article="${esc(a.id)}">${esc(a.title)}</a>`).join('');
  document.querySelectorAll('[data-article]').forEach(el=>el.onclick=e=>{e.preventDefault();openArticle(el.dataset.article)});
 }
+function setTicker(text){const el=$('tickerText');el.textContent=text;el.style.animation='none';void el.offsetWidth;el.style.animation='';}
 function applySettings(){
  const g=settings.general||{},ads=settings.ads||{};
  if(g.tagline)document.querySelector('.tagline').textContent=g.tagline;
- $('tickerText').textContent=g.breaking||'দৃষ্টিপাতBD-তে আপনাকে স্বাগতম।';
+ const brand=document.querySelector('.brand-name');
+ if(brand){if(g.logo&&/^https?:\/\//i.test(g.logo)){brand.innerHTML=`<img class="site-logo" src="${esc(g.logo)}" alt="দৃষ্টিপাতBD লোগো" onerror="this.outerHTML='দৃষ্টিপাত<span>BD</span>'">`}else{brand.innerHTML='দৃষ্টিপাত<span>BD</span>'}}
+ setTicker(g.breaking||'দৃষ্টিপাতBD-তে আপনাকে স্বাগতম।');
  $('facebookLink').href=g.facebook||'#';$('youtubeLink').href=g.youtube||'#';
  $('contactEmail').textContent=g.email?'ইমেইল: '+g.email:'ইমেইল: যোগাযোগের তথ্য যোগ করা হয়নি';
  const map={headerAd:ads.header,topBannerAd:ads.top,sideAd:ads.side,bottomAd:ads.bottom};
@@ -39,7 +42,7 @@ async function load(){
  const [ar,sr]=await Promise.all([db.from('articles').select('id,title,slug,excerpt,body,image_url,author,featured,breaking,published_at,created_at,categories(name)').eq('status','published').order('published_at',{ascending:false}).limit(100),db.from('site_settings').select('key,value')]);
  if(ar.error){$('heroNews').innerHTML='<p class="muted">সংবাদ লোড করা যায়নি। Supabase schema ও RLS পরীক্ষা করুন।</p>';console.error(ar.error);return}
  allArticles=ar.data||[];(sr.data||[]).forEach(x=>settings[x.key]=x.value);applySettings();
- const breaking=allArticles.filter(a=>a.breaking).map(a=>a.title);if(breaking.length) $('tickerText').textContent=breaking.join('  •  ');
+ const breaking=allArticles.filter(a=>a.breaking).map(a=>a.title);if(breaking.length) setTicker(breaking.join('  •  '));
  render();
  const cats=await db.from('categories').select('name').order('name');if(!cats.error){const links=$('navLinks');const existing=new Set([...links.querySelectorAll('[data-cat]')].map(a=>a.dataset.cat));cats.data.forEach(c=>{if(!existing.has(c.name)){const a=document.createElement('a');a.href='#';a.dataset.cat=c.name;a.textContent=c.name;links.appendChild(a)}});links.querySelectorAll('[data-cat]').forEach(a=>a.onclick=e=>{e.preventDefault();activeCategory=a.dataset.cat;searchTerm='';shown=10;render();$('latestTitle').textContent=activeCategory})}
 }
