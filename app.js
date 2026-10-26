@@ -34,7 +34,7 @@ function applySettings(){
  $('contactEmail').textContent=g.email?'ইমেইল: '+g.email:'ইমেইল: যোগাযোগের তথ্য যোগ করা হয়নি';
  const map={headerAd:ads.header,topBannerAd:ads.top,sideAd:ads.side,bottomAd:ads.bottom};
  for(const [id,code] of Object.entries(map)){const el=$(id);if(code){el.innerHTML=code;el.querySelectorAll('script').forEach(old=>{const s=document.createElement('script');for(const a of old.attributes)s.setAttribute(a.name,a.value);s.text=old.textContent;old.replaceWith(s)});el.classList.remove('hidden')}else el.innerHTML='<span>বিজ্ঞাপনের স্থান</span>'}
- if(ads.notes){/* Provider instructions are saved; scripts should be installed only from a trusted ad account. */}
+ if(ads.notes && !document.getElementById('globalAdCode')){const box=document.createElement('div');box.id='globalAdCode';box.hidden=true;box.innerHTML=ads.notes;box.querySelectorAll('script').forEach(old=>{const s=document.createElement('script');for(const a of old.attributes)s.setAttribute(a.name,a.value);s.text=old.textContent;old.replaceWith(s)});document.body.appendChild(box)}
 }
 async function load(){
  $('today').textContent=new Intl.DateTimeFormat('bn-BD',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).format(new Date());$('year').textContent=new Date().getFullYear();
