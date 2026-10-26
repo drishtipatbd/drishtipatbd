@@ -33,7 +33,7 @@ function applySettings(){
  $('facebookLink').href=g.facebook||'#';$('youtubeLink').href=g.youtube||'#';
  $('contactEmail').textContent=g.email?'ইমেইল: '+g.email:'ইমেইল: যোগাযোগের তথ্য যোগ করা হয়নি';
  const map={headerAd:ads.header,topBannerAd:ads.top,sideAd:ads.side,bottomAd:ads.bottom};
- for(const [id,code] of Object.entries(map)){const el=$(id);if(code){el.innerHTML=code;el.classList.remove('hidden')}else el.innerHTML='<span>বিজ্ঞাপনের স্থান</span>'}
+ for(const [id,code] of Object.entries(map)){const el=$(id);if(code){el.innerHTML=code;el.querySelectorAll('script').forEach(old=>{const s=document.createElement('script');for(const a of old.attributes)s.setAttribute(a.name,a.value);s.text=old.textContent;old.replaceWith(s)});el.classList.remove('hidden')}else el.innerHTML='<span>বিজ্ঞাপনের স্থান</span>'}
  if(ads.notes){/* Provider instructions are saved; scripts should be installed only from a trusted ad account. */}
 }
 async function load(){
@@ -42,7 +42,7 @@ async function load(){
  const [ar,sr]=await Promise.all([db.from('articles').select('id,title,slug,excerpt,body,image_url,author,featured,breaking,published_at,created_at,categories(name)').eq('status','published').order('published_at',{ascending:false}).limit(100),db.from('site_settings').select('key,value')]);
  if(ar.error){$('heroNews').innerHTML='<p class="muted">সংবাদ লোড করা যায়নি। Supabase schema ও RLS পরীক্ষা করুন।</p>';console.error(ar.error);return}
  allArticles=ar.data||[];(sr.data||[]).forEach(x=>settings[x.key]=x.value);applySettings();
- const breaking=allArticles.filter(a=>a.breaking).map(a=>a.title);if(breaking.length) setTicker(breaking.join('  •  '));
+ const g=settings.general||{};const manual=(g.breaking_enabled===false?[]:(g.breaking_items||[]));const articleBreaking=allArticles.filter(a=>a.breaking||a.is_breaking).map(a=>a.title);const headlines=[...manual,...articleBreaking];if(headlines.length)setTicker(headlines.join('  •  '));
  render();
  const cats=await db.from('categories').select('name').order('name');if(!cats.error){const links=$('navLinks');const existing=new Set([...links.querySelectorAll('[data-cat]')].map(a=>a.dataset.cat));cats.data.forEach(c=>{if(!existing.has(c.name)){const a=document.createElement('a');a.href='#';a.dataset.cat=c.name;a.textContent=c.name;links.appendChild(a)}});links.querySelectorAll('[data-cat]').forEach(a=>a.onclick=e=>{e.preventDefault();activeCategory=a.dataset.cat;searchTerm='';shown=10;render();$('latestTitle').textContent=activeCategory})}
 }
