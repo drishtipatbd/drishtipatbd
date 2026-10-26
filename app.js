@@ -26,7 +26,7 @@ function render(){
 function setTicker(text){const el=$('tickerText');el.textContent=text;el.style.setProperty('--ticker-start',(el.parentElement?.clientWidth||window.innerWidth)+'px');el.style.animation='none';void el.offsetWidth;el.style.animation='';}
 function applySettings(){
  const g=settings.general||{},ads=settings.ads||{};
- if(g.tagline)document.querySelector('.tagline').textContent=g.tagline;
+ if(g.tagline)document.querySelector('.tagline').textContent=g.tagline;const editorCredit=$('editorCredit');if(editorCredit)editorCredit.textContent=g.editor_credit||'ভারপ্রাপ্ত সম্পাদক : আবুল কাশেম বোরহান';
  const brand=document.querySelector('.brand-name');
  if(brand){if(g.logo&&/^https?:\/\//i.test(g.logo)){brand.innerHTML=`<img class="site-logo" src="${esc(g.logo)}" alt="দৃষ্টিপাতBD লোগো" onerror="this.outerHTML='দৃষ্টিপাত<span>BD</span>'">`}else{brand.innerHTML='দৃষ্টিপাত<span>BD</span>'}}
  setTicker(g.breaking||'দৃষ্টিপাতBD-তে আপনাকে স্বাগতম।');
