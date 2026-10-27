@@ -11,3 +11,6 @@
 .comments-box{border-top:1px solid var(--line);margin-top:24px;padding-top:18px}.comments-box h2{font-size:20px;margin:0 0 8px}.comments-box form{display:grid;gap:8px;margin:14px 0 22px}.comments-box label{display:grid;gap:5px;font-weight:600;font-size:13px}.comments-box input,.comments-box textarea{width:100%;border:1px solid #d6d8da;border-radius:4px;padding:10px;background:#fff}.comments-box textarea{resize:vertical}.comment-item{border-bottom:1px solid var(--line);padding:12px 0}.comment-item b{margin-right:12px}.comment-item small{font-size:11px;color:var(--muted)}.comment-item p{margin:6px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}.share-row a{display:inline-flex;align-items:center}
 
 .editor-credit{text-align:center;padding:12px 16px 4px;font-weight:600;font-size:14px;color:inherit}.footer .copyright{padding-top:10px}
+
+/* Newspaper directory with publication icons */
+.newspaper-list a{display:flex;align-items:center;gap:10px;padding:10px 0;line-height:1.4}.newspaper-list a img{width:28px;height:28px;object-fit:contain;flex:0 0 28px;border-radius:4px;background:#f4f4f4;padding:2px}.newspaper-list a span{margin-left:auto;color:var(--muted);font-size:12px}.newspaper-list a:hover{color:var(--red)}
