@@ -14,3 +14,6 @@
 
 /* Newspaper directory with publication icons */
 .newspaper-list a{display:flex;align-items:center;gap:10px;padding:10px 0;line-height:1.4}.newspaper-list a img{width:28px;height:28px;object-fit:contain;flex:0 0 28px;border-radius:4px;background:#f4f4f4;padding:2px}.newspaper-list a span{margin-left:auto;color:var(--muted);font-size:12px}.newspaper-list a:hover{color:var(--red)}
+
+/* Visitor analytics */
+.stats-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0 24px}.stat-card{background:#f7f8fa;border:1px solid var(--line);border-radius:7px;padding:18px;display:flex;flex-direction:column;gap:8px}.stat-card span{font-size:13px;color:var(--muted)}.stat-card strong{font-size:28px;color:var(--red)}#popularAdmin td:first-child{width:60px;text-align:center}@media(max-width:600px){.stats-grid{grid-template-columns:1fr}.stat-card{padding:13px}.stat-card strong{font-size:23px}}
