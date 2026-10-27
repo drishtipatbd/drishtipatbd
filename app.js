@@ -39,7 +39,7 @@ function applySettings(){
 async function load(){
  $('today').textContent=new Intl.DateTimeFormat('bn-BD',{weekday:'long',year:'numeric',month:'long',day:'numeric'}).format(new Date());$('year').textContent=new Date().getFullYear();
  if(!db){$('heroNews').innerHTML='<div class="notice">ওয়েবসাইটের Supabase সংযোগ সেটআপ করা হয়নি। README.txt অনুযায়ী config.js তৈরি করে Supabase URL ও Publishable/anon key বসান।</div>';$('latestNews').innerHTML='';return}
- const [ar,sr]=await Promise.all([db.from('articles').select('id,title,slug,excerpt,body,image_url,author,featured,breaking,published_at,created_at,categories(name)').eq('status','published').order('published_at',{ascending:false}).limit(100),db.from('site_settings').select('key,value')]);
+ const [ar,sr]=await Promise.all([db.from('articles').select('id,title,slug,excerpt,body,image_url,author,featured,breaking,published_at,created_at,categories(name)').eq('status','published').or('published_at.is.null,published_at.lte.'+new Date().toISOString()).order('published_at',{ascending:false}).limit(100),db.from('site_settings').select('key,value')]);
  if(ar.error){$('heroNews').innerHTML='<p class="muted">সংবাদ লোড করা যায়নি। Supabase schema ও RLS পরীক্ষা করুন।</p>';console.error(ar.error);return}
  allArticles=ar.data||[];(sr.data||[]).forEach(x=>settings[x.key]=x.value);applySettings();
  const g=settings.general||{};const manual=(g.breaking_enabled===false?[]:(g.breaking_items||[]));const articleBreaking=allArticles.filter(a=>a.breaking||a.is_breaking).map(a=>a.title);const headlines=[...manual,...articleBreaking];if(headlines.length)setTicker(headlines.join('  •  '));
