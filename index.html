@@ -1,35 +1,59 @@
 <!doctype html>
 <html lang="bn">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#006a4e">
-<meta name="description" content="দৃষ্টিপাতBD — শিগগিরই আসছে">
-<title>দৃষ্টিপাতBD — শিগগিরই আসছে</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#b51f2b">
+<meta name="description" content="দৃষ্টিপাতBD — সত্য, নিরপেক্ষতা ও জনস্বার্থের সংবাদ">
+<title>দৃষ্টিপাতBD | সংবাদপত্র</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<style>
-:root{color-scheme:light;--green:#006a4e;--red:#f42a41;--ink:#17231f}
-*{box-sizing:border-box}body{margin:0;min-height:100vh;display:grid;place-items:center;padding:24px;background:#f7faf8;color:var(--ink);font-family:"Noto Sans Bengali","Hind Siliguri",system-ui,sans-serif}
-main{width:min(760px,100%);text-align:center;padding:clamp(28px,7vw,64px) 20px}
-.mark{width:82px;height:82px;border-radius:22px;background:var(--green);margin:0 auto 24px;display:grid;place-items:center;position:relative;overflow:hidden}
-.mark:before{content:"";width:35px;height:35px;background:var(--red);border-radius:50%;position:absolute;left:24px;top:23px}
-.mark:after{content:"";position:absolute;left:0;right:0;bottom:12px;height:7px;background:#fff;transform:rotate(-17deg)}
-.brand{font-size:clamp(30px,7vw,52px);font-weight:900;letter-spacing:-1px;margin:0;color:var(--green)}
-.brand span{color:var(--red)}.rule{height:4px;width:100px;margin:22px auto;background:linear-gradient(90deg,var(--green) 0 50%,var(--red) 50%)}
-h1{font-size:clamp(25px,5vw,38px);margin:18px 0 12px;font-weight:800}
-p{font-size:clamp(15px,3vw,18px);line-height:1.9;color:#53645d;margin:0}
-footer{margin-top:46px;font-size:12px;color:#829088}
-</style>
+<link rel="stylesheet" href="style.css">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
 </head>
 <body>
-<main>
-  <div class="mark" aria-hidden="true"></div>
-  <p class="brand">দৃষ্টিপাত<span>BD</span></p>
-  <div class="rule"></div>
-  <h1>দৃষ্টিপাত শিগগিরই আসছে</h1>
-  <p>সত্যের পথে, মানুষের পাশে।</p>
-  <footer>© <span id="year"></span> দৃষ্টিপাতBD</footer>
+<header class="site-header">
+  <div class="topline"><div class="wrap top-inner"><span id="today">দৃষ্টিপাতBD</span><div><a href="#about">আমাদের সম্পর্কে</a><span class="sep">|</span><a href="#contact">যোগাযোগ</a></div></div></div>
+  <div class="wrap masthead">
+    <div class="brand"><div class="brand-kicker">DP MEDIA CELL</div><a href="#" class="brand-name">দৃষ্টিপাত<span>BD</span></a><div class="tagline">সত্যের পক্ষে, জনস্বার্থে</div></div>
+    <div class="mast-ad ad-slot" id="headerAd"><span>বিজ্ঞাপনের স্থান</span></div>
+  </div>
+  <nav class="nav"><div class="wrap nav-inner"><button class="menu-toggle" id="menuToggle" aria-label="মেনু">☰</button><a class="home-link" href="#">হোম</a><div class="nav-links" id="navLinks"><a href="#" data-cat="জাতীয়">জাতীয়</a><a href="#" data-cat="আন্তর্জাতিক">আন্তর্জাতিক</a><a href="#" data-cat="রাজনীতি">রাজনীতি</a><a href="#" data-cat="খেলাধুলা">খেলাধুলা</a><a href="#" data-cat="ধর্ম ও জীবন">ধর্ম ও জীবন</a><a href="#" data-cat="সংস্কৃতি">সংস্কৃতি</a><a href="#" data-cat="অনলাইনে কেনাকাটা">অনলাইনে কেনাকাটা</a><a href="#" data-cat="অনলাইনে আয়">অনলাইনে আয়</a></div><button class="search-btn" id="searchToggle" aria-label="খুঁজুন">⌕</button></div></nav>
+  <div class="wrap search-row hidden" id="searchRow"><input id="searchInput" placeholder="সংবাদ খুঁজুন..."><button id="searchSubmit" class="btn">খুঁজুন</button></div>
+</header>
+<div class="wrap breaking"><span class="breaking-label">সর্বশেষ</span><div class="ticker-window"><div id="tickerText">দৃষ্টিপাতBD-তে আপনাকে স্বাগতম। সর্বশেষ সংবাদ পেতে সঙ্গে থাকুন।</div></div></div>
+<main class="wrap page-grid">
+  <section class="main-column">
+    <div class="section-heading"><h2 id="sectionTitle">আজকের প্রধান সংবাদ</h2><span class="heading-line"></span></div>
+    <div id="heroNews" class="hero-grid"><div class="loading">সংবাদ লোড হচ্ছে...</div></div>
+    <div class="ad-slot horizontal-ad" id="topBannerAd"><span>ব্যানার বিজ্ঞাপনের স্থান</span></div>
+    <div class="section-heading"><h2 id="latestTitle">সর্বশেষ সংবাদ</h2><span class="heading-line"></span></div>
+    <div id="latestNews" class="news-list"><div class="loading">সংবাদ লোড হচ্ছে...</div></div>
+    <div class="center"><button id="loadMore" class="btn btn-outline hidden">আরও সংবাদ</button></div>
+  </section>
+  <aside class="sidebar">
+    <div class="section-heading"><h2>গুরুত্বপূর্ণ লিংক</h2></div>
+    <div id="importantLinks" class="side-card link-list newspaper-list">
+      <a href="https://www.dailynayadiganta.com/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=dailynayadiganta.com&sz=64" alt="">দৈনিক নয়া দিগন্ত <span>↗</span></a>
+      <a href="https://www.dailyamardesh.com/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=dailyamardesh.com&sz=64" alt="">দৈনিক আমার দেশ <span>↗</span></a>
+      <a href="https://dailysangram.com/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=dailysangram.com&sz=64" alt="">দৈনিক সংগ্রাম <span>↗</span></a>
+      <a href="https://www.prothomalo.com/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=prothomalo.com&sz=64" alt="">দৈনিক প্রথম আলো <span>↗</span></a>
+      <a href="https://www.dailyinqilab.com/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=dailyinqilab.com&sz=64" alt="">দৈনিক ইনকিলাব <span>↗</span></a>
+      <a href="https://www.jugantor.com/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=jugantor.com&sz=64" alt="">দৈনিক যুগান্তর <span>↗</span></a>
+      <a href="https://www.kalerkantho.com/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=kalerkantho.com&sz=64" alt="">কালের কণ্ঠ <span>↗</span></a>
+      <a href="https://www.ittefaq.com.bd/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=ittefaq.com.bd&sz=64" alt="">দৈনিক ইত্তেফাক <span>↗</span></a>
+      <a href="https://www.bd-pratidin.com/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=bd-pratidin.com&sz=64" alt="">বাংলাদেশ প্রতিদিন <span>↗</span></a>
+      <a href="https://www.bssnews.net/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=bssnews.net&sz=64" alt="">বাংলাদেশ সংবাদ সংস্থা (বাসস) <span>↗</span></a>
+      <a href="https://www.thedailystar.net/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=thedailystar.net&sz=64" alt="">The Daily Star <span>↗</span></a>
+      <a href="https://www.dhakatribune.com/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=dhakatribune.com&sz=64" alt="">Dhaka Tribune <span>↗</span></a>
+    </div>
+    <div class="ad-slot sidebar-ad" id="sideAd"><span>বিজ্ঞাপনের স্থান</span></div>
+    <div class="section-heading"><h2>জনপ্রিয় সংবাদ</h2></div><div id="popularNews" class="side-card popular-list"><p class="muted">সংবাদ প্রকাশিত হলে এখানে দেখা যাবে।</p></div>
+    <div class="section-heading"><h2>আমাদের অনুসরণ করুন</h2></div><div class="side-card social-box"><a href="#" id="facebookLink">Facebook পেজ</a><a href="#" id="youtubeLink">YouTube</a></div>
+  </aside>
 </main>
-<script>document.getElementById('year').textContent=new Date().getFullYear();</script>
-</body>
-</html>
+<section class="wrap ad-slot horizontal-ad" id="bottomAd"><span>ব্যানার বিজ্ঞাপনের স্থান</span></section>
+<footer class="footer" id="about"><div class="wrap footer-grid"><div><div class="footer-brand">দৃষ্টিপাত<span>BD</span></div><p>সত্য, নিরপেক্ষতা ও জনস্বার্থকে সামনে রেখে সংবাদ পরিবেশনের অঙ্গীকার।</p></div><div id="contact"><h3>যোগাযোগ</h3><p>ঠিকানা: পুরানা পল্টন, ঢাকা</p><p id="contactEmail">ইমেইল: যোগাযোগের তথ্য যোগ করা হয়নি</p></div><div><h3>দ্রুত লিংক</h3><a href="#about">আমাদের সম্পর্কে</a><a href="#contact">যোগাযোগ</a><a href="admin.html">অ্যাডমিন লগইন</a></div></div><div class="editor-credit" id="editorCredit">ভারপ্রাপ্ত সম্পাদক : আবুল কাশেম বোরহান</div><div class="copyright">© <span id="year"></span> দৃষ্টিপাতBD। সর্বস্বত্ব সংরক্ষিত।</div></footer>
+<div id="articleModal" class="modal hidden" role="dialog" aria-modal="true"><div class="modal-card"><button class="modal-close" id="closeModal" aria-label="বন্ধ করুন">×</button><div id="articleDetail"></div></div></div>
+<div id="toast" class="toast hidden"></div>
+<script src="app.js"></script>
+</body></html>
