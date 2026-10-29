@@ -31,3 +31,27 @@
 
 /* Mobile navigation: keep the dropdown contained and close it after a section is selected. */
 @media(max-width:650px){.nav-links.open{max-height:calc(100dvh - 150px);overflow-y:auto;overscroll-behavior:contain}.site-header{isolation:isolate}.page-grid{scroll-margin-top:150px}}
+
+
+/* Responsive fixes: keep article content in normal page flow on phones. */
+.site-header{position:relative;top:auto;z-index:10}
+#articleModal{position:static;display:block;overflow:visible;max-width:100%;scroll-margin-top:12px}
+#articleModal.hidden{display:none!important}
+#articleModal .modal-card{position:relative;max-width:100%;overflow-wrap:anywhere}
+.ad-slot img{display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain}
+.mast-ad{flex:0 1 45%;min-width:0}
+@media(max-width:650px){
+  .site-header{position:relative}
+  .masthead{align-items:center;gap:8px}
+  .brand{min-width:0;flex:1}
+  .brand-name:has(.site-logo){max-width:100%}
+  .site-logo{max-width:100%;width:auto;height:auto;max-height:48px}
+  .mast-ad{flex:0 0 36%;width:36%;min-width:96px;height:52px;overflow:hidden}
+  .mast-ad img,.mast-ad a img{max-width:100%!important;max-height:48px!important;width:auto!important;height:auto!important;object-fit:contain}
+  #articleModal{margin:10px auto}
+  #articleModal .modal-card{width:calc(100% - 24px);margin:0 auto;padding:22px 14px}
+  .admin-tabs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;border-bottom:0}
+  .admin-tabs .tab{display:block;width:100%;min-width:0;min-height:44px;padding:9px 6px;border-radius:5px;white-space:normal;line-height:1.4;overflow-wrap:anywhere}
+  .admin-tabs .tab[data-tab="settings"]{border:1px solid #b51f2b}
+  .admin-tabs .tab[data-tab="ads"]{border:1px solid #138444}
+}
