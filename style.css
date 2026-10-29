@@ -28,3 +28,6 @@
 .footer p{margin:1em 0}
 .footer .copyright{padding:12px}
 @media(max-width:600px){.site-header .masthead{padding:8px 0;gap:10px}.brand-name{font-size:27px}.brand-kicker{font-size:9px}.tagline{font-size:10px}.mast-ad{height:48px}.site-logo{max-height:52px}.nav-inner{min-height:42px}.nav a{padding:8px 9px}.footer{max-height:none}.footer-grid{grid-template-columns:1fr;gap:18px;padding:24px 0}.footer-grid>div:first-child{grid-column:auto}.footer-brand{font-size:22px}.footer h3{font-size:16px;margin-bottom:10px}.footer p,.footer a{font-size:13px}.footer a{padding:3px 0}.footer .copyright{font-size:12px;padding:12px}}
+
+/* Mobile navigation: keep the dropdown contained and close it after a section is selected. */
+@media(max-width:650px){.nav-links.open{max-height:calc(100dvh - 150px);overflow-y:auto;overscroll-behavior:contain}.site-header{isolation:isolate}.page-grid{scroll-margin-top:150px}}
