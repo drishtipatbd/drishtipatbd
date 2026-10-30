@@ -55,3 +55,11 @@
   .admin-tabs .tab[data-tab="settings"]{border:1px solid #b51f2b}
   .admin-tabs .tab[data-tab="ads"]{border:1px solid #138444}
 }
+
+
+/* Adsterra Native Banner */
+.native-ad-wrap{width:100%;max-width:100%;margin:18px 0 24px;padding:10px 0;text-align:center;overflow:hidden;}
+.native-ad-label{display:block;margin-bottom:6px;color:#8a8f94;font-size:11px;line-height:1.4;text-align:left;}
+.native-ad-wrap #container-73e5be4ed2f389305893ca155a3a364a{width:100%;max-width:100%;margin:0 auto;overflow:hidden;}
+.native-ad-wrap img,.native-ad-wrap iframe{max-width:100%;}
+@media(max-width:650px){.native-ad-wrap{margin:14px 0 18px;padding:8px 0;}}
