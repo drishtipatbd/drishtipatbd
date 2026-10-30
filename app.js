@@ -36,7 +36,7 @@ function applySettings(){
  const footerLogo=$('footerLogoWrap');if(footerLogo){if(g.logo&&/^https?:\/\//i.test(g.logo)){footerLogo.innerHTML='<img class="footer-site-logo" src="'+esc(g.logo)+'" alt="দৃষ্টিপাতBD লোগো">'}else{footerLogo.innerHTML='দৃষ্টিপাত<span>BD</span>'}}
  const breakingItems=Array.isArray(g.breaking_items)?g.breaking_items.filter(Boolean):[];setTicker(g.breaking_enabled===false?'':(breakingItems.length?breakingItems.join('  •  '):(g.breaking||'দৃষ্টিপাতBD-তে আপনাকে স্বাগতম।')));
  $('facebookLink').href=g.facebook||'#';$('youtubeLink').href=g.youtube||'#';
- $('contactEmail').textContent=g.email?'ইমেইল: '+g.email:'ইমেইল: যোগাযোগের তথ্য যোগ করা হয়নি';
+ const contactEmail=$('contactEmail');if(contactEmail)contactEmail.textContent=g.email?'ইমেইল: '+g.email:'ইমেইল: যোগাযোগের তথ্য যোগ করা হয়নি';
  const map={headerAd:ads.header,topBannerAd:ads.top,sideAd:ads.side,bottomAd:ads.bottom};
  for(const [id,code] of Object.entries(map)){const el=$(id);if(code){el.innerHTML=code;el.querySelectorAll('script').forEach(old=>{const s=document.createElement('script');for(const a of old.attributes)s.setAttribute(a.name,a.value);s.text=old.textContent;old.replaceWith(s)});el.classList.remove('hidden')}else el.innerHTML='<span>বিজ্ঞাপনের স্থান</span>'}
  if(ads.notes && !document.getElementById('globalAdCode')){const box=document.createElement('div');box.id='globalAdCode';box.hidden=true;box.innerHTML=ads.notes;box.querySelectorAll('script').forEach(old=>{const s=document.createElement('script');for(const a of old.attributes)s.setAttribute(a.name,a.value);s.text=old.textContent;old.replaceWith(s)});document.body.appendChild(box)}
