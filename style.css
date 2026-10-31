@@ -104,3 +104,10 @@
 
 /* Exactly four footer columns on desktop; editor details share the contact column. */
 .footer-grid{grid-template-columns:1.2fr 1.55fr .9fr 1.1fr!important;gap:14px!important;padding:12px 0 9px!important}.footer-grid>div{min-width:0}.footer-editor{display:none!important}.footer h3{font-size:12px!important;margin:0 0 4px!important}.footer p,.footer a{font-size:10.5px!important;line-height:1.4!important}.footer p{margin:2px 0!important}.footer a{padding:1px 0!important}.footer .copyright{padding:7px!important;font-size:10px!important}@media(max-width:950px){.footer-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}}@media(max-width:650px){.footer-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;padding:11px 0 8px!important}.footer-grid>div:first-child{grid-column:1/-1}}
+
+/* Keep the footer at the bottom on short pages; content pushes it down naturally. */
+html,body{min-height:100%;}
+body{min-height:100vh;display:flex;flex-direction:column;}
+body>main.page-grid{flex:1 0 auto;width:min(1180px,calc(100% - 32px));}
+body>.footer{flex-shrink:0;margin-top:auto;}
+@media(max-width:650px){body>main.page-grid{width:calc(100% - 24px);}}
