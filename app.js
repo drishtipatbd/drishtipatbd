@@ -32,7 +32,7 @@ function render(){
 function setTicker(text){const el=$('tickerText');el.textContent=text;el.style.setProperty('--ticker-start',(el.parentElement?.clientWidth||window.innerWidth)+'px');el.style.animation='none';void el.offsetWidth;el.style.animation='';}
 function applySettings(){
  const g=settings.general||{},ads=settings.ads||{};
- if(g.tagline)document.querySelector('.tagline').textContent=g.tagline;const editorCredit=$('editorCredit');if(editorCredit)editorCredit.textContent=g.editor_credit||'ভারপ্রাপ্ত সম্পাদক : আবুল কাশেম বোরহান';
+ if(g.tagline)document.querySelector('.tagline').textContent=g.tagline;const editorCredit=$('footerEditorName');if(editorCredit)editorCredit.textContent=g.editor_credit||'ভারপ্রাপ্ত সম্পাদক: আবুল কাশেম বোরহান';const editorEmail=$('footerEditorEmail');if(editorEmail){const em=g.editor_email||'abulkasam117@gmail.com';editorEmail.textContent=em;editorEmail.href='mailto:'+em;}
  const brand=document.querySelector('.brand-name');
  if(brand){if(g.logo&&/^https?:\/\//i.test(g.logo)){brand.innerHTML=`<img class="site-logo" src="${esc(g.logo)}" alt="দৃষ্টিপাতBD লোগো" onerror="this.outerHTML='দৃষ্টিপাত<span>BD</span>'">`}else{brand.innerHTML='দৃষ্টিপাত<span>BD</span>'}}
  const footerLogo=$('footerLogoWrap');if(footerLogo){if(g.logo&&/^https?:\/\//i.test(g.logo)){footerLogo.innerHTML='<img class="footer-site-logo" src="'+esc(g.logo)+'" alt="দৃষ্টিপাতBD লোগো">'}else{footerLogo.innerHTML='দৃষ্টিপাত<span>BD</span>'}}
