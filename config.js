@@ -1,4 +1,4 @@
 window.DRISHIPAT_CONFIG = {
   SUPABASE_URL: "https://xzlpmztdzoupsshgdang.supabase.co",
-  SUPABASE_ANON_KEY: "sb_publishable_nmYPtu7sjpaTGGcbosgZ5w_0VUJPKPc"
+  SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inh6bHBtenRkem91cHNzaGdkYW5nIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI5MjU3NTksImV4cCI6MjEwODUwMTc1OX0.e-WvSIg14qQXr_KDXeCnpWM5IvY38Hyd7PxMvva2QAk"
 };
