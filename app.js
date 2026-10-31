@@ -12,7 +12,7 @@ const time=s=>{try{return new Intl.DateTimeFormat('bn-BD',{timeZone:'Asia/Dhaka'
 const publishedMeta=a=>{const stamp=a.published_at||a.created_at;return `<span>${date(stamp)}</span><span class="published-time">🕒 সময়: ${time(stamp)}</span>`};
 const toast=m=>{const t=$('toast');t.textContent=m;t.classList.remove('hidden');setTimeout(()=>t.classList.add('hidden'),2800)};
 function img(url,title,cls='news-image'){return url?`<img class="${cls}" src="${esc(url)}" alt="${esc(title)}" loading="lazy" onerror="this.outerHTML='<div class=\\'news-image image-placeholder\\'>ছবি পাওয়া যায়নি</div>'">`:`<div class="${cls} image-placeholder">দৃষ্টিপাতBD</div>`}
-function articleCard(a,kind='row'){return `<article class="${kind==='mini'?'mini-news':kind==='hero'?'hero-card':'news-row'}">${img(a.image_url,a.title)}<div><div class="meta"><span class="category-tag">${esc(a.categories?.name||'সংবাদ')}</span>${publishedMeta(a)}<span>পঠিত: ${Number(a.views||0).toLocaleString('bn-BD')}</span></div><h3><a href="#article-${esc(a.id)}" data-article="${esc(a.id)}">${esc(a.title)}</a></h3>${kind==='hero'||kind==='row'?`<p class="excerpt">${esc(a.excerpt||'')}</p>`:''}<a class="read-more" href="#article-${esc(a.id)}" data-article="${esc(a.id)}">বিস্তারিত পড়ুন <span aria-hidden="true">›</span></a></div></article>`}
+function articleCard(a,kind='row'){return `<article class="${kind==='mini'?'mini-news':kind==='hero'?'hero-card':kind==='tile'?'news-tile':'news-row'}">${img(a.image_url,a.title)}<div><div class="meta"><span class="category-tag">${esc(a.categories?.name||'সংবাদ')}</span>${publishedMeta(a)}<span>পঠিত: ${Number(a.views||0).toLocaleString('bn-BD')}</span></div><h3><a href="#article-${esc(a.id)}" data-article="${esc(a.id)}">${esc(a.title)}</a></h3>${kind==='hero'||kind==='row'||kind==='tile'?`<p class="excerpt">${esc(a.excerpt||'')}</p>`:''}<a class="read-more" href="#article-${esc(a.id)}" data-article="${esc(a.id)}">বিস্তারিত পড়ুন <span aria-hidden="true">›</span></a></div></article>`}
 function filtered(){return allArticles.filter(a=>(!activeCategory||a.categories?.name===activeCategory)&&(!searchTerm||(a.title+' '+a.excerpt+' '+a.body).toLowerCase().includes(searchTerm.toLowerCase())))}
 function render(){
  const items=filtered(),featured=items.find(a=>a.featured)||items[0];
@@ -22,7 +22,7 @@ function render(){
  const heroSide=rest.slice(0,3);
  $('heroNews').innerHTML=(featured?articleCard(featured,'hero'):'')+`<div class="hero-side">${heroSide.map(a=>articleCard(a,'mini')).join('')}</div>`;
  const latest=items.filter(a=>a.id!==featured?.id).slice(0,shown);
- $('latestNews').innerHTML=latest.length?latest.map(a=>articleCard(a,'row')).join(''):'<p class="muted">আর কোনো সংবাদ নেই।</p>';
+ $('latestNews').innerHTML=latest.length?latest.map(a=>articleCard(a,'tile')).join(''):'<p class="muted">আর কোনো সংবাদ নেই।</p>';
  $('loadMore').classList.toggle('hidden',items.length<=shown+1);
  $('popularNews').innerHTML=[...items].sort((a,b)=>Number(b.views||0)-Number(a.views||0)).slice(0,5).map((a,i)=>`<a href="#article-${esc(a.id)}" data-article="${esc(a.id)}">${i+1}. ${esc(a.title)} <small>(${Number(a.views||0).toLocaleString('bn-BD')} পঠিত)</small></a>`).join('');
  document.querySelectorAll('[data-article]').forEach(el=>el.onclick=e=>{e.preventDefault();openArticle(el.dataset.article)});
