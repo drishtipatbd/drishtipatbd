@@ -59,3 +59,7 @@
 
 /* Ad policy controls */
 .ad-policy{background:#f8f8f8;border:1px solid #e1e3e5;border-left:4px solid var(--red);padding:13px 15px;margin:12px 0 18px;border-radius:5px;font-size:13px}.ad-policy p{margin:6px 0}.ad-global-control{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px;background:#f4f7f5;border:1px solid #dce8df;border-radius:6px;margin:12px 0 18px}.ad-global-control .check-label{margin:0!important}
+
+/* Inline article detail and follow links below the news feed */
+.inline-article{margin:28px 0 12px;scroll-margin-top:18px}.inline-article-card{position:relative;background:#fff;border:1px solid var(--line);border-radius:8px;padding:24px;box-shadow:var(--shadow)}.article-back{margin-bottom:18px}.inline-article #articleDetail h1{font-size:25px;line-height:1.5;margin:10px 0}.follow-section{margin-top:28px;margin-bottom:24px}.follow-section .social-box{display:flex;gap:12px;flex-wrap:wrap}.follow-section .social-box a{padding:9px 16px}
+@media(max-width:600px){.inline-article-card{padding:16px 12px}.inline-article #articleDetail h1{font-size:20px}}
