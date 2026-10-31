@@ -54,12 +54,13 @@ async function load(){
   const ar=await db.from('articles').select('*').eq('status','published').order('published_at',{ascending:false,nullsFirst:false}).limit(100);
   if(ar.error)throw ar.error;
   allArticles=ar.data||[];
-  // Resolve category names separately so an optional relation never blocks article cards.
-  try{const cr=await db.from('categories').select('id,name');if(!cr.error){const categoryMap=new Map((cr.data||[]).map(c=>[String(c.id),c.name]));allArticles=allArticles.map(a=>({...a,categories:{name:categoryMap.get(String(a.category_id))||'সংবাদ'}}))}else allArticles=allArticles.map(a=>({...a,categories:{name:'সংবাদ'}}))}catch(e){console.warn('Categories unavailable:',e);allArticles=allArticles.map(a=>({...a,categories:{name:'সংবাদ'}}))}
-  renderFooterVideos();
-  try{const sr=await db.from('site_settings').select('key,value');if(!sr.error)(sr.data||[]).forEach(x=>settings[x.key]=x.value);else console.warn('Site settings unavailable:',sr.error)}catch(e){console.warn('Site settings unavailable:',e)}
-  // Render the news first. Optional site settings must never prevent published articles from appearing.
+  // Show published news immediately. Optional categories/settings must never hold the homepage in a loading state.
+  allArticles=allArticles.map(a=>({...a,categories:{name:'সংবাদ'}}));
   render();
+  renderFooterVideos();
+  // Enrich cards with category names after the first render.
+  try{const cr=await db.from('categories').select('id,name');if(!cr.error){const categoryMap=new Map((cr.data||[]).map(c=>[String(c.id),c.name]));allArticles=allArticles.map(a=>({...a,categories:{name:categoryMap.get(String(a.category_id))||'সংবাদ'}}));render()}}catch(e){console.warn('Categories unavailable:',e)}
+  try{const sr=await db.from('site_settings').select('key,value');if(!sr.error)(sr.data||[]).forEach(x=>settings[x.key]=x.value);else console.warn('Site settings unavailable:',sr.error)}catch(e){console.warn('Site settings unavailable:',e)}
   try{applySettings()}catch(settingsError){console.error('Optional site settings could not be applied:',settingsError)}
   const g=settings.general||{};const breakingItems=Array.isArray(g.breaking_items)?g.breaking_items.filter(Boolean):[];const breakingTitles=allArticles.filter(a=>a.breaking===true||a.is_breaking===true).slice(0,5).map(a=>a.title);
   try{setTicker(g.breaking_enabled===false?'':(breakingItems.length?breakingItems.join('  •  '):(g.breaking|| (breakingTitles.length?breakingTitles.join('  •  '):'দৃষ্টিপাতBD-তে আপনাকে স্বাগতম।'))))}catch(tickerError){console.warn('Ticker could not be updated:',tickerError)}
