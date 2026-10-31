@@ -56,3 +56,6 @@
   .admin-tabs .tab[data-tab="ads"]{border:1px solid #138444}
 }
 
+
+/* Ad policy controls */
+.ad-policy{background:#f8f8f8;border:1px solid #e1e3e5;border-left:4px solid var(--red);padding:13px 15px;margin:12px 0 18px;border-radius:5px;font-size:13px}.ad-policy p{margin:6px 0}.ad-global-control{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:12px;background:#f4f7f5;border:1px solid #dce8df;border-radius:6px;margin:12px 0 18px}.ad-global-control .check-label{margin:0!important}
