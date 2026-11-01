@@ -6,6 +6,7 @@
 
 - `NEWSROOM_ENABLED=false`
 - `NEWSROOM_DRY_RUN=true`
+- `NEWSROOM_DRAFTS_ENABLED=false` (AI disabled until explicitly enabled)
 - `AUTO_PUBLISH_ENABLED=false`; Worker-এ auto-publish route বা code নেই
 - Cron প্রতি ৩০ মিনিটে নির্ধারিত, কিন্তু Worker disabled থাকলে কাজ করে না
 - Worker deploy করা হয়নি; এই কোড কেবল `ai-newsroom-integration` branch-এ
@@ -65,7 +66,7 @@ AI corroboration proposal সম্পাদকীয় যাচাইয়ের �
 
 ## Manual run
 
-`NEWSROOM_ENABLED=true` এবং `NEWSROOM_RUN_TOKEN` configure করার পর manual endpoint ব্যবহার করা যাবে। প্রথমে `NEWSROOM_DRY_RUN=true` রেখেই ফলাফল পরীক্ষা করতে হবে। Write mode বা live automation চালুর আগে আলাদা অনুমোদন, staging migration, source rights review ও dry-run acceptance আবশ্যক।
+`NEWSROOM_ENABLED=true` এবং `NEWSROOM_RUN_TOKEN` configure করার পর manual endpoint দিয়ে RSS collection পরীক্ষা করা যাবে। Manual `/run` কখনো AI model call করে না। AI draft generation কেবল `NEWSROOM_DRAFTS_ENABLED=true`, `NEWSROOM_DRY_RUN=false` এবং UTC hourly scheduled run—এই তিনটি শর্ত পূরণ হলে চলে।
 
 ## সীমাবদ্ধতা
 
@@ -83,7 +84,7 @@ The Node.js test suite in `test/newsroom.test.js` covers:
 - explicit enablement/approval and HTTPS/domain validation;
 - independent-publisher corroboration (multiple feeds from one publisher do not count twice).
 
-The CI workflow runs these tests in addition to syntax and disabled-candidate-registry validation.
+The CI workflow runs these tests in addition to syntax, disabled-candidate-registry, AI-binding, prompt/output budget and disabled-default validation.
 
 When write mode is explicitly enabled, the Worker records per-feed results in `public.ai_news_source_runs` using a shared run ID. Statuses are `ok`, `no_fresh_items`, and `error`. The table is intended for admin-only reading; inserts use the server-side service role. The additive migration `20261101191707_ai_news_source_health.sql` was applied to the connected Supabase project on 2026-11-01; table and RLS were verified. Dry-run mode continues to perform no database writes.
 
