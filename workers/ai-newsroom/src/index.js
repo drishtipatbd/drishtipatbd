@@ -50,7 +50,8 @@ function parseFeed(xml, source) {
     if (!title || !link) return null;
     try {
       const articleUrl = new URL(link, source.url);
-      if (articleUrl.protocol !== "https:" || !source.articleHosts.includes(articleUrl.hostname.toLowerCase())) return null;
+      const allowedArticleHosts = Array.isArray(source.articleHosts) ? source.articleHosts : [source.domain];
+      if (articleUrl.protocol !== "https:" || !allowedArticleHosts.includes(articleUrl.hostname.toLowerCase())) return null;
       return {
         publisherId: source.publisherId,
         sourceId: source.sourceId,
