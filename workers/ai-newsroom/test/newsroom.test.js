@@ -80,8 +80,8 @@ test("Workers AI prompt stays inside the daily free-tier character budget", () =
     region: "international",
     categories: ["world"],
     url: "https://news" + index + ".example/story",
-    title: "Headline " + index,
-    description: "Short source description " + index,
+    title: "Headline " + index + " ".repeat(180),
+    description: "Long source description ".repeat(20) + index,
     publishedAt: "2026-11-01T12:00:00.000Z"
   }));
   const prompt = buildDraftMessages(items);
