@@ -345,6 +345,132 @@
       "status": "review_required",
       "enabled": false,
       "validation": "recent feed directory reports working; official UN page confirms RSS service; verify exact feed output"
+    },
+    {
+      "sourceId": "banglanews24-home",
+      "publisherId": "banglanews24",
+      "name": "BanglaNews24 — Home",
+      "domain": "www.banglanews24.com",
+      "url": "https://www.banglanews24.com/rss/rss.xml",
+      "region": "south-asia",
+      "country": "Bangladesh",
+      "language": "bn",
+      "categories": [
+        "general",
+        "bangladesh"
+      ],
+      "tier": "tier2",
+      "status": "review_required",
+      "enabled": false,
+      "validation": "Listed by two RSS feed directories; direct response, freshness and rights review required"
+    },
+    {
+      "sourceId": "jagonews24-home",
+      "publisherId": "jagonews24",
+      "name": "Jago News 24 — Home",
+      "domain": "www.jagonews24.com",
+      "url": "https://www.jagonews24.com/rss/rss.xml",
+      "region": "south-asia",
+      "country": "Bangladesh",
+      "language": "bn",
+      "categories": [
+        "general",
+        "bangladesh"
+      ],
+      "tier": "tier2",
+      "status": "review_required",
+      "enabled": false,
+      "validation": "Listed by RSS feed directories; direct response, freshness and rights review required"
+    },
+    {
+      "sourceId": "kalerkantho-home",
+      "publisherId": "kalerkantho",
+      "name": "Kaler Kantho — Home",
+      "domain": "www.kalerkantho.com",
+      "url": "https://www.kalerkantho.com/rss.xml",
+      "region": "south-asia",
+      "country": "Bangladesh",
+      "language": "bn",
+      "categories": [
+        "general",
+        "bangladesh"
+      ],
+      "tier": "tier2",
+      "status": "review_required",
+      "enabled": false,
+      "validation": "Listed by RSS feed directories; direct response, freshness and rights review required"
+    },
+    {
+      "sourceId": "prothomalo-home",
+      "publisherId": "prothomalo",
+      "name": "Prothom Alo — Home",
+      "domain": "www.prothomalo.com",
+      "url": "https://www.prothomalo.com/feed/",
+      "region": "south-asia",
+      "country": "Bangladesh",
+      "language": "bn",
+      "categories": [
+        "general",
+        "bangladesh"
+      ],
+      "tier": "tier1",
+      "status": "rights_review_required",
+      "enabled": false,
+      "validation": "Third-party reader reports feed responds but last post stale; commercial use requires separate terms/licensing review; do not activate without permission"
+    },
+    {
+      "sourceId": "skynews-home",
+      "publisherId": "skynews",
+      "name": "Sky News — Home",
+      "domain": "feeds.skynews.com",
+      "url": "https://feeds.skynews.com/feeds/rss/home.xml",
+      "region": "international",
+      "country": "United Kingdom",
+      "language": "en",
+      "categories": [
+        "general",
+        "world"
+      ],
+      "tier": "tier1",
+      "status": "review_required",
+      "enabled": false,
+      "validation": "October 2026 RSS test list reports feed active; direct response and terms review required"
+    },
+    {
+      "sourceId": "ap-top-stories-flipboard",
+      "publisherId": "associatedpress",
+      "name": "Associated Press — Top Stories (Flipboard distribution)",
+      "domain": "flipboard.com",
+      "url": "https://flipboard.com/@associatedpress/top-stories-u7govdf1z.rss",
+      "region": "international",
+      "country": "United States",
+      "language": "en",
+      "categories": [
+        "general",
+        "world"
+      ],
+      "tier": "tier1",
+      "status": "review_required",
+      "enabled": false,
+      "validation": "Third-party distribution feed; confirm publisher attribution, direct feed response and reuse terms before activation"
+    },
+    {
+      "sourceId": "nyt-home",
+      "publisherId": "nytimes",
+      "name": "The New York Times — Home Page",
+      "domain": "rss.nytimes.com",
+      "url": "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml",
+      "region": "international",
+      "country": "United States",
+      "language": "en",
+      "categories": [
+        "general",
+        "world"
+      ],
+      "tier": "tier1",
+      "status": "review_required",
+      "enabled": false,
+      "validation": "October 2026 RSS test list reports feed active; direct response and licensing review required"
     }
   ]
 }
