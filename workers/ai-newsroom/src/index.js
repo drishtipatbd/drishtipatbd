@@ -172,12 +172,7 @@ async function collectItems(sources) {
         if (/text\/html/i.test(contentType)) throw new Error("Feed endpoint returned HTML, not an RSS/Atom document.");
         const xml = await response.text();
         if (!/<(rss|feed|rdf:RDF)\b/i.test(xml)) throw new Error("Response does not look like RSS/Atom XML.");
-        const rawItems = parseFeed(xml, { ...source, _includeStale: true });
-        const items = rawItems.filter((item) => {
-          if (!item.publishedAt) return false;
-          const ageHours = (Date.now() - new Date(item.publishedAt).getTime()) / 3600000;
-          return ageHours <= MAX_ITEM_AGE_HOURS && ageHours >= -MAX_FUTURE_SKEW_HOURS;
-        });
+        const items = parseFeed(xml, source);
         collected.push(...items);
         sourceHealth.push({ source_id: source.sourceId, publisher_id: source.publisherId, domain: source.domain, status: "ok", checked_at: checkedAt, items_found: items.length, freshness_window_hours: MAX_ITEM_AGE_HOURS });
       } catch (error) {
