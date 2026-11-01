@@ -75,3 +75,10 @@ Worker-এর কাজ:
 - একাধিক feed fetch করার সময় bounded concurrency ব্যবহৃত হয়; প্রতি feed failure আলাদাভাবে রিপোর্ট হয়। একই publisher-এর দুটি feed কখনো দুইটি স্বাধীন publisher হিসেবে গণ্য হবে না।
 - RSS/Atom কেবল discovery metadata; full article/image republishing নয়। Terms/licensing অনুমতি না থাকলে commercial reuse করা যাবে না। Prothom Alo-এর Terms of Use-এ commercial content use সীমাবদ্ধ, তাই স্পষ্ট অনুমতি ছাড়া তাদের content commercial workflow-এ যুক্ত করা হবে না।
 
+
+
+## Source health history and automated tests
+
+The Integration branch adds `ai_news_source_runs` (migration `202611010002_ai_news_source_health.sql`) for durable per-feed telemetry: run ID, source/publisher/domain, status, checked time, item count, freshness window, and bounded error message. RLS allows authenticated admin-role reads only; the Worker writes through the service role. This migration is not applied to Supabase.
+
+The Worker records these rows only when write mode is explicitly enabled. Dry-run remains database-write-free. CI now runs Node's built-in test runner for RSS date freshness, disabled/unapproved feed rejection, HTTPS/domain matching, and distinct-publisher corroboration.
