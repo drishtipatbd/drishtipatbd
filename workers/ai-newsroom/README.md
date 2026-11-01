@@ -85,7 +85,7 @@ The Node.js test suite in `test/newsroom.test.js` covers:
 
 The CI workflow runs these tests in addition to syntax and disabled-candidate-registry validation.
 
-When write mode is explicitly enabled, the Worker records per-feed results in `public.ai_news_source_runs` using a shared run ID. Statuses are `ok`, `no_fresh_items`, and `error`. The table is intended for admin-only reading; inserts use the server-side service role. Apply the additive migration `202611010002_ai_news_source_health.sql` only after staging review. Dry-run mode continues to perform no database writes.
+When write mode is explicitly enabled, the Worker records per-feed results in `public.ai_news_source_runs` using a shared run ID. Statuses are `ok`, `no_fresh_items`, and `error`. The table is intended for admin-only reading; inserts use the server-side service role. The additive migration `202611010002_ai_news_source_health.sql` was applied to the connected Supabase project on 2026-11-01; table and RLS were verified. Dry-run mode continues to perform no database writes.
 
 
 **Cost guard:** RSS feed checks can run without model usage. AI draft generation is disabled by default and requires the explicit `NEWSROOM_DRAFTS_ENABLED=true` setting; this calls the metered OpenAI API. Dry-run does not write to the database, and with draft generation disabled it also avoids model API charges.
