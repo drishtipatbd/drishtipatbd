@@ -3,38 +3,33 @@
   "body": {
     "dry_run": true,
     "sources_checked": 2,
-    "sources_succeeded": 0,
-    "feed_items_collected": 0,
+    "sources_succeeded": 1,
+    "feed_items_collected": 5,
     "source_health": [
-      {
-        "source_id": "globalvoices-all",
-        "publisher_id": "globalvoices",
-        "domain": "globalvoices.org",
-        "status": "error",
-        "checked_at": "2026-11-01T19:58:09.680Z",
-        "error": "Invalid redirect value, must be one of \"follow\" or \"manual\" (\"error\" won't be implemented since it does not make sense at the edge; use \"manual\" and check the response status code)."
-      },
       {
         "source_id": "wikinews-latest",
         "publisher_id": "wikinews",
         "domain": "en.wikinews.org",
         "status": "error",
-        "checked_at": "2026-11-01T19:58:09.680Z",
-        "error": "Invalid redirect value, must be one of \"follow\" or \"manual\" (\"error\" won't be implemented since it does not make sense at the edge; use \"manual\" and check the response status code)."
+        "checked_at": "2026-11-01T19:59:28.748Z",
+        "error": "HTTP 404"
+      },
+      {
+        "source_id": "globalvoices-all",
+        "publisher_id": "globalvoices",
+        "domain": "globalvoices.org",
+        "status": "ok",
+        "checked_at": "2026-11-01T19:59:28.748Z",
+        "items_found": 5,
+        "freshness_window_hours": 72
       }
     ],
     "feed_failures": [
       {
-        "source": "Global Voices — All Stories",
-        "source_id": "globalvoices-all",
-        "domain": "globalvoices.org",
-        "error": "Invalid redirect value, must be one of \"follow\" or \"manual\" (\"error\" won't be implemented since it does not make sense at the edge; use \"manual\" and check the response status code)."
-      },
-      {
         "source": "Wikinews — Latest Published Articles",
         "source_id": "wikinews-latest",
         "domain": "en.wikinews.org",
-        "error": "Invalid redirect value, must be one of \"follow\" or \"manual\" (\"error\" won't be implemented since it does not make sense at the edge; use \"manual\" and check the response status code)."
+        "error": "HTTP 404"
       }
     ]
   }
