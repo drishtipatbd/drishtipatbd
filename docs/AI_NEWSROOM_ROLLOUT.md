@@ -3,7 +3,8 @@
 ## বর্তমান অবস্থা
 - Admin dashboard-এ AI News Queue UI আছে।
 - `ai_news_queue` টেবিল তৈরির migration repository-তে আছে; production database-এ এই নতুন hardening migration চালানো হয়নি।
-- AI সংগ্রহ/লেখা/যাচাইয়ের scheduled backend এখনো deploy করা হয়নি।
+- AI সংগ্রহ/খসড়া তৈরির Worker source code `workers/ai-newsroom/`-এ integration branch-এ প্রস্তুত; deploy করা হয়নি।
+- Worker default-এ disabled এবং dry-run; এতে কোনো auto-publish code নেই।
 - `ai-newsroom-integration` হলো পরীক্ষামূলক branch; `main`-ই Production branch।
 
 ## Editorial policy
@@ -46,6 +47,14 @@ Worker-এর কাজ:
 6. প্রথম rollout-এ সবকিছু queue-তে pending রাখবে; কোনো স্বয়ংক্রিয় প্রকাশ নয়।
 7. Dry-run ফলাফল ও সম্পাদকীয় পরীক্ষার পর পৃথক policy দিয়ে কেবল অনুমোদিত live sports / urgent categories চালু করা যাবে।
 8. প্রতিটি action audit log-এ লিখবে; kill switch তাৎক্ষণিকভাবে automation বন্ধ করবে।
+
+## Worker implementation (integration branch only)
+- `workers/ai-newsroom/src/index.js` allowlisted RSS/Atom feeds সংগ্রহ করে, পৃথক publisher/domain থেকে একই ঘটনার corroboration proposal তৈরি করে এবং OpenAI Responses Structured Outputs দিয়ে বাংলা খসড়া তৈরি করে।
+- Dry-run default-এ কোনো database write হয় না। Write mode-এ যাওয়ার আগে Worker verification columns পরীক্ষা করে; migration অনুপস্থিত হলে fail-closed করে।
+- Write mode কেবল `pending`, `needs_review`, `confidence_score=0`, `auto_publish=false`, `manual_only` হিসেবে queue-তে সংরক্ষণ করতে পারে।
+- `/run` endpoint bearer token ছাড়া চালানো যায় না; `/health`-এ কোনো secret প্রকাশ হয় না।
+- `wrangler.jsonc`-এ Cron আছে, কিন্তু `NEWSROOM_ENABLED=false`; Worker deploy করা হয়নি এবং কোনো secret সেট করা হয়নি।
+- `.github/workflows/ai-newsroom-worker-check.yml` শুধু JavaScript syntax check করে; deploy step নেই।
 
 ## Release checklist
 - [ ] RSS/API source allowlist সম্পাদকীয় দল অনুমোদন করেছে
