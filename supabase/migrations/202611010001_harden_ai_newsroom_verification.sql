@@ -44,7 +44,7 @@ begin
         or (
           verification_status = 'verified'
           and jsonb_typeof(source_evidence) = 'array'
-          and jsonb_array_length(source_evidence) >= 2
+          and case when jsonb_typeof(source_evidence) = 'array' then jsonb_array_length(source_evidence) >= 2 else false end
           and confidence_score >= 0.950
           and (
             (auto_publish_rule = 'live_sports' and news_type = 'sports')
