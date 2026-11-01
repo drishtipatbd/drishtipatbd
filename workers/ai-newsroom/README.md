@@ -28,7 +28,7 @@
 - সর্বোচ্চ ১০০টি registry entry; সর্বোচ্চ ১০০টি সক্রিয় feed
 - কেবল বৈধ তারিখযুক্ত এবং গত ৭২ ঘণ্টার মধ্যে প্রকাশিত feed item গ্রহণ করা হয়; ভবিষ্যতের ৬ ঘণ্টার বেশি timestamp-ও বাদ যায়
 - প্রতিটি feed থেকে সর্বোচ্চ ১২টি item; মোট সর্বোচ্চ ৩০০টি item
-- একসঙ্গে সর্বোচ্চ ১০টি feed fetch; প্রতিটি request-এ ৮ সেকেন্ড timeout
+- একসঙ্গে সর্বোচ্চ ১০টি feed fetch; প্রতিটি request-এ ৮ সেকেন্ড timeout এবং response body সর্বোচ্চ ১.৫ MB
 - কেবল HTTPS; URL hostname এবং registered domain হুবহু মিলতে হবে; redirect নিষিদ্ধ
 - একই publisher-এর একাধিক feed অনুমোদিত, কিন্তু duplicate `sourceId` নিষিদ্ধ
 - HTML page-কে RSS/Atom হিসেবে গ্রহণ করা হয় না
