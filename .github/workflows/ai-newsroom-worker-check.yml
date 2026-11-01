@@ -24,6 +24,25 @@ jobs:
           node-version: "22"
       - name: Check Worker JavaScript syntax
         run: node --check workers/ai-newsroom/src/index.js
-      - name: Validate candidate source registry JSON and safe defaults
+      - name: Validate candidate source registry
         run: |
-          node -e 'const r=require("./workers/ai-newsroom/source-registry.candidates.json"); if (!Array.isArray(r.sources) || r.sources.length < 1) process.exit(1); if (r.sources.some(s => s.enabled !== false || s.status !== "review_required")) process.exit(1); console.log("Validated", r.sources.length, "disabled review candidates");'
+          node <<'NODE'
+          const registry = require("./workers/ai-newsroom/source-registry.candidates.json");
+          if (!Array.isArray(registry.sources) || registry.sources.length < 1 || registry.sources.length > 100) {
+            throw new Error("Candidate registry must contain 1–100 entries.");
+          }
+          const ids = new Set();
+          for (const source of registry.sources) {
+            if (source.enabled !== false) throw new Error("Candidate feed must remain disabled: " + source.sourceId);
+            if (!["review_required", "rights_review_required"].includes(source.status)) {
+              throw new Error("Unexpected candidate status: " + source.sourceId);
+            }
+            if (!source.sourceId || ids.has(source.sourceId)) throw new Error("Missing or duplicate sourceId.");
+            ids.add(source.sourceId);
+            const url = new URL(source.url);
+            if (url.protocol !== "https:" || url.hostname.toLowerCase() !== source.domain.toLowerCase()) {
+              throw new Error("Unsafe or mismatched feed URL: " + source.sourceId);
+            }
+          }
+          console.log("Validated", registry.sources.length, "disabled candidate feeds.");
+          NODE
