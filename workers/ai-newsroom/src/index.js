@@ -5,31 +5,6 @@ const FEED_FETCH_CONCURRENCY = 10;
 const MAX_FEED_BYTES = 1500000;
 const MAX_ITEM_AGE_HOURS = 72;
 const MAX_FUTURE_SKEW_HOURS = 6;
-const RESPONSE_SCHEMA = {
-  type: "object",
-  additionalProperties: false,
-  properties: {
-    stories: {
-      type: "array",
-      items: {
-        type: "object",
-        additionalProperties: false,
-        properties: {
-          source_indexes: { type: "array", items: { type: "integer" }, minItems: 2, maxItems: 10 },
-          title: { type: "string" },
-          excerpt: { type: "string" },
-          body: { type: "string" },
-          category: { type: "string" },
-          news_type: { type: "string", enum: ["general", "breaking", "sports", "domestic", "international"] },
-          verification_notes: { type: "string" }
-        },
-        required: ["source_indexes", "title", "excerpt", "body", "category", "news_type", "verification_notes"]
-      }
-    }
-  },
-  required: ["stories"]
-};
-
 function json(data, status) {
   return new Response(JSON.stringify(data, null, 2), {
     status: status || 200,
