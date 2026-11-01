@@ -11,7 +11,7 @@
         "publisher_id": "wikinews",
         "domain": "en.wikinews.org",
         "status": "error",
-        "checked_at": "2026-11-01T20:00:25.885Z",
+        "checked_at": "2026-11-01T20:01:03.002Z",
         "error": "HTTP 404"
       },
       {
@@ -19,7 +19,7 @@
         "publisher_id": "globalvoices",
         "domain": "globalvoices.org",
         "status": "ok",
-        "checked_at": "2026-11-01T20:00:25.885Z",
+        "checked_at": "2026-11-01T20:01:03.002Z",
         "items_found": 5,
         "freshness_window_hours": 72
       }
