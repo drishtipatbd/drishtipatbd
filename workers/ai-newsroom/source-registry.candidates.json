@@ -15,9 +15,9 @@
         "world"
       ],
       "tier": "tier1",
-      "status": "review_required",
+      "status": "rights_review_required",
       "enabled": false,
-      "validation": "third-party feed directory reports working; verify directly before activation"
+      "validation": "Publisher terms require prior permission/licensing for business, commercial, automated or AI-related use; keep disabled until written permission is confirmed."
     },
     {
       "sourceId": "bbc-world",
@@ -33,9 +33,9 @@
         "politics"
       ],
       "tier": "tier1",
-      "status": "review_required",
+      "status": "rights_review_required",
       "enabled": false,
-      "validation": "third-party feed directory reports working; verify directly before activation"
+      "validation": "Publisher terms require prior permission/licensing for business, commercial, automated or AI-related use; keep disabled until written permission is confirmed."
     },
     {
       "sourceId": "bbc-business",
@@ -51,9 +51,9 @@
         "economy"
       ],
       "tier": "tier1",
-      "status": "review_required",
+      "status": "rights_review_required",
       "enabled": false,
-      "validation": "third-party feed directory reports working; verify directly before activation"
+      "validation": "Publisher terms require prior permission/licensing for business, commercial, automated or AI-related use; keep disabled until written permission is confirmed."
     },
     {
       "sourceId": "bbc-technology",
@@ -69,9 +69,9 @@
         "science"
       ],
       "tier": "tier1",
-      "status": "review_required",
+      "status": "rights_review_required",
       "enabled": false,
-      "validation": "third-party feed directory reports working; verify directly before activation"
+      "validation": "Publisher terms require prior permission/licensing for business, commercial, automated or AI-related use; keep disabled until written permission is confirmed."
     },
     {
       "sourceId": "bbc-science-environment",
@@ -87,9 +87,9 @@
         "environment"
       ],
       "tier": "tier1",
-      "status": "review_required",
+      "status": "rights_review_required",
       "enabled": false,
-      "validation": "third-party feed directory reports working; verify directly before activation"
+      "validation": "Publisher terms require prior permission/licensing for business, commercial, automated or AI-related use; keep disabled until written permission is confirmed."
     },
     {
       "sourceId": "aljazeera-all",
@@ -106,9 +106,9 @@
         "middle-east"
       ],
       "tier": "tier1",
-      "status": "review_required",
+      "status": "rights_review_required",
       "enabled": false,
-      "validation": "third-party technical feed test reports RSS responding; verify direct endpoint and terms"
+      "validation": "Publisher terms require prior permission/licensing for business, commercial, automated or AI-related use; keep disabled until written permission is confirmed."
     },
     {
       "sourceId": "guardian-world",
@@ -124,9 +124,9 @@
         "politics"
       ],
       "tier": "tier1",
-      "status": "review_required",
+      "status": "rights_review_required",
       "enabled": false,
-      "validation": "third-party technical feed test reports RSS responding; verify direct endpoint and terms"
+      "validation": "Publisher terms require prior permission/licensing for business, commercial, automated or AI-related use; keep disabled until written permission is confirmed."
     },
     {
       "sourceId": "daily-star-frontpage",
@@ -195,9 +195,9 @@
         "sports"
       ],
       "tier": "tier1",
-      "status": "review_required",
+      "status": "rights_review_required",
       "enabled": false,
-      "validation": "feed URL listed by recent RSS directory; verify directly before activation"
+      "validation": "Publisher terms require prior permission/licensing for business, commercial, automated or AI-related use; keep disabled until written permission is confirmed."
     },
     {
       "sourceId": "guardian-sport",
@@ -212,9 +212,9 @@
         "sports"
       ],
       "tier": "tier1",
-      "status": "review_required",
+      "status": "rights_review_required",
       "enabled": false,
-      "validation": "feed URL listed by recent RSS directory; verify directly before activation"
+      "validation": "Publisher terms require prior permission/licensing for business, commercial, automated or AI-related use; keep disabled until written permission is confirmed."
     },
     {
       "sourceId": "espncricinfo-main",
