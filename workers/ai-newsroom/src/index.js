@@ -170,9 +170,10 @@ async function collectItems(sources) {
       try {
         const response = await fetch(source.url, {
           headers: { "user-agent": "DrishtipatBD-Newsroom/0.2 (+https://drishtipatbd.pages.dev)", "accept": "application/rss+xml, application/atom+xml, application/xml, text/xml" },
-          redirect: "error",
+          redirect: "manual",
           signal: AbortSignal.timeout(8000)
         });
+        if (response.status >= 300 && response.status < 400) throw new Error("Feed redirects are not allowed; configure the canonical HTTPS feed URL.");
         if (!response.ok) throw new Error("HTTP " + response.status);
         const contentType = response.headers.get("content-type") || "";
         if (/text\/html/i.test(contentType)) throw new Error("Feed endpoint returned HTML, not an RSS/Atom document.");
