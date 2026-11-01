@@ -82,3 +82,6 @@ Worker-এর কাজ:
 The Integration branch adds `ai_news_source_runs` (migration `202611010002_ai_news_source_health.sql`) for durable per-feed telemetry: run ID, source/publisher/domain, status, checked time, item count, freshness window, and bounded error message. RLS allows authenticated admin-role reads only; the Worker writes through the service role. This migration is not applied to Supabase.
 
 The Worker records these rows only when write mode is explicitly enabled. Dry-run remains database-write-free. CI now runs Node's built-in test runner for RSS date freshness, disabled/unapproved feed rejection, HTTPS/domain matching, and distinct-publisher corroboration.
+
+
+**Cost guard:** RSS feed checks can run without model usage. AI draft generation is disabled by default and requires the explicit `NEWSROOM_DRAFTS_ENABLED=true` setting; this calls the metered OpenAI API. Dry-run does not write to the database, and with draft generation disabled it also avoids model API charges.
