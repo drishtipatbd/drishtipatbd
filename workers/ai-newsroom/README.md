@@ -35,7 +35,7 @@
 
 ### Candidate catalogue
 
-`source-registry.candidates.json`-এ ১৯টি প্রাথমিক candidate রাখা হয়েছে—বাংলাদেশি সংবাদ, আন্তর্জাতিক সংবাদ, খেলাধুলা, বিজ্ঞান, প্রযুক্তি, পরিবেশ ও জাতিসংঘ-সম্পর্কিত উৎসসহ। **সবগুলো disabled এবং review_required**—কোনোটিই live allowlist নয়। কিছু URL তৃতীয়-পক্ষ feed directory-তে তালিকাভুক্ত; Worker-এ সক্রিয় করার আগে সরাসরি feed response, freshness, publisher identity, editorial standards, correction policy, terms/licensing এবং commercial reuse rights যাচাই করতে হবে। Candidate তালিকা সরাসরি `NEWSROOM_SOURCES`-এ কপি করবেন না।
+`source-registry.candidates.json`-এ ২৬টি প্রাথমিক candidate রাখা হয়েছে—বাংলাদেশি সংবাদ, আন্তর্জাতিক সংবাদ, খেলাধুলা, বিজ্ঞান, প্রযুক্তি, পরিবেশ ও জাতিসংঘ-সম্পর্কিত উৎসসহ। **সবগুলো disabled; সাধারণ feed review_required এবং Prothom Alo rights_review_required**—কোনোটিই live allowlist নয়। কিছু URL তৃতীয়-পক্ষ feed directory-তে তালিকাভুক্ত; Worker-এ সক্রিয় করার আগে সরাসরি feed response, freshness, publisher identity, editorial standards, correction policy, terms/licensing এবং commercial reuse rights যাচাই করতে হবে। Candidate তালিকা সরাসরি `NEWSROOM_SOURCES`-এ কপি করবেন না।
 
 RSS হলো সংবাদ আবিষ্কারের মাধ্যম, পূর্ণ article পুনঃপ্রকাশের অনুমতি নয়। Feed-এর headline/summary ও source URL-কে lead হিসেবে ব্যবহার করতে হবে; পূর্ণ লেখা বা ছবি কপি করা যাবে না, যদি না স্পষ্ট লাইসেন্স/অনুমতি থাকে। প্রথম আলোর Terms of Use-এ commercial use-এর সীমাবদ্ধতা রয়েছে; তাই লিখিত অনুমতি ছাড়া তাদের content commercial workflow-এ ব্যবহার করা যাবে না।
 
