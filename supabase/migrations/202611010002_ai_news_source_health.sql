@@ -33,7 +33,7 @@ create policy "Admins can read AI newsroom source health"
     exists (
       select 1
       from public.admin_users au
-      where au.user_id = auth.uid()
+      where au.user_id = (select auth.uid())
         and au.role = 'admin'
     )
   );
