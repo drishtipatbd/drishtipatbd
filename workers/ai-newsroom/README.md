@@ -43,18 +43,18 @@ RSS হলো সংবাদ আবিষ্কারের মাধ্যম,
 ## প্রয়োজনীয় server-side secrets / variables
 
 Cloudflare Worker settings-এ (browser code-এ নয়) configure করতে হবে:
-- Secret `OPENAI_API_KEY`
+- Cloudflare Workers AI binding `AI` (Gemma 4 26B A4B; no external API key)
 - Secret `SUPABASE_SERVICE_ROLE_KEY`
 - Secret `NEWSROOM_RUN_TOKEN`
 - Variable `SUPABASE_URL`
 - Variable `NEWSROOM_SOURCES` — কেবল approved ও enabled feed-এর JSON
-- Variable `OPENAI_MODEL` — default `gpt-4.1-mini`
+- Variable `NEWSROOM_AI_MODEL` — default `@cf/google/gemma-4-26b-a4b-it`
 
 ## কার্যপ্রবাহ
 
 1. Approved registry থেকে bounded concurrency-তে feed fetch।
 2. XML type, HTTPS URL এবং feed link পরীক্ষা; duplicate URL বাদ।
-3. OpenAI Responses API Structured Outputs দিয়ে source index-সহ বাংলা draft proposal।
+3. Cloudflare Workers AI (Gemma 4 26B A4B) দিয়ে source index-সহ বাংলা draft proposal; inference শুধু নির্ধারিত UTC hourly run-এ।
 4. অন্তত দুইটি আলাদা publisherId এবং দুইটি আলাদা domain না থাকলে draft বাদ।
 5. Dry-run-এ database write হয় না।
 6. Write mode-এ verification schema না থাকলে fail-closed।
@@ -88,4 +88,4 @@ The CI workflow runs these tests in addition to syntax and disabled-candidate-re
 When write mode is explicitly enabled, the Worker records per-feed results in `public.ai_news_source_runs` using a shared run ID. Statuses are `ok`, `no_fresh_items`, and `error`. The table is intended for admin-only reading; inserts use the server-side service role. The additive migration `20261101191707_ai_news_source_health.sql` was applied to the connected Supabase project on 2026-11-01; table and RLS were verified. Dry-run mode continues to perform no database writes.
 
 
-**Cost guard:** RSS feed checks can run without model usage. AI draft generation is disabled by default and requires the explicit `NEWSROOM_DRAFTS_ENABLED=true` setting; this calls the metered OpenAI API. Dry-run does not write to the database, and with draft generation disabled it also avoids model API charges.
+**Cost guard:** RSS feed checks run without model usage. AI draft generation is disabled by default and requires `NEWSROOM_DRAFTS_ENABLED=true`, write mode, and a scheduled UTC hourly run. The Worker uses Cloudflare Workers AI's published 10,000-neuron daily free allocation; it limits inference to 24 calls/day, a 1,500-character total prompt, and 500 output tokens. At the published Gemma 4 rates this is estimated at about 2,000 neurons/day under a conservative 5-token-per-character input assumption, below the free allocation. Dry-run and manual `/run` never call the model. No OpenAI API key is required.
