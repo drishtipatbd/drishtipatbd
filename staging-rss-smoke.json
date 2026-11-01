@@ -3,34 +3,28 @@
   "body": {
     "dry_run": true,
     "sources_checked": 2,
-    "sources_succeeded": 1,
-    "feed_items_collected": 5,
+    "sources_succeeded": 2,
+    "feed_items_collected": 15,
     "source_health": [
       {
-        "source_id": "wikinews-latest",
-        "publisher_id": "wikinews",
-        "domain": "en.wikinews.org",
-        "status": "error",
-        "checked_at": "2026-11-01T20:01:54.992Z",
-        "error": "Response does not look like RSS/Atom XML."
+        "source_id": "agencia-brasil-latest",
+        "publisher_id": "agencia-brasil",
+        "domain": "agenciabrasil.ebc.com.br",
+        "status": "ok",
+        "checked_at": "2026-11-01T20:02:20.534Z",
+        "items_found": 10,
+        "freshness_window_hours": 72
       },
       {
         "source_id": "globalvoices-all",
         "publisher_id": "globalvoices",
         "domain": "globalvoices.org",
         "status": "ok",
-        "checked_at": "2026-11-01T20:01:54.992Z",
+        "checked_at": "2026-11-01T20:02:20.534Z",
         "items_found": 5,
         "freshness_window_hours": 72
       }
     ],
-    "feed_failures": [
-      {
-        "source": "Wikinews — Latest Published Articles",
-        "source_id": "wikinews-latest",
-        "domain": "en.wikinews.org",
-        "error": "Response does not look like RSS/Atom XML."
-      }
-    ]
+    "feed_failures": []
   }
 }
