@@ -61,6 +61,8 @@ function parseFeed(xml, source) {
         language: source.language,
         categories: source.categories,
         tier: source.tier,
+        license: source.license || "review_required",
+        attribution: source.attribution || source.name,
         feedUrl: source.url,
         url: articleUrl.toString(),
         title: title.slice(0, 400),
@@ -122,7 +124,9 @@ function loadSources(raw) {
       country: String(source.country || "unknown").slice(0, 80),
       language: String(source.language || "en").slice(0, 12),
       categories,
-      tier: ["primary", "tier1", "tier2", "specialist"].includes(source.tier) ? source.tier : "tier2"
+      tier: ["primary", "tier1", "tier2", "specialist"].includes(source.tier) ? source.tier : "tier2",
+      license: String(source.license || "review_required").slice(0, 160),
+      attribution: String(source.attribution || source.name).slice(0, 200)
     };
   });
 }
@@ -357,6 +361,8 @@ async function persistPendingDrafts(env, stories, items) {
       domain: item.domain,
       url: item.url,
       headline: item.title,
+      license: item.license || "review_required",
+      attribution: item.attribution || item.publisher,
       published_at: item.publishedAt,
       checked_at: new Date().toISOString()
     }));
