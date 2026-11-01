@@ -71,7 +71,7 @@ Worker-এর কাজ:
 - একই publisher-এর একাধিক section feed আলাদা `sourceId`-এ রাখা যাবে; একই `publisherId`-এর একাধিক feed corroboration-এ একটি publisher হিসেবেই গণ্য হবে।
 - প্রতিটি feed-এ region, country, language, categories এবং tier metadata বহন করা হয়।
 - কেবল `enabled=true` এবং `status=approved` feed-ই run-এ অংশ নেয়। HTTPS, exact hostname match, no credentials, no redirect এবং RSS/Atom content checks প্রয়োগ করা হয়।
-- `workers/ai-newsroom/source-registry.candidates.json`-এ ২৬টি candidate feed আছে—sports, science, technology, environment এবং UN/world news category-সহ; সবগুলো `disabled`; সাধারণ feed `review_required` এবং Prothom Alo `rights_review_required`। এগুলো সরাসরি active allowlist নয়। প্রতিটি feed-এর direct availability, freshness, source identity, editorial policy এবং licensing/terms আলাদাভাবে যাচাই করতে হবে।
+- `workers/ai-newsroom/source-registry.candidates.json`-এ ২৬টি candidate feed আছে—sports, science, technology, environment এবং UN/world news category-সহ; সবগুলো `disabled`; সাধারণ feed `review_required`, BanglaNews24 `stale_review_required` এবং Prothom Alo `rights_review_required`। এগুলো সরাসরি active allowlist নয়। প্রতিটি feed-এর direct availability, freshness, source identity, editorial policy এবং licensing/terms আলাদাভাবে যাচাই করতে হবে।
 - একাধিক feed fetch করার সময় bounded concurrency ব্যবহৃত হয়; প্রতি feed failure আলাদাভাবে রিপোর্ট হয়। একই publisher-এর দুটি feed কখনো দুইটি স্বাধীন publisher হিসেবে গণ্য হবে না।
 - RSS/Atom কেবল discovery metadata; full article/image republishing নয়। Terms/licensing অনুমতি না থাকলে commercial reuse করা যাবে না। Prothom Alo-এর Terms of Use-এ commercial content use সীমাবদ্ধ, তাই স্পষ্ট অনুমতি ছাড়া তাদের content commercial workflow-এ যুক্ত করা হবে না।
 
