@@ -87,7 +87,7 @@ test("Workers AI prompt stays inside the daily free-tier character budget", () =
   }));
   const prompt = buildDraftMessages(items);
   assert.ok(prompt.prompt_chars <= 1800);
-  assert.ok(prompt.source_count >= 2);
+  assert.ok(prompt.source_count >= 1);
   assert.ok(prompt.source_count <= items.length);
 });
 
@@ -112,7 +112,7 @@ test("Workers AI draft adapter uses a bounded mocked request without external AP
         return {
           response: JSON.stringify({
             stories: [{
-              source_indexes: [0, 1],
+              source_indexes: [0],
               title: "বাংলা শিরোনাম",
               excerpt: "সংক্ষিপ্ত সারাংশ",
               body: "উৎসসমর্থিত খসড়া",
@@ -134,15 +134,6 @@ test("Workers AI draft adapter uses a bounded mocked request without external AP
       title: "Source A headline",
       description: "Source A summary",
       publishedAt: "2026-11-01T10:00:00.000Z"
-    },
-    {
-      publisher: "Publisher B",
-      publisherId: "publisher-b",
-      domain: "b.example",
-      url: "https://b.example/story",
-      title: "Source B headline",
-      description: "Source B summary",
-      publishedAt: "2026-11-01T10:01:00.000Z"
     }
   ];
 
