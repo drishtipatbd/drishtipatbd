@@ -36,6 +36,8 @@ Cloudflare Worker + Cron (বা সমতুল্য scheduled backend) ব্
 - `SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY` (শুধু server-side secret)
 - `NEWSROOM_ENABLED` (default false)
+- `NEWSROOM_DRY_RUN` (default true)
+- `NEWSROOM_DRAFTS_ENABLED` (default false)
 - `AUTO_PUBLISH_ENABLED` (default false)
 
 Worker-এর কাজ:
@@ -57,7 +59,7 @@ Worker-এর কাজ:
 - `.github/workflows/ai-newsroom-worker-check.yml` শুধু JavaScript syntax check করে; deploy step নেই।
 
 ## Release checklist
-- [ ] RSS/API source allowlist সম্পাদকীয় দল অনুমোদন করেছে
+- [ ] RSS/API source allowlist-এর freshness, editorial standards ও licensing/terms পর্যালোচনা করে অনুমোদিত হয়েছে
 - [ ] Supabase service-role secret Cloudflare-এ server-side সেট করা হয়েছে; Workers AI binding সক্রিয়
 - [x] Verification ও source-health migrations Supabase-এ প্রয়োগ এবং schema যাচাই করা হয়েছে
 - [ ] Queue ingestion dry-run অন্তত ৭ দিন পর্যবেক্ষণ করা হয়েছে
