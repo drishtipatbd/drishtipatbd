@@ -84,3 +84,16 @@
 @media(max-width:950px){#latestNews.news-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:650px){#latestNews.news-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 10px}.news-tile .news-image{height:112px}.news-tile h3{font-size:14px}.news-tile .excerpt{font-size:12px;-webkit-line-clamp:2}.inline-article-card{padding:16px 12px}.inline-article #articleDetail h1{font-size:20px}.inline-article #articleDetail .article-body{font-size:15px}.newspaper-list{grid-template-columns:1fr 1fr}}
 @media(max-width:390px){#latestNews.news-list{grid-template-columns:1fr}.news-tile{display:grid;grid-template-columns:105px minmax(0,1fr);gap:10px}.news-tile .news-image{height:88px;grid-row:1/5}.news-tile>div{min-width:0}.news-tile .meta{margin-top:0}.news-tile .excerpt{display:none}}
+
+/* 2026-11-01: compact four-column footer and four-column archive feed */
+.footer-grid{grid-template-columns:1.15fr 1.25fr 1.15fr .8fr;gap:24px;align-items:start}
+.footer-grid>div{min-width:0}.footer-editor #editorCredit{padding:0;text-align:left;font-size:13px;font-weight:600;color:#bbb}.footer-grid p{overflow-wrap:anywhere}
+#latestNews.news-list{grid-template-columns:repeat(4,minmax(0,1fr));gap:22px 14px}
+.feed-ad{min-width:0;min-height:250px;height:100%;align-self:stretch;padding:8px;border:1px dashed #d6d8da;background:#fafafa;border-radius:4px}
+.feed-ad .sponsored-ad{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px}
+.feed-ad img,.feed-ad video{display:block;width:100%;max-height:280px;object-fit:contain}
+.feed-ad video{background:#111;aspect-ratio:9/16;max-height:280px}
+@media(max-width:1100px){#latestNews.news-list{grid-template-columns:repeat(3,minmax(0,1fr))}.footer-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:22px}}
+@media(max-width:850px){#latestNews.news-list{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:650px){.footer-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;padding:24px 0}.footer-grid>div:first-child{grid-column:auto}#latestNews.news-list{grid-template-columns:repeat(2,minmax(0,1fr));gap:16px 10px}.feed-ad{min-height:190px}}
+@media(max-width:390px){#latestNews.news-list{grid-template-columns:1fr}.news-tile{display:grid;grid-template-columns:105px minmax(0,1fr);gap:10px}.news-tile .news-image{height:88px;grid-row:1/5}.news-tile>div{min-width:0}.news-tile .meta{margin-top:0}.news-tile .excerpt{display:none}}
