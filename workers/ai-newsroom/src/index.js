@@ -50,12 +50,12 @@ function parseFeed(xml, source) {
     if (!title || !link) return null;
     try {
       const articleUrl = new URL(link, source.url);
-      if (articleUrl.protocol !== "https:") return null;
+      if (articleUrl.protocol !== "https:" || !source.articleHosts.includes(articleUrl.hostname.toLowerCase())) return null;
       return {
         publisherId: source.publisherId,
         sourceId: source.sourceId,
         publisher: source.name,
-        domain: source.domain,
+        domain: articleUrl.hostname.toLowerCase(),
         region: source.region,
         country: source.country,
         language: source.language,
@@ -102,7 +102,11 @@ function loadSources(raw) {
     const url = new URL(source.url);
     const hostname = url.hostname.toLowerCase();
     const domain = String(source.domain).trim().toLowerCase();
-    if (url.protocol !== "https:" || hostname !== domain || url.username || url.password) {
+    const feedHost = String(source.feedHost || domain).trim().toLowerCase();
+    const articleHosts = Array.isArray(source.articleHosts)
+      ? [...new Set(source.articleHosts.map((host) => String(host).trim().toLowerCase()).filter(Boolean))]
+      : [domain];
+    if (!domain || !articleHosts.includes(domain) || url.protocol !== "https:" || hostname !== feedHost || url.username || url.password) {
       throw new Error("Source URL must use HTTPS, contain no credentials, and exactly match its registered hostname: " + source.name);
     }
     const publisherId = String(source.publisherId).trim().toLowerCase();
@@ -118,7 +122,9 @@ function loadSources(raw) {
       publisherId,
       sourceId,
       name: String(source.name).slice(0, 120),
-      domain: hostname,
+      domain,
+      feedHost,
+      articleHosts,
       url: url.toString(),
       region: String(source.region || "international").slice(0, 40),
       country: String(source.country || "unknown").slice(0, 80),
