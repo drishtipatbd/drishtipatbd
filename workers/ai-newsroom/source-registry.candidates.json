@@ -471,6 +471,53 @@
       "status": "review_required",
       "enabled": false,
       "validation": "October 2026 RSS test list reports feed active; direct response and licensing review required"
+    },
+    {
+      "sourceId": "globalvoices-all",
+      "publisherId": "globalvoices",
+      "name": "Global Voices — All Stories",
+      "domain": "globalvoices.org",
+      "url": "https://globalvoices.org/feed/",
+      "region": "international",
+      "country": "International",
+      "language": "en",
+      "categories": [
+        "world",
+        "human-rights",
+        "technology",
+        "environment",
+        "culture",
+        "bangladesh"
+      ],
+      "tier": "specialist",
+      "status": "rights_review_required",
+      "enabled": false,
+      "license": "CC-BY-3.0 (verify article-level exceptions)",
+      "attribution": "Global Voices and original author; link to original article; identify adaptations",
+      "validation": "Feed currently reported active by RSS directory; Creative Commons records describe CC BY 3.0 reuse, but current per-article licence/attribution must be confirmed before activation."
+    },
+    {
+      "sourceId": "wikinews-latest",
+      "publisherId": "wikinews",
+      "name": "Wikinews — Latest Published Articles",
+      "domain": "en.wikinews.org",
+      "url": "https://en.wikinews.org/w/index.php?title=Special:NewsFeed&feed=rss&namespace=0&categories=Published&count=20",
+      "region": "international",
+      "country": "International",
+      "language": "en",
+      "categories": [
+        "world",
+        "politics",
+        "sports",
+        "science",
+        "business"
+      ],
+      "tier": "specialist",
+      "status": "review_required",
+      "enabled": false,
+      "license": "CC-BY-4.0 for works published after 2024-12-16; older works may be CC-BY-2.5",
+      "attribution": "Wikinews; link to original article and applicable Creative Commons licence; indicate adaptations",
+      "validation": "Official Wikinews copyright policy states post-2024-12-16 text is CC BY 4.0; feed freshness and current endpoint still need a live fetch test."
     }
   ]
 }
