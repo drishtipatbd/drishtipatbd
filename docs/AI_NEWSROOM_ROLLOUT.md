@@ -32,7 +32,7 @@ Admin UI এখন AI story প্রকাশের আগে বাধ্য�
 
 ## Automation backend — পরবর্তী বাস্তবায়ন
 Cloudflare Worker + Cron (বা সমতুল্য scheduled backend) ব্যবহার করতে হবে। Browser-side JavaScript-এ কোনো privileged key থাকবে না। Backend-এর secret bindings:
-- `OPENAI_API_KEY`
+- Cloudflare Workers AI binding `AI`
 - `SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY` (শুধু server-side secret)
 - `NEWSROOM_ENABLED` (default false)
@@ -49,7 +49,7 @@ Worker-এর কাজ:
 8. প্রতিটি action audit log-এ লিখবে; kill switch তাৎক্ষণিকভাবে automation বন্ধ করবে।
 
 ## Worker implementation (integration branch only)
-- `workers/ai-newsroom/src/index.js` allowlisted RSS/Atom feeds সংগ্রহ করে, পৃথক publisher/domain থেকে একই ঘটনার corroboration proposal তৈরি করে এবং OpenAI Responses Structured Outputs দিয়ে বাংলা খসড়া তৈরি করে।
+- `workers/ai-newsroom/src/index.js` allowlisted RSS/Atom feeds সংগ্রহ করে, পৃথক publisher/domain থেকে একই ঘটনার corroboration proposal তৈরি করে এবং Cloudflare Workers AI (Gemma 4 26B A4B) দিয়ে বাংলা খসড়া তৈরি করে; ২৪টি hourly inference/day, prompt ১,৫০০ অক্ষর ও output ৫০০ token-এ সীমিত।
 - Dry-run default-এ কোনো database write হয় না। Write mode-এ যাওয়ার আগে Worker verification columns পরীক্ষা করে; migration অনুপস্থিত হলে fail-closed করে।
 - Write mode কেবল `pending`, `needs_review`, `confidence_score=0`, `auto_publish=false`, `manual_only` হিসেবে queue-তে সংরক্ষণ করতে পারে।
 - `/run` endpoint bearer token ছাড়া চালানো যায় না; `/health`-এ কোনো secret প্রকাশ হয় না।
@@ -58,7 +58,7 @@ Worker-এর কাজ:
 
 ## Release checklist
 - [ ] RSS/API source allowlist সম্পাদকীয় দল অনুমোদন করেছে
-- [ ] OpenAI ও Supabase secrets Cloudflare-এ server-side সেট করা হয়েছে
+- [ ] Supabase service-role secret Cloudflare-এ server-side সেট করা হয়েছে; Workers AI binding সক্রিয়
 - [x] Verification ও source-health migrations Supabase-এ প্রয়োগ এবং schema যাচাই করা হয়েছে
 - [ ] Queue ingestion dry-run অন্তত ৭ দিন পর্যবেক্ষণ করা হয়েছে
 - [ ] Source diversity, duplicate detection, false-positive এবং Bengali copy যাচাই করা হয়েছে
@@ -84,4 +84,4 @@ The Integration branch adds `ai_news_source_runs` (migration `20261101191707_ai_
 The Worker records these rows only when write mode is explicitly enabled. Dry-run remains database-write-free. CI now runs Node's built-in test runner for RSS date freshness, disabled/unapproved feed rejection, HTTPS/domain matching, and distinct-publisher corroboration.
 
 
-**Cost guard:** RSS feed checks can run without model usage. AI draft generation is disabled by default and requires the explicit `NEWSROOM_DRAFTS_ENABLED=true` setting; this calls the metered OpenAI API. Dry-run does not write to the database, and with draft generation disabled it also avoids model API charges.
+**Cost guard:** RSS polling does not use AI. Draft generation is disabled by default; if enabled, it uses the Cloudflare Workers AI free daily allocation with 24 scheduled calls/day, a 1,500-character prompt limit and 500 output-token limit. Dry-run and manual runs never invoke the model. No external model API key is needed.
