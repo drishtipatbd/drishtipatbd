@@ -28,12 +28,14 @@ const first=collect(1);if(!first)return;if(first.invalid||!first.publisher||!fir
 const second=collect(2);if(!second)return;if(second.invalid||!second.publisher||!second.title){toast('দ্বিতীয় উৎসের নাম, শিরোনাম ও বৈধ HTTPS URL দিন।');return}
 if(first.domain===second.domain||first.publisherId===second.publisherId){toast('দুটি উৎস অবশ্যই আলাদা সংবাদমাধ্যম ও আলাদা ডোমেইনের হতে হবে।');return}
 const notes=prompt('তথ্য মিলিয়ে দেখার নোট লিখুন (কোন তথ্য/দাবি দুই উৎসে মিলেছে):');if(notes===null)return;if(!notes.trim()){toast('যাচাইয়ের নোট লিখতে হবে।');return}
-if(!confirm('আপনি কি নিজে দুইটি স্বাধীন উৎস খুলে শিরোনাম, তারিখ ও মূল তথ্য মিলিয়ে দেখেছেন? নিশ্চিত করলে সম্পাদকীয় যাচাই হিসেবে ৯৫% confidence সংরক্ষণ হবে।'))return;
+if(!confirm('আপনি কি নিজে দুইটি স্বাধীন উৎস খুলে শিরোনাম, তারিখ ও মূল তথ্য মিলিয়ে দেখেছেন? এটি কেবল আপনার ম্যানুয়াল সম্পাদকীয় যাচাই—স্বয়ংক্রিয় সত্যতা-নিশ্চয়তা নয়।'))return;
+const confidenceInput=prompt('নিজের সম্পাদকীয় আস্থার মাত্রা ০–১০০ এর মধ্যে লিখুন (প্রকাশের জন্য কমপক্ষে ৯৫ প্রয়োজন):','95');if(confidenceInput===null)return;const confidencePercent=Number(confidenceInput);if(!Number.isFinite(confidencePercent)||confidencePercent<0||confidencePercent>100){toast('আস্থার মান ০ থেকে ১০০-এর মধ্যে হতে হবে।');return}if(confidencePercent<95){toast('আস্থা ৯৫%-এর কম হলে প্রকাশের অনুমতি দেওয়া হবে না।');return}
 const {data:{user},error:userError}=await db.auth.getUser();if(userError||!user){toast('রিভিউকারীর পরিচয় যাচাই করা যায়নি।');return}
 const now=new Date().toISOString(), evidence=[first,second].map(x=>({...x,publishedAt:null}));
 const history=Array.isArray(q.review_history)?q.review_history:[];
-const entry={action:'manually_verified_two_independent_sources',reviewed_at:now,reviewed_by:user.id,source_domains:evidence.map(x=>x.domain),notes:notes.trim(),confidence_score:0.95};
-const {error:updateError}=await db.from('ai_news_queue').update({source_evidence:evidence,confidence_score:0.95,verification_status:'verified',verification_method:'manual_two_source_editorial_review',verified_at:now,reviewed_by:user.id,reviewed_at:now,editorial_notes:notes.trim(),review_history:[...history,entry],updated_at:now}).eq('id',id);
+const confidenceScore=confidencePercent/100;
+const entry={action:'manually_verified_two_independent_sources',reviewed_at:now,reviewed_by:user.id,source_domains:evidence.map(x=>x.domain),notes:notes.trim(),confidence_score:confidenceScore,verification_is_editor_attested:true};
+const {error:updateError}=await db.from('ai_news_queue').update({source_evidence:evidence,confidence_score:confidenceScore,verification_status:'verified',verification_method:'manual_two_source_editorial_review',verified_at:now,reviewed_by:user.id,reviewed_at:now,editorial_notes:notes.trim(),review_history:[...history,entry],updated_at:now}).eq('id',id);
 if(updateError){toast('যাচাই সংরক্ষণ হয়নি: '+updateError.message+' — প্রয়োজনীয় newsroom migration এখনো প্রয়োগ করা হয়নি কি না পরীক্ষা করুন।');return}
 toast('দুই উৎসের সম্পাদকীয় যাচাই সংরক্ষিত হয়েছে।');await loadAiQueue();
 }
