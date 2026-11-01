@@ -181,6 +181,170 @@
       "status": "review_required",
       "enabled": false,
       "validation": "third-party directory lists endpoint; direct validation and terms review required"
+    },
+    {
+      "sourceId": "bbc-sport-main",
+      "publisherId": "bbc",
+      "name": "BBC Sport — Main",
+      "domain": "feeds.bbci.co.uk",
+      "url": "https://feeds.bbci.co.uk/sport/rss.xml",
+      "region": "international",
+      "country": "United Kingdom",
+      "language": "en",
+      "categories": [
+        "sports"
+      ],
+      "tier": "tier1",
+      "status": "review_required",
+      "enabled": false,
+      "validation": "feed URL listed by recent RSS directory; verify directly before activation"
+    },
+    {
+      "sourceId": "guardian-sport",
+      "publisherId": "theguardian",
+      "name": "The Guardian — Sport",
+      "domain": "www.theguardian.com",
+      "url": "https://www.theguardian.com/uk/sport/rss",
+      "region": "international",
+      "country": "United Kingdom",
+      "language": "en",
+      "categories": [
+        "sports"
+      ],
+      "tier": "tier1",
+      "status": "review_required",
+      "enabled": false,
+      "validation": "feed URL listed by recent RSS directory; verify directly before activation"
+    },
+    {
+      "sourceId": "espncricinfo-main",
+      "publisherId": "espncricinfo",
+      "name": "ESPNcricinfo — Cricket",
+      "domain": "www.cricinfo.com",
+      "url": "https://www.cricinfo.com/rss/content/story/feeds/0.xml",
+      "region": "international",
+      "country": "International",
+      "language": "en",
+      "categories": [
+        "sports",
+        "cricket"
+      ],
+      "tier": "specialist",
+      "status": "review_required",
+      "enabled": false,
+      "validation": "feed URL listed by recent RSS directory; verify direct response and terms"
+    },
+    {
+      "sourceId": "nyt-world",
+      "publisherId": "nytimes",
+      "name": "The New York Times — World",
+      "domain": "rss.nytimes.com",
+      "url": "https://rss.nytimes.com/services/xml/rss/nyt/World.xml",
+      "region": "international",
+      "country": "United States",
+      "language": "en",
+      "categories": [
+        "world",
+        "politics"
+      ],
+      "tier": "tier1",
+      "status": "review_required",
+      "enabled": false,
+      "validation": "feed URL listed by recent RSS directory; verify direct response and licensing"
+    },
+    {
+      "sourceId": "npr-main",
+      "publisherId": "npr",
+      "name": "NPR — News",
+      "domain": "feeds.npr.org",
+      "url": "https://feeds.npr.org/1001/rss.xml",
+      "region": "international",
+      "country": "United States",
+      "language": "en",
+      "categories": [
+        "general",
+        "world"
+      ],
+      "tier": "tier1",
+      "status": "review_required",
+      "enabled": false,
+      "validation": "feed URL listed by recent RSS directory; verify direct response and terms"
+    },
+    {
+      "sourceId": "washingtonpost-world",
+      "publisherId": "washingtonpost",
+      "name": "The Washington Post — World",
+      "domain": "feeds.washingtonpost.com",
+      "url": "https://feeds.washingtonpost.com/rss/world",
+      "region": "international",
+      "country": "United States",
+      "language": "en",
+      "categories": [
+        "world",
+        "politics"
+      ],
+      "tier": "tier1",
+      "status": "review_required",
+      "enabled": false,
+      "validation": "feed URL listed by recent RSS directory; verify direct response and licensing"
+    },
+    {
+      "sourceId": "nasa-news-release",
+      "publisherId": "nasa",
+      "name": "NASA — News Releases",
+      "domain": "www.nasa.gov",
+      "url": "https://www.nasa.gov/news-release/feed/",
+      "region": "international",
+      "country": "United States",
+      "language": "en",
+      "categories": [
+        "science",
+        "technology",
+        "space"
+      ],
+      "tier": "primary",
+      "status": "review_required",
+      "enabled": false,
+      "validation": "NASA official RSS directory lists News Releases; verify direct response and usage policy"
+    },
+    {
+      "sourceId": "sciencedaily-all",
+      "publisherId": "sciencedaily",
+      "name": "ScienceDaily — All News",
+      "domain": "www.sciencedaily.com",
+      "url": "https://www.sciencedaily.com/rss/all.xml",
+      "region": "international",
+      "country": "United States",
+      "language": "en",
+      "categories": [
+        "science",
+        "health",
+        "technology",
+        "environment"
+      ],
+      "tier": "specialist",
+      "status": "review_required",
+      "enabled": false,
+      "validation": "publisher RSS page documents this feed and attribution/no-full-text conditions; review commercial terms"
+    },
+    {
+      "sourceId": "un-news-en",
+      "publisherId": "un-news",
+      "name": "UN News — English",
+      "domain": "news.un.org",
+      "url": "https://news.un.org/feed/subscribe/en/audio-product/all/audio-rss.xml",
+      "region": "international",
+      "country": "United Nations",
+      "language": "en",
+      "categories": [
+        "world",
+        "humanitarian",
+        "diplomacy"
+      ],
+      "tier": "primary",
+      "status": "review_required",
+      "enabled": false,
+      "validation": "recent feed directory reports working; official UN page confirms RSS service; verify exact feed output"
     }
   ]
 }
