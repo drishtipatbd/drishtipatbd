@@ -522,6 +522,30 @@
       "articleHosts": [
         "en.wikinews.org"
       ]
+    },
+    {
+      "sourceId": "agencia-brasil-latest",
+      "publisherId": "agencia-brasil",
+      "name": "Agência Brasil — Latest News",
+      "domain": "agenciabrasil.ebc.com.br",
+      "url": "https://agenciabrasil.ebc.com.br/rss/ultimasnoticias/feed.xml",
+      "region": "south-america",
+      "country": "Brazil",
+      "language": "pt",
+      "categories": [
+        "world",
+        "politics",
+        "economy",
+        "sports",
+        "education",
+        "human-rights"
+      ],
+      "tier": "primary",
+      "status": "review_required",
+      "enabled": false,
+      "license": "CC-BY-2.5-BR (verify current article-level exceptions)",
+      "attribution": "Agência Brasil and named author; link to original; cite source and indicate translation/adaptation",
+      "validation": "Official RSS index lists general, international, sports and other topic feeds; RSS directory reports active and reproduces under source attribution; current licence policy should be confirmed on each article."
     }
   ]
 }
