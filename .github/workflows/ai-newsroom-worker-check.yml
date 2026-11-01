@@ -59,3 +59,23 @@ jobs:
           }
           console.log("Validated", registry.sources.length, "disabled candidate feeds.");
           NODE
+      - name: Enforce zero-cost newsroom defaults
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+          const config = JSON.parse(fs.readFileSync("workers/ai-newsroom/wrangler.jsonc", "utf8"));
+          const vars = config.vars || {};
+          if (config.ai?.binding !== "AI") throw new Error("Workers AI binding is required.");
+          for (const [key, expected] of Object.entries({
+            NEWSROOM_ENABLED: "false",
+            NEWSROOM_DRY_RUN: "true",
+            NEWSROOM_DRAFTS_ENABLED: "false",
+            AUTO_PUBLISH_ENABLED: "false"
+          })) {
+            if (vars[key] !== expected) throw new Error(key + " must remain " + expected);
+          }
+          const worker = fs.readFileSync("workers/ai-newsroom/src/index.js", "utf8");
+          if (!worker.includes("MAX_DRAFT_PROMPT_CHARS = 1800") || !worker.includes("MAX_DRAFT_OUTPUT_TOKENS = 500")) {
+            throw new Error("Workers AI usage caps changed.");
+          }
+          NODE
