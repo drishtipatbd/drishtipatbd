@@ -59,6 +59,18 @@ jobs:
           }
           console.log("Validated", registry.sources.length, "disabled candidate feeds.");
           NODE
+      - name: Staging RSS live smoke test (dry-run only)
+        run: |
+          node --input-type=module <<'NODE'
+          const url = "https://drishtipatbd-ai-newsroom-staging.drishtipatbd24.workers.dev/probe?token=staging-rss-probe-20261101-7f3a9c2d";
+          const response = await fetch(url);
+          const result = await response.json();
+          console.log(JSON.stringify(result, null, 2));
+          if (!response.ok) throw new Error("Staging RSS probe failed: HTTP " + response.status);
+          if (result.dry_run !== true) throw new Error("Staging probe must remain dry-run.");
+          if (result.sources_checked !== 2) throw new Error("Expected exactly two licensed pilot feeds.");
+          if (result.sources_succeeded < 1) throw new Error("No pilot RSS feed returned successfully.");
+          NODE
       - name: Enforce zero-cost newsroom defaults
         run: |
           node <<'NODE'
