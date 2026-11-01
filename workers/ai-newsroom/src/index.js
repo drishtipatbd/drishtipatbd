@@ -416,8 +416,11 @@ async function runNewsroom(env) {
   if (env.NEWSROOM_ENABLED !== "true") return { skipped: true, reason: "NEWSROOM_ENABLED is not true." };
   const sources = loadSources(env.NEWSROOM_SOURCES);
   const collected = await collectItems(sources);
-  const stories = await draftStories(env, collected.items);
   const dryRun = env.NEWSROOM_DRY_RUN !== "false";
+  // AI generation calls a metered external API. Keep it explicitly opt-in so
+  // a default dry-run can validate feeds without incurring model usage costs.
+  const draftGenerationEnabled = env.NEWSROOM_DRAFTS_ENABLED === "true";
+  const stories = draftGenerationEnabled ? await draftStories(env, collected.items) : [];
   let persistence = { inserted: 0, skipped: stories.length };
   let sourceHealthPersistence = { recorded: 0 };
   if (!dryRun) {
@@ -427,6 +430,8 @@ async function runNewsroom(env) {
   }
   return {
     dry_run: dryRun,
+    draft_generation_enabled: draftGenerationEnabled,
+    draft_generation_skipped: !draftGenerationEnabled,
     sources_configured: sources.length,
     sources_checked: collected.sources_checked,
     sources_succeeded: collected.sources_succeeded,
