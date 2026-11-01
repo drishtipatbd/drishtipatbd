@@ -7,6 +7,7 @@ import {
   hasIndependentCorroboration,
   buildDraftMessages,
   parseDraftResponse,
+  draftStories,
   shouldGenerateDraftAt
 } from "../src/index.js";
 
@@ -99,4 +100,59 @@ test("Workers AI parser accepts fenced JSON and normalizes unknown news types", 
 test("AI draft generation is limited to the top of each UTC hour", () => {
   assert.equal(shouldGenerateDraftAt("2026-11-01T10:00:00.000Z"), true);
   assert.equal(shouldGenerateDraftAt("2026-11-01T10:30:00.000Z"), false);
+});
+
+
+test("Workers AI draft adapter uses a bounded mocked request without external API access", async () => {
+  const calls = [];
+  const env = {
+    AI: {
+      async run(model, input) {
+        calls.push({ model, input });
+        return {
+          response: JSON.stringify({
+            stories: [{
+              source_indexes: [0, 1],
+              title: "বাংলা শিরোনাম",
+              excerpt: "সংক্ষিপ্ত সারাংশ",
+              body: "উৎসসমর্থিত খসড়া",
+              category: "বাংলাদেশ",
+              news_type: "general",
+              verification_notes: "সম্পাদকীয় যাচাই প্রয়োজন"
+            }]
+          })
+        };
+      }
+    }
+  };
+  const items = [
+    {
+      publisher: "Publisher A",
+      publisherId: "publisher-a",
+      domain: "a.example",
+      url: "https://a.example/story",
+      title: "Source A headline",
+      description: "Source A summary",
+      publishedAt: "2026-11-01T10:00:00.000Z"
+    },
+    {
+      publisher: "Publisher B",
+      publisherId: "publisher-b",
+      domain: "b.example",
+      url: "https://b.example/story",
+      title: "Source B headline",
+      description: "Source B summary",
+      publishedAt: "2026-11-01T10:01:00.000Z"
+    }
+  ];
+
+  const drafts = await draftStories(env, items);
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].model, "@cf/google/gemma-4-26b-a4b-it");
+  assert.equal(calls[0].input.max_tokens, 500);
+  assert.ok(
+    calls[0].input.messages.reduce((sum, message) => sum + message.content.length, 0) <= 1800
+  );
+  assert.equal(drafts.length, 1);
+  assert.equal(drafts[0].title, "বাংলা শিরোনাম");
 });
