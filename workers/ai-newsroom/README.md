@@ -74,3 +74,15 @@ AI corroboration proposal সম্পাদকীয় যাচাইয়ের �
 - Conflicting reports হলে manual review আবশ্যক।
 - Breaking, sports বা অন্য কোনো category স্বয়ংক্রিয়ভাবে প্রকাশ করা হয় না।
 - Worker deploy, secrets configuration, migration apply, branch merge বা Production release এই কাজের অংশ নয়।
+
+
+## Safety test suite and source-health telemetry
+
+The Node.js test suite in `test/newsroom.test.js` covers:
+- malformed, missing, stale, and future RSS dates;
+- explicit enablement/approval and HTTPS/domain validation;
+- independent-publisher corroboration (multiple feeds from one publisher do not count twice).
+
+The CI workflow runs these tests in addition to syntax and disabled-candidate-registry validation.
+
+When write mode is explicitly enabled, the Worker records per-feed results in `public.ai_news_source_runs` using a shared run ID. Statuses are `ok`, `no_fresh_items`, and `error`. The table is intended for admin-only reading; inserts use the server-side service role. Apply the additive migration `202611010002_ai_news_source_health.sql` only after staging review. Dry-run mode continues to perform no database writes.
