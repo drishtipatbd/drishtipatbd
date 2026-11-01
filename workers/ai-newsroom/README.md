@@ -26,6 +26,7 @@
 
 নিরাপত্তা ও সীমা:
 - সর্বোচ্চ ১০০টি registry entry; সর্বোচ্চ ১০০টি সক্রিয় feed
+- কেবল বৈধ তারিখযুক্ত এবং গত ৭২ ঘণ্টার মধ্যে প্রকাশিত feed item গ্রহণ করা হয়; ভবিষ্যতের ৬ ঘণ্টার বেশি timestamp-ও বাদ যায়
 - প্রতিটি feed থেকে সর্বোচ্চ ১২টি item; মোট সর্বোচ্চ ৩০০টি item
 - একসঙ্গে সর্বোচ্চ ১০টি feed fetch; প্রতিটি request-এ ৮ সেকেন্ড timeout
 - কেবল HTTPS; URL hostname এবং registered domain হুবহু মিলতে হবে; redirect নিষিদ্ধ
@@ -35,7 +36,7 @@
 
 ### Candidate catalogue
 
-`source-registry.candidates.json`-এ ২৬টি প্রাথমিক candidate রাখা হয়েছে—বাংলাদেশি সংবাদ, আন্তর্জাতিক সংবাদ, খেলাধুলা, বিজ্ঞান, প্রযুক্তি, পরিবেশ ও জাতিসংঘ-সম্পর্কিত উৎসসহ। **সবগুলো disabled; সাধারণ feed review_required এবং Prothom Alo rights_review_required**—কোনোটিই live allowlist নয়। কিছু URL তৃতীয়-পক্ষ feed directory-তে তালিকাভুক্ত; Worker-এ সক্রিয় করার আগে সরাসরি feed response, freshness, publisher identity, editorial standards, correction policy, terms/licensing এবং commercial reuse rights যাচাই করতে হবে। Candidate তালিকা সরাসরি `NEWSROOM_SOURCES`-এ কপি করবেন না।
+`source-registry.candidates.json`-এ ২৬টি প্রাথমিক candidate রাখা হয়েছে—বাংলাদেশি সংবাদ, আন্তর্জাতিক সংবাদ, খেলাধুলা, বিজ্ঞান, প্রযুক্তি, পরিবেশ ও জাতিসংঘ-সম্পর্কিত উৎসসহ। **সবগুলো disabled; সাধারণ feed review_required, BanglaNews24 stale_review_required এবং Prothom Alo rights_review_required**—কোনোটিই live allowlist নয়। কিছু URL তৃতীয়-পক্ষ feed directory-তে তালিকাভুক্ত; Worker-এ সক্রিয় করার আগে সরাসরি feed response, freshness, publisher identity, editorial standards, correction policy, terms/licensing এবং commercial reuse rights যাচাই করতে হবে। Candidate তালিকা সরাসরি `NEWSROOM_SOURCES`-এ কপি করবেন না।
 
 RSS হলো সংবাদ আবিষ্কারের মাধ্যম, পূর্ণ article পুনঃপ্রকাশের অনুমতি নয়। Feed-এর headline/summary ও source URL-কে lead হিসেবে ব্যবহার করতে হবে; পূর্ণ লেখা বা ছবি কপি করা যাবে না, যদি না স্পষ্ট লাইসেন্স/অনুমতি থাকে। প্রথম আলোর Terms of Use-এ commercial use-এর সীমাবদ্ধতা রয়েছে; তাই লিখিত অনুমতি ছাড়া তাদের content commercial workflow-এ ব্যবহার করা যাবে না।
 
