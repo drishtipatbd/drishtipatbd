@@ -5,13 +5,18 @@
   "compatibility_date": "2026-11-01",
   "workers_dev": true,
   "triggers": {
-    "crons": ["*/30 * * * *"]
+    "crons": [
+      "*/30 * * * *"
+    ]
   },
   "vars": {
     "NEWSROOM_ENABLED": "false",
     "NEWSROOM_DRY_RUN": "true",
     "NEWSROOM_DRAFTS_ENABLED": "false",
     "AUTO_PUBLISH_ENABLED": "false",
-    "OPENAI_MODEL": "gpt-4.1-mini"
+    "NEWSROOM_AI_MODEL": "@cf/google/gemma-4-26b-a4b-it"
+  },
+  "ai": {
+    "binding": "AI"
   }
 }
