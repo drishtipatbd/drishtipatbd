@@ -1,0 +1,186 @@
+{
+  "note": "Candidate catalogue only. All entries are disabled and require editorial, technical, and licensing review before activation. Do not paste this file directly into NEWSROOM_SOURCES.",
+  "sources": [
+    {
+      "sourceId": "bbc-top",
+      "publisherId": "bbc",
+      "name": "BBC News — Top Stories",
+      "domain": "feeds.bbci.co.uk",
+      "url": "https://feeds.bbci.co.uk/news/rss.xml",
+      "region": "international",
+      "country": "United Kingdom",
+      "language": "en",
+      "categories": [
+        "general",
+        "world"
+      ],
+      "tier": "tier1",
+      "status": "review_required",
+      "enabled": false,
+      "validation": "third-party feed directory reports working; verify directly before activation"
+    },
+    {
+      "sourceId": "bbc-world",
+      "publisherId": "bbc",
+      "name": "BBC News — World",
+      "domain": "feeds.bbci.co.uk",
+      "url": "https://feeds.bbci.co.uk/news/world/rss.xml",
+      "region": "international",
+      "country": "United Kingdom",
+      "language": "en",
+      "categories": [
+        "world",
+        "politics"
+      ],
+      "tier": "tier1",
+      "status": "review_required",
+      "enabled": false,
+      "validation": "third-party feed directory reports working; verify directly before activation"
+    },
+    {
+      "sourceId": "bbc-business",
+      "publisherId": "bbc",
+      "name": "BBC News — Business",
+      "domain": "feeds.bbci.co.uk",
+      "url": "https://feeds.bbci.co.uk/news/business/rss.xml",
+      "region": "international",
+      "country": "United Kingdom",
+      "language": "en",
+      "categories": [
+        "business",
+        "economy"
+      ],
+      "tier": "tier1",
+      "status": "review_required",
+      "enabled": false,
+      "validation": "third-party feed directory reports working; verify directly before activation"
+    },
+    {
+      "sourceId": "bbc-technology",
+      "publisherId": "bbc",
+      "name": "BBC News — Technology",
+      "domain": "feeds.bbci.co.uk",
+      "url": "https://feeds.bbci.co.uk/news/technology/rss.xml",
+      "region": "international",
+      "country": "United Kingdom",
+      "language": "en",
+      "categories": [
+        "technology",
+        "science"
+      ],
+      "tier": "tier1",
+      "status": "review_required",
+      "enabled": false,
+      "validation": "third-party feed directory reports working; verify directly before activation"
+    },
+    {
+      "sourceId": "bbc-science-environment",
+      "publisherId": "bbc",
+      "name": "BBC News — Science and Environment",
+      "domain": "feeds.bbci.co.uk",
+      "url": "https://feeds.bbci.co.uk/news/science_and_environment/rss.xml",
+      "region": "international",
+      "country": "United Kingdom",
+      "language": "en",
+      "categories": [
+        "science",
+        "environment"
+      ],
+      "tier": "tier1",
+      "status": "review_required",
+      "enabled": false,
+      "validation": "third-party feed directory reports working; verify directly before activation"
+    },
+    {
+      "sourceId": "aljazeera-all",
+      "publisherId": "aljazeera",
+      "name": "Al Jazeera — All News",
+      "domain": "www.aljazeera.com",
+      "url": "https://www.aljazeera.com/xml/rss/all.xml",
+      "region": "international",
+      "country": "Qatar",
+      "language": "en",
+      "categories": [
+        "world",
+        "politics",
+        "middle-east"
+      ],
+      "tier": "tier1",
+      "status": "review_required",
+      "enabled": false,
+      "validation": "third-party technical feed test reports RSS responding; verify direct endpoint and terms"
+    },
+    {
+      "sourceId": "guardian-world",
+      "publisherId": "theguardian",
+      "name": "The Guardian — World",
+      "domain": "www.theguardian.com",
+      "url": "https://www.theguardian.com/world/rss",
+      "region": "international",
+      "country": "United Kingdom",
+      "language": "en",
+      "categories": [
+        "world",
+        "politics"
+      ],
+      "tier": "tier1",
+      "status": "review_required",
+      "enabled": false,
+      "validation": "third-party technical feed test reports RSS responding; verify direct endpoint and terms"
+    },
+    {
+      "sourceId": "daily-star-frontpage",
+      "publisherId": "thedailystar",
+      "name": "The Daily Star — Front Page",
+      "domain": "www.thedailystar.net",
+      "url": "https://www.thedailystar.net/frontpage/rss.xml",
+      "region": "south-asia",
+      "country": "Bangladesh",
+      "language": "en",
+      "categories": [
+        "general",
+        "bangladesh"
+      ],
+      "tier": "tier1",
+      "status": "review_required",
+      "enabled": false,
+      "validation": "third-party directory lists endpoint; direct validation and terms review required"
+    },
+    {
+      "sourceId": "bdnews24-home",
+      "publisherId": "bdnews24",
+      "name": "bdnews24.com — Home",
+      "domain": "bdnews24.com",
+      "url": "https://bdnews24.com/?widgetName=rssfeed&widgetId=1150&getXmlFeed=true",
+      "region": "south-asia",
+      "country": "Bangladesh",
+      "language": "en",
+      "categories": [
+        "general",
+        "bangladesh"
+      ],
+      "tier": "tier1",
+      "status": "review_required",
+      "enabled": false,
+      "validation": "third-party directory lists endpoint; direct validation and terms review required"
+    },
+    {
+      "sourceId": "jugantor-home",
+      "publisherId": "jugantor",
+      "name": "Jugantor — Home",
+      "domain": "www.jugantor.com",
+      "url": "https://www.jugantor.com/feed/rss.xml",
+      "region": "south-asia",
+      "country": "Bangladesh",
+      "language": "bn",
+      "categories": [
+        "general",
+        "bangladesh"
+      ],
+      "tier": "tier1",
+      "status": "review_required",
+      "enabled": false,
+      "validation": "third-party directory lists endpoint; direct validation and terms review required"
+    }
+  ]
+}
