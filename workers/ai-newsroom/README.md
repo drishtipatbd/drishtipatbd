@@ -9,7 +9,7 @@
 - `NEWSROOM_DRAFTS_ENABLED=false` (AI disabled until explicitly enabled)
 - `AUTO_PUBLISH_ENABLED=false`; Worker-এ auto-publish route বা code নেই
 - Cron প্রতি ৩০ মিনিটে নির্ধারিত, কিন্তু Worker disabled থাকলে কাজ করে না
-- Worker deploy করা হয়নি; এই কোড কেবল `ai-newsroom-integration` branch-এ
+- Cost-safe staging Worker `drishtipatbd-ai-newsroom-staging` Cloudflare-এ deploy করা হয়েছে; এটি workers.dev-এ আছে, কিন্তু কোনো Cron Trigger যুক্ত করা হয়নি। সব newsroom/AI switches disabled, কোনো source allowlist বা secret configure করা হয়নি; Production অপরিবর্তিত।
 
 ## Source registry
 
