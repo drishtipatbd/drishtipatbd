@@ -11,7 +11,7 @@
         "publisher_id": "globalvoices",
         "domain": "globalvoices.org",
         "status": "error",
-        "checked_at": "2026-11-01T19:57:33.809Z",
+        "checked_at": "2026-11-01T19:58:09.680Z",
         "error": "Invalid redirect value, must be one of \"follow\" or \"manual\" (\"error\" won't be implemented since it does not make sense at the edge; use \"manual\" and check the response status code)."
       },
       {
@@ -19,7 +19,7 @@
         "publisher_id": "wikinews",
         "domain": "en.wikinews.org",
         "status": "error",
-        "checked_at": "2026-11-01T19:57:33.809Z",
+        "checked_at": "2026-11-01T19:58:09.680Z",
         "error": "Invalid redirect value, must be one of \"follow\" or \"manual\" (\"error\" won't be implemented since it does not make sense at the edge; use \"manual\" and check the response status code)."
       }
     ],
