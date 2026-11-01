@@ -2,6 +2,7 @@ const MAX_SOURCES = 100;
 const MAX_ITEMS_PER_FEED = 12;
 const MAX_TOTAL_ITEMS = 300;
 const FEED_FETCH_CONCURRENCY = 10;
+const MAX_FEED_BYTES = 1500000;
 const MAX_ITEM_AGE_HOURS = 72;
 const MAX_FUTURE_SKEW_HOURS = 6;
 const RESPONSE_SCHEMA = {
@@ -151,6 +152,32 @@ function loadSources(raw) {
   });
 }
 
+async function readLimitedText(response, maxBytes) {
+  const declaredLength = Number(response.headers.get("content-length") || 0);
+  if (declaredLength > maxBytes) throw new Error("Feed response exceeds the " + maxBytes + " byte size limit.");
+  if (!response.body) throw new Error("Feed response has no readable body.");
+  const reader = response.body.getReader();
+  const chunks = [];
+  let total = 0;
+  while (true) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    total += value.byteLength;
+    if (total > maxBytes) {
+      await reader.cancel("Feed response size limit exceeded.");
+      throw new Error("Feed response exceeds the " + maxBytes + " byte size limit.");
+    }
+    chunks.push(value);
+  }
+  const merged = new Uint8Array(total);
+  let offset = 0;
+  for (const chunk of chunks) {
+    merged.set(chunk, offset);
+    offset += chunk.byteLength;
+  }
+  return new TextDecoder("utf-8", { fatal: false }).decode(merged);
+}
+
 async function collectItems(sources) {
   const collected = [];
   const failures = [];
@@ -170,7 +197,7 @@ async function collectItems(sources) {
         if (!response.ok) throw new Error("HTTP " + response.status);
         const contentType = response.headers.get("content-type") || "";
         if (/text\/html/i.test(contentType)) throw new Error("Feed endpoint returned HTML, not an RSS/Atom document.");
-        const xml = await response.text();
+        const xml = await readLimitedText(response, MAX_FEED_BYTES);
         if (!/<(rss|feed|rdf:RDF)\b/i.test(xml)) throw new Error("Response does not look like RSS/Atom XML.");
         const items = parseFeed(xml, source);
         collected.push(...items);
