@@ -317,6 +317,12 @@ async function assertHardenedQueueSchema(env) {
   }
 }
 
+function hasIndependentCorroboration(items) {
+  const publisherIds = new Set(items.map((item) => item.publisherId));
+  const domains = new Set(items.map((item) => item.domain));
+  return items.length >= 2 && publisherIds.size >= 2 && domains.size >= 2;
+}
+
 async function persistPendingDrafts(env, stories, items) {
   await assertHardenedQueueSchema(env);
   const categories = await getCategoryMap(env);
@@ -325,9 +331,7 @@ async function persistPendingDrafts(env, stories, items) {
   for (const story of stories) {
     const indexes = [...new Set((story.source_indexes || []).filter((i) => Number.isInteger(i) && i >= 0 && i < items.length))];
     const evidenceItems = indexes.map((i) => items[i]);
-    const publisherIds = new Set(evidenceItems.map((item) => item.publisherId));
-    const domains = new Set(evidenceItems.map((item) => item.domain));
-    if (evidenceItems.length < 2 || publisherIds.size < 2 || domains.size < 2) { skipped++; continue; }
+    if (!hasIndependentCorroboration(evidenceItems)) { skipped++; continue; }
     const title = String(story.title || "").trim().slice(0, 400);
     const excerpt = String(story.excerpt || "").trim().slice(0, 1200);
     const body = String(story.body || "").trim().slice(0, 18000);
@@ -433,3 +437,7 @@ export default {
     }
   }
 };
+
+
+// Exported pure helpers are also covered by the Node.js test suite.
+export { safeIsoDate, parseFeed, loadSources, hasIndependentCorroboration };
