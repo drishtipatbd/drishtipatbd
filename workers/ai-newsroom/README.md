@@ -1,6 +1,6 @@
 # দৃষ্টিপাতBD AI Newsroom Worker
 
-এই Worker সম্পাদক-অনুমোদিত RSS/Atom source registry থেকে সংবাদ-প্রার্থী সংগ্রহ করে, একাধিক স্বাধীন publisher-এর মধ্যে একই ঘটনার মিল খুঁজে বাংলা খসড়া তৈরি করে এবং write mode অনুমোদিত হলে কেবল `ai_news_queue`-তে **pending** হিসেবে রাখে। এতে কোনো auto-publish implementation নেই।
+এই Worker সম্পাদক-অনুমোদিত RSS/Atom source registry থেকে সংবাদ-প্রার্থী সংগ্রহ করে, একটি বা একাধিক উৎসের ভিত্তিতে বাংলা AI খসড়া তৈরি করে এবং write mode অনুমোদিত হলে কেবল `ai_news_queue`-তে **pending** হিসেবে রাখে। এক-উৎসের খসড়াও কেবল মানুষের যাচাই ও অনুমোদনের পর প্রকাশযোগ্য। এতে কোনো auto-publish implementation নেই।
 
 ## নিরাপত্তার ডিফল্ট
 
@@ -60,7 +60,7 @@ Cloudflare Worker settings-এ (browser code-এ নয়) configure করতে 
 1. Approved registry থেকে bounded concurrency-তে feed fetch।
 2. XML type, HTTPS URL এবং feed link পরীক্ষা; duplicate URL বাদ।
 3. Cloudflare Workers AI (Gemma 4 26B A4B) দিয়ে source index-সহ বাংলা draft proposal; inference শুধু নির্ধারিত UTC hourly run-এ, এবং কেবল staging-এর dry-run বন্ধ ও draft switch চালু থাকলে।
-4. অন্তত দুইটি আলাদা publisherId এবং দুইটি আলাদা domain না থাকলে draft বাদ।
+4. অন্তত একটি বৈধ HTTPS source না থাকলে draft বাদ; এক-উৎসের খসড়ায় স্বাধীন corroboration নেই বলে স্পষ্ট editorial note থাকে।
 5. Dry-run-এ database write হয় না।
 6. Write mode-এ verification schema না থাকলে fail-closed।
 7. Write সফল হলেও সব row `pending`, `auto_publish=false`, `verification_status=needs_review`, `confidence_score=0`, `auto_publish_rule=manual_only`।
