@@ -24,6 +24,8 @@ jobs:
           node-version: "22"
       - name: Check Worker JavaScript syntax
         run: node --check workers/ai-newsroom/src/index.js
+      - name: Run newsroom safety tests
+        run: node --test workers/ai-newsroom/test/*.test.js
       - name: Validate candidate source registry
         run: |
           node <<'NODE'
