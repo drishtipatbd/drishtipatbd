@@ -55,7 +55,8 @@ jobs:
             if (!source.sourceId || ids.has(source.sourceId)) throw new Error("Missing or duplicate sourceId.");
             ids.add(source.sourceId);
             const url = new URL(source.url);
-            if (url.protocol !== "https:" || url.hostname.toLowerCase() !== source.domain.toLowerCase()) {
+            const feedHost = (source.feedHost || source.domain).toLowerCase();
+            if (url.protocol !== "https:" || url.hostname.toLowerCase() !== feedHost || (source.articleHosts && !source.articleHosts.includes(source.domain))) {
               throw new Error("Unsafe or mismatched feed URL: " + source.sourceId);
             }
           }
