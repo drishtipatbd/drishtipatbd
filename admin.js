@@ -28,9 +28,9 @@ if(error||!q){toast('খবর লোড হয়নি: '+(error?.message||'প�
 const evidence=Array.isArray(q.source_evidence)?q.source_evidence:[];
 const publishers=new Set(evidence.map(x=>String(x.publisher_id||x.publisherId||x.publisher||'').trim().toLowerCase()).filter(Boolean));
 const domains=new Set(evidence.map(x=>{try{return new URL(x.url).hostname.toLowerCase().replace(/^www[.]/,'')}catch{return ''}}).filter(Boolean));
-const valid=evidence.length>=2&&publishers.size>=2&&domains.size>=2&&evidence.every(x=>{try{return new URL(x.url).protocol==='https:'}catch{return false}});
-if(!valid){toast('প্রকাশ করা যাবে না: অন্তত একটি HTTPS উৎসের লিংক প্রয়োজন।');return}
-if(!confirm('উৎসের লিংক ও খবরের মূল তথ্য দেখে নিয়েছেন? ঠিক থাকলে আপনার অনুমোদনে সংবাদটি প্রকাশ হবে। একটিমাত্র উৎস থাকলেও আপনি দায়িত্ব নিয়ে অনুমোদন করতে পারবেন। AI নিজে সত্যতা নিশ্চিত করেনি।'))return;
+const valid=evidence.length>=1&&evidence.every(x=>{try{return new URL(x.url).protocol==='https:'}catch{return false}});
+if(!valid){toast('প্রকাশ করা যাবে না: অন্তত একটি বৈধ HTTPS উৎসের লিংক প্রয়োজন।');return}
+if(!confirm('খবরটি ও মূল উৎসের লিংক দেখে অনুমোদন করে প্রকাশ করবেন? AI নিজে সত্যতা নিশ্চিত করেনি; এক উৎসের খবর হলে প্রয়োজনে পরে আরও যাচাই করুন।'))return;
 const {data:{user},error:userError}=await db.auth.getUser();
 if(userError||!user){toast('রিভিউকারীর পরিচয় যাচাই করা যায়নি।');return}
 const now=new Date().toISOString(),history=Array.isArray(q.review_history)?q.review_history:[];
