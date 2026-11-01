@@ -62,7 +62,7 @@ function parseFeed(xml, source) {
   const blocks = [...xml.matchAll(/<(item|entry)\b[^>]*>([\s\S]*?)<\/\1\s*>/gi)].slice(0, MAX_ITEMS_PER_FEED);
   return blocks.map((match) => {
     const block = match[2];
-    let link = tagValue(block, ["link", "guid", "id"]);
+    let link = tagValue(block, ["link"]);
     const atomLink = block.match(/<link\b[^>]*href=["']([^"']+)["'][^>]*\/?>/i);
     if (atomLink) link = atomLink[1];
     const title = tagValue(block, ["title"]);
