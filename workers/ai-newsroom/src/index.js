@@ -425,6 +425,11 @@ async function persistPendingDrafts(env, stories, items) {
   return { inserted, skipped };
 }
 
+function shouldGenerateDraftAt(scheduledTime) {
+  const date = new Date(scheduledTime || Date.now());
+  return date.getUTCMinutes() === 0;
+}
+
 async function runNewsroom(env, options = {}) {
   if (env.NEWSROOM_ENABLED !== "true") return { skipped: true, reason: "NEWSROOM_ENABLED is not true." };
   const sources = loadSources(env.NEWSROOM_SOURCES);
@@ -482,8 +487,7 @@ export default {
   },
   async scheduled(controller, env) {
     try {
-      const scheduledAt = new Date(controller.scheduledTime || Date.now());
-      const allowDraftGeneration = scheduledAt.getUTCMinutes() === 0;
+      const allowDraftGeneration = shouldGenerateDraftAt(controller.scheduledTime);
       const result = await runNewsroom(env, { allowDraftGeneration });
       console.log("AI newsroom scheduled run summary:", JSON.stringify(result));
     } catch (error) {
@@ -495,4 +499,4 @@ export default {
 
 
 // Exported pure helpers are also covered by the Node.js test suite.
-export { safeIsoDate, parseFeed, loadSources, hasIndependentCorroboration, persistSourceHealth, buildDraftMessages, parseDraftResponse };
+export { safeIsoDate, parseFeed, loadSources, hasIndependentCorroboration, persistSourceHealth, buildDraftMessages, parseDraftResponse, shouldGenerateDraftAt };
