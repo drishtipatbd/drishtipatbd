@@ -2,6 +2,8 @@ const MAX_SOURCES = 100;
 const MAX_ITEMS_PER_FEED = 12;
 const MAX_TOTAL_ITEMS = 300;
 const FEED_FETCH_CONCURRENCY = 10;
+const MAX_ITEM_AGE_HOURS = 72;
+const MAX_FUTURE_SKEW_HOURS = 6;
 const RESPONSE_SCHEMA = {
   type: "object",
   additionalProperties: false,
@@ -87,12 +89,16 @@ function parseFeed(xml, source) {
         url: articleUrl.toString(),
         title: title.slice(0, 400),
         description: description.slice(0, 1800),
-        publishedAt: published || null
+        publishedAt: safeIsoDate(published)
       };
     } catch {
       return null;
     }
-  }).filter(Boolean);
+  }).filter((item) => {
+    if (!item.publishedAt) return false;
+    const ageHours = (Date.now() - new Date(item.publishedAt).getTime()) / 3600000;
+    return ageHours <= MAX_ITEM_AGE_HOURS && ageHours >= -MAX_FUTURE_SKEW_HOURS;
+  });
 }
 
 async function sha256(value) {
@@ -166,9 +172,14 @@ async function collectItems(sources) {
         if (/text\/html/i.test(contentType)) throw new Error("Feed endpoint returned HTML, not an RSS/Atom document.");
         const xml = await response.text();
         if (!/<(rss|feed|rdf:RDF)\b/i.test(xml)) throw new Error("Response does not look like RSS/Atom XML.");
-        const items = parseFeed(xml, source);
+        const rawItems = parseFeed(xml, { ...source, _includeStale: true });
+        const items = rawItems.filter((item) => {
+          if (!item.publishedAt) return false;
+          const ageHours = (Date.now() - new Date(item.publishedAt).getTime()) / 3600000;
+          return ageHours <= MAX_ITEM_AGE_HOURS && ageHours >= -MAX_FUTURE_SKEW_HOURS;
+        });
         collected.push(...items);
-        sourceHealth.push({ source_id: source.sourceId, publisher_id: source.publisherId, domain: source.domain, status: "ok", checked_at: checkedAt, items_found: items.length });
+        sourceHealth.push({ source_id: source.sourceId, publisher_id: source.publisherId, domain: source.domain, status: "ok", checked_at: checkedAt, items_found: items.length, freshness_window_hours: MAX_ITEM_AGE_HOURS });
       } catch (error) {
         const message = String(error.message || error).slice(0, 240);
         failures.push({ source: source.name, source_id: source.sourceId, domain: source.domain, error: message });
