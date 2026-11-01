@@ -360,9 +360,9 @@
         "bangladesh"
       ],
       "tier": "tier2",
-      "status": "review_required",
+      "status": "stale_review_required",
       "enabled": false,
-      "validation": "Listed by two RSS feed directories; direct response, freshness and rights review required"
+      "validation": "Feed endpoint returned RSS-like content, but observed latest entries were from May 2024; do not activate until feed freshness is restored and rechecked."
     },
     {
       "sourceId": "jagonews24-home",
