@@ -165,3 +165,25 @@ test("loadSources preserves reuse licence and attribution metadata", () => {
   assert.equal(configured[0].license, "CC-BY-4.0");
   assert.equal(configured[0].attribution, "Publisher A — author credit");
 });
+
+test("RSS proxy host is separated from the independent publisher article domain", () => {
+  const configured = loadSources(JSON.stringify([
+    source({
+      enabled: true,
+      status: "approved",
+      domain: "en.wikinews.org",
+      url: "https://feeds.feedburner.com/WikinewsLatestNews.rss",
+      feedHost: "feeds.feedburner.com",
+      articleHosts: ["en.wikinews.org"],
+      license: "CC-BY-4.0"
+    })
+  ]));
+  assert.equal(configured[0].feedHost, "feeds.feedburner.com");
+  assert.equal(configured[0].domain, "en.wikinews.org");
+  assert.deepEqual(configured[0].articleHosts, ["en.wikinews.org"]);
+  const recent = new Date(Date.now() - 60 * 60 * 1000).toUTCString();
+  const xml = rss(`<pubDate>${recent}</pubDate>`).replace("https://news.example/story-1", "https://en.wikinews.org/wiki/Example");
+  const items = parseFeed(xml, configured[0]);
+  assert.equal(items.length, 1);
+  assert.equal(items[0].domain, "en.wikinews.org");
+});
