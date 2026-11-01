@@ -4,12 +4,10 @@
 
 ## নিরাপত্তার ডিফল্ট
 
-- `NEWSROOM_ENABLED=false`
-- `NEWSROOM_DRY_RUN=true`
-- `NEWSROOM_DRAFTS_ENABLED=false` (AI disabled until explicitly enabled)
-- `AUTO_PUBLISH_ENABLED=false`; Worker-এ auto-publish route বা code নেই
-- Cron প্রতি ৩০ মিনিটে নির্ধারিত, কিন্তু Worker disabled থাকলে কাজ করে না
-- Cost-safe staging Worker `drishtipatbd-ai-newsroom-staging` Cloudflare-এ deploy করা হয়েছে; এটি workers.dev-এ আছে, কিন্তু কোনো Cron Trigger যুক্ত করা হয়নি। সব newsroom/AI switches disabled, কোনো source allowlist বা secret configure করা হয়নি; Production অপরিবর্তিত।
+- Repository `wrangler.jsonc`-এর নিরাপদ default: `NEWSROOM_ENABLED=false`, `NEWSROOM_DRY_RUN=true`, `NEWSROOM_DRAFTS_ENABLED=false`, `AUTO_PUBLISH_ENABLED=false`.
+- Staging Worker `drishtipatbd-ai-newsroom-staging` আলাদাভাবে চালু: `NEWSROOM_ENABLED=true`, `NEWSROOM_DRY_RUN=true`, `NEWSROOM_DRAFTS_ENABLED=false`, `AUTO_PUBLISH_ENABLED=false`.
+- Staging-এ Global Voices ও Agência Brasil—এই ২টি অনুমোদিত pilot RSS feed allowlist-এ আছে; Cron প্রতি ৩০ মিনিটে চলে এবং RSS fetch dry-run করে।
+- Staging-এ কোনো Supabase secret/token নেই; তাই কোনো database write, AI inference বা auto-publish হয় না। Production অপরিবর্তিত।
 
 ## Source registry
 
@@ -61,7 +59,7 @@ Cloudflare Worker settings-এ (browser code-এ নয়) configure করতে 
 
 1. Approved registry থেকে bounded concurrency-তে feed fetch।
 2. XML type, HTTPS URL এবং feed link পরীক্ষা; duplicate URL বাদ।
-3. Cloudflare Workers AI (Gemma 4 26B A4B) দিয়ে source index-সহ বাংলা draft proposal; inference শুধু নির্ধারিত UTC hourly run-এ।
+3. Cloudflare Workers AI (Gemma 4 26B A4B) দিয়ে source index-সহ বাংলা draft proposal; inference শুধু নির্ধারিত UTC hourly run-এ, এবং কেবল staging-এর dry-run বন্ধ ও draft switch চালু থাকলে।
 4. অন্তত দুইটি আলাদা publisherId এবং দুইটি আলাদা domain না থাকলে draft বাদ।
 5. Dry-run-এ database write হয় না।
 6. Write mode-এ verification schema না থাকলে fail-closed।
@@ -73,6 +71,10 @@ AI corroboration proposal সম্পাদকীয় যাচাইয়ের �
 ## Manual run
 
 `NEWSROOM_ENABLED=true` এবং `NEWSROOM_RUN_TOKEN` configure করার পর manual endpoint দিয়ে RSS collection পরীক্ষা করা যাবে। Manual `/run` কখনো AI model call করে না। AI draft generation কেবল `NEWSROOM_DRAFTS_ENABLED=true`, `NEWSROOM_DRY_RUN=false` এবং UTC hourly scheduled run—এই তিনটি শর্ত পূরণ হলে চলে।
+
+## অ্যাডমিনের সহজ অনুমোদন
+
+AI queue-তে অন্তত একটি বৈধ HTTPS source link থাকলে admin দ্রুত দেখে `অনুমোদন ও প্রকাশ` করতে পারবেন। এটি editor-attested approval—দুটি স্বাধীন উৎস বাধ্যতামূলক নয়; তাই AI-এর তৈরি তথ্য যাচাই না করে প্রকাশ করবেন না। মূল source link ও review audit history সংরক্ষিত হয়। ভবিষ্যতে প্রয়োজন হলে দুই-উৎসের কঠোর gate আবার চালু করা যাবে।
 
 ## সীমাবদ্ধতা
 
