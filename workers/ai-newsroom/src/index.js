@@ -471,4 +471,4 @@ export default {
 
 
 // Exported pure helpers are also covered by the Node.js test suite.
-export { safeIsoDate, parseFeed, loadSources, hasIndependentCorroboration, persistSourceHealth, buildDraftMessages, parseDraftResponse, shouldGenerateDraftAt };
+export { safeIsoDate, parseFeed, loadSources, hasIndependentCorroboration, persistSourceHealth, buildDraftMessages, parseDraftResponse, draftStories, shouldGenerateDraftAt };
