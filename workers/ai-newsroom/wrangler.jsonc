@@ -1,0 +1,16 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "drishtipatbd-ai-newsroom",
+  "main": "src/index.js",
+  "compatibility_date": "2026-11-01",
+  "workers_dev": true,
+  "triggers": {
+    "crons": ["*/30 * * * *"]
+  },
+  "vars": {
+    "NEWSROOM_ENABLED": "false",
+    "NEWSROOM_DRY_RUN": "true",
+    "AUTO_PUBLISH_ENABLED": "false",
+    "OPENAI_MODEL": "gpt-4.1-mini"
+  }
+}
