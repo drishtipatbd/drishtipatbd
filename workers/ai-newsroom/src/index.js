@@ -1,6 +1,7 @@
-const MAX_SOURCES = 20;
-const MAX_ITEMS_PER_FEED = 20;
-const MAX_TOTAL_ITEMS = 100;
+const MAX_SOURCES = 100;
+const MAX_ITEMS_PER_FEED = 12;
+const MAX_TOTAL_ITEMS = 300;
+const FEED_FETCH_CONCURRENCY = 10;
 const RESPONSE_SCHEMA = {
   type: "object",
   additionalProperties: false,
@@ -74,8 +75,14 @@ function parseFeed(xml, source) {
       if (articleUrl.protocol !== "https:") return null;
       return {
         publisherId: source.publisherId,
+        sourceId: source.sourceId,
         publisher: source.name,
         domain: source.domain,
+        region: source.region,
+        country: source.country,
+        language: source.language,
+        categories: source.categories,
+        tier: source.tier,
         feedUrl: source.url,
         url: articleUrl.toString(),
         title: title.slice(0, 400),
@@ -98,41 +105,72 @@ function loadSources(raw) {
   let parsed;
   try { parsed = JSON.parse(raw || "[]"); } catch { throw new Error("NEWSROOM_SOURCES must be valid JSON."); }
   if (!Array.isArray(parsed) || parsed.length === 0 || parsed.length > MAX_SOURCES) {
-    throw new Error("Configure 1 to " + MAX_SOURCES + " approved RSS/Atom sources in NEWSROOM_SOURCES.");
+    throw new Error("Configure 1 to " + MAX_SOURCES + " source registry entries in NEWSROOM_SOURCES.");
   }
-  const seen = new Set();
-  return parsed.map((source) => {
-    if (!source || !source.publisherId || !source.name || !source.domain || !source.url) {
-      throw new Error("Each source needs publisherId, name, domain and url.");
+  const seenSourceIds = new Set();
+  const enabled = parsed.filter((source) => source && source.enabled === true && source.status === "approved");
+  if (!enabled.length) throw new Error("No sources are active: each feed must be explicitly enabled and status=approved.");
+  if (enabled.length > MAX_SOURCES) throw new Error("Active source count exceeds " + MAX_SOURCES + ".");
+  return enabled.map((source) => {
+    if (!source.publisherId || !source.name || !source.domain || !source.url) {
+      throw new Error("Each enabled source needs publisherId, name, domain and url.");
     }
     const url = new URL(source.url);
-    if (url.protocol !== "https:" || url.hostname.toLowerCase() !== String(source.domain).toLowerCase()) {
-      throw new Error("Source URL must use HTTPS and domain must exactly match its hostname: " + source.name);
+    const hostname = url.hostname.toLowerCase();
+    const domain = String(source.domain).trim().toLowerCase();
+    if (url.protocol !== "https:" || hostname !== domain || url.username || url.password) {
+      throw new Error("Source URL must use HTTPS, contain no credentials, and exactly match its registered hostname: " + source.name);
     }
-    const id = String(source.publisherId).trim().toLowerCase();
-    if (seen.has(id)) throw new Error("Duplicate publisherId in source allowlist: " + id);
-    seen.add(id);
-    return { publisherId: id, name: String(source.name).slice(0, 120), domain: url.hostname.toLowerCase(), url: url.toString() };
+    const publisherId = String(source.publisherId).trim().toLowerCase();
+    const sourceId = String(source.sourceId || (publisherId + ":" + url.pathname)).trim().toLowerCase();
+    if (!publisherId || !sourceId || seenSourceIds.has(sourceId)) {
+      throw new Error("Missing or duplicate sourceId in source registry: " + sourceId);
+    }
+    seenSourceIds.add(sourceId);
+    const categories = Array.isArray(source.categories)
+      ? [...new Set(source.categories.map((value) => String(value).trim().toLowerCase()).filter(Boolean))].slice(0, 12)
+      : [];
+    return {
+      publisherId,
+      sourceId,
+      name: String(source.name).slice(0, 120),
+      domain: hostname,
+      url: url.toString(),
+      region: String(source.region || "international").slice(0, 40),
+      country: String(source.country || "unknown").slice(0, 80),
+      language: String(source.language || "en").slice(0, 12),
+      categories,
+      tier: ["primary", "tier1", "tier2", "specialist"].includes(source.tier) ? source.tier : "tier2"
+    };
   });
 }
 
 async function collectItems(sources) {
   const collected = [];
   const failures = [];
-  for (const source of sources) {
-    try {
-      const response = await fetch(source.url, {
-        headers: { "user-agent": "DrishtipatBD-Newsroom/0.1 (+https://drishtipatbd.pages.dev)" },
-        redirect: "error",
-        signal: AbortSignal.timeout(12000)
-      });
-      if (!response.ok) throw new Error("HTTP " + response.status);
-      const xml = await response.text();
-      collected.push(...parseFeed(xml, source));
-    } catch (error) {
-      failures.push({ source: source.name, error: String(error.message || error).slice(0, 240) });
+  let cursor = 0;
+  const workerCount = Math.min(FEED_FETCH_CONCURRENCY, sources.length);
+  async function fetchWorker() {
+    while (cursor < sources.length) {
+      const source = sources[cursor++];
+      try {
+        const response = await fetch(source.url, {
+          headers: { "user-agent": "DrishtipatBD-Newsroom/0.2 (+https://drishtipatbd.pages.dev)", "accept": "application/rss+xml, application/atom+xml, application/xml, text/xml" },
+          redirect: "error",
+          signal: AbortSignal.timeout(8000)
+        });
+        if (!response.ok) throw new Error("HTTP " + response.status);
+        const contentType = response.headers.get("content-type") || "";
+        if (/text\/html/i.test(contentType)) throw new Error("Feed endpoint returned HTML, not an RSS/Atom document.");
+        const xml = await response.text();
+        if (!/<(rss|feed|rdf:RDF)\b/i.test(xml)) throw new Error("Response does not look like RSS/Atom XML.");
+        collected.push(...parseFeed(xml, source));
+      } catch (error) {
+        failures.push({ source: source.name, source_id: source.sourceId, domain: source.domain, error: String(error.message || error).slice(0, 240) });
+      }
     }
   }
+  await Promise.all(Array.from({ length: workerCount }, () => fetchWorker()));
   const unique = [];
   const seenUrls = new Set();
   for (const item of collected) {
@@ -142,7 +180,7 @@ async function collectItems(sources) {
     unique.push(item);
     if (unique.length >= MAX_TOTAL_ITEMS) break;
   }
-  return { items: unique, failures };
+  return { items: unique, failures, sources_checked: sources.length, sources_succeeded: sources.length - failures.length };
 }
 
 function extractResponseText(payload) {
@@ -164,6 +202,11 @@ async function draftStories(env, items) {
     publisher: item.publisher,
     publisher_id: item.publisherId,
     domain: item.domain,
+    region: item.region,
+    country: item.country,
+    language: item.language,
+    categories: item.categories,
+    source_tier: item.tier,
     url: item.url,
     title: item.title,
     description: item.description,
@@ -309,6 +352,8 @@ async function runNewsroom(env) {
   return {
     dry_run: dryRun,
     sources_configured: sources.length,
+    sources_checked: collected.sources_checked,
+    sources_succeeded: collected.sources_succeeded,
     feed_items_collected: collected.items.length,
     candidate_drafts: stories.length,
     queue_rows_inserted: persistence.inserted,
