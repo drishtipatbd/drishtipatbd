@@ -4,7 +4,10 @@ import {
   safeIsoDate,
   parseFeed,
   loadSources,
-  hasIndependentCorroboration
+  hasIndependentCorroboration,
+  buildDraftMessages,
+  parseDraftResponse,
+  shouldGenerateDraftAt
 } from "../src/index.js";
 
 const source = (overrides = {}) => ({
@@ -67,4 +70,33 @@ test("independent publishers on distinct domains corroborate", () => {
     { publisherId: "publisher-b", domain: "b.example" }
   ];
   assert.equal(hasIndependentCorroboration(independent), true);
+});
+
+test("Workers AI prompt stays inside the daily free-tier character budget", () => {
+  const items = Array.from({ length: 10 }, (_, index) => ({
+    publisher: "Publisher " + index,
+    publisherId: "publisher-" + index,
+    domain: "news" + index + ".example",
+    region: "international",
+    categories: ["world"],
+    url: "https://news" + index + ".example/story",
+    title: "Headline " + index,
+    description: "Short source description " + index,
+    publishedAt: "2026-11-01T12:00:00.000Z"
+  }));
+  const prompt = buildDraftMessages(items);
+  assert.ok(prompt.prompt_chars <= 1500);
+  assert.ok(prompt.source_count >= 2);
+  assert.ok(prompt.source_count <= items.length);
+});
+
+test("Workers AI parser accepts fenced JSON and normalizes unknown news types", () => {
+  const result = parseDraftResponse('\\`\\`\\`json\\n{"stories":[{"source_indexes":[0,1],"title":"শিরোনাম","excerpt":"সারাংশ","body":"বিস্তারিত","category":"বাংলাদেশ","news_type":"made_up","verification_notes":"দুটি উৎসে মিলেছে"}]}\\n\\`\\`\\`');
+  assert.equal(result.length, 1);
+  assert.equal(result[0].news_type, "general");
+});
+
+test("AI draft generation is limited to the top of each UTC hour", () => {
+  assert.equal(shouldGenerateDraftAt("2026-11-01T10:00:00.000Z"), true);
+  assert.equal(shouldGenerateDraftAt("2026-11-01T10:30:00.000Z"), false);
 });
