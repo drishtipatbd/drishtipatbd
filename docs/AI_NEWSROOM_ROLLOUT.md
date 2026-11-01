@@ -2,8 +2,8 @@
 
 ## বর্তমান অবস্থা
 - Admin dashboard-এ AI News Queue UI আছে।
-- `ai_news_queue` টেবিল তৈরির migration repository-তে আছে; production database-এ এই নতুন hardening migration চালানো হয়নি।
-- AI সংগ্রহ/খসড়া তৈরির Worker source code `workers/ai-newsroom/`-এ integration branch-এ প্রস্তুত; deploy করা হয়নি।
+- `ai_news_queue`-এর verification hardening migration এবং `ai_news_source_runs` telemetry migration ২০২৬-১১-০১ তারিখে সংযুক্ত Supabase project-এ সফলভাবে প্রয়োগ ও schema দিয়ে যাচাই করা হয়েছে।
+- AI সংগ্রহ/খসড়া তৈরির Worker source code `workers/ai-newsroom/`-এ integration branch-এ প্রস্তুত; Cloudflare Worker এখনো deploy করা হয়নি।
 - Worker default-এ disabled এবং dry-run; এতে কোনো auto-publish code নেই।
 - `ai-newsroom-integration` হলো পরীক্ষামূলক branch; `main`-ই Production branch।
 
@@ -28,7 +28,7 @@ Admin UI এখন AI story প্রকাশের আগে বাধ্য�
 ## Database migration
 `supabase/migrations/202611010001_harden_ai_newsroom_verification.sql` additive fields, audit history, evidence array, confidence score, allowlisted automation policy এবং database-level auto-publish guard যোগ করে।
 
-**এটি শুধু integration branch-এ লেখা হয়েছে; Supabase-এ চালানো হয়নি।** Production migration-এর আগে backup, staging test, constraint validation এবং আলাদা অনুমোদন লাগবে।
+**এই migration ২০২৬-১১-০১ তারিখে সংযুক্ত Supabase project-এ প্রয়োগ করা হয়েছে।** অতিরিক্ত schema change-এর আগে backup ও staging validation প্রয়োজন।
 
 ## Automation backend — পরবর্তী বাস্তবায়ন
 Cloudflare Worker + Cron (বা সমতুল্য scheduled backend) ব্যবহার করতে হবে। Browser-side JavaScript-এ কোনো privileged key থাকবে না। Backend-এর secret bindings:
@@ -59,7 +59,7 @@ Worker-এর কাজ:
 ## Release checklist
 - [ ] RSS/API source allowlist সম্পাদকীয় দল অনুমোদন করেছে
 - [ ] OpenAI ও Supabase secrets Cloudflare-এ server-side সেট করা হয়েছে
-- [ ] Migration staging-এ চালানো ও পরীক্ষা করা হয়েছে
+- [x] Verification ও source-health migrations Supabase-এ প্রয়োগ এবং schema যাচাই করা হয়েছে
 - [ ] Queue ingestion dry-run অন্তত ৭ দিন পর্যবেক্ষণ করা হয়েছে
 - [ ] Source diversity, duplicate detection, false-positive এবং Bengali copy যাচাই করা হয়েছে
 - [ ] Auto-publish switch default OFF যাচাই করা হয়েছে
@@ -79,7 +79,7 @@ Worker-এর কাজ:
 
 ## Source health history and automated tests
 
-The Integration branch adds `ai_news_source_runs` (migration `202611010002_ai_news_source_health.sql`) for durable per-feed telemetry: run ID, source/publisher/domain, status, checked time, item count, freshness window, and bounded error message. RLS allows authenticated admin-role reads only; the Worker writes through the service role. This migration is not applied to Supabase.
+The Integration branch adds `ai_news_source_runs` (migration `202611010002_ai_news_source_health.sql`) for durable per-feed telemetry: run ID, source/publisher/domain, status, checked time, item count, freshness window, and bounded error message. RLS allows authenticated admin-role reads only; the Worker writes through the service role. This migration was applied to the connected Supabase project on 2026-11-01; the table and RLS status were verified after application.
 
 The Worker records these rows only when write mode is explicitly enabled. Dry-run remains database-write-free. CI now runs Node's built-in test runner for RSS date freshness, disabled/unapproved feed rejection, HTTPS/domain matching, and distinct-publisher corroboration.
 
