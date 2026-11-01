@@ -1,17 +1,24 @@
 name: AI newsroom Worker syntax check
 
 on:
+  workflow_dispatch:
   push:
     branches:
       - ai-newsroom-integration
     paths:
       - "workers/ai-newsroom/**"
+      - "admin.js"
+      - "app.js"
+      - "supabase/migrations/**"
       - ".github/workflows/ai-newsroom-worker-check.yml"
   pull_request:
     branches:
       - main
     paths:
       - "workers/ai-newsroom/**"
+      - "admin.js"
+      - "app.js"
+      - "supabase/migrations/**"
       - ".github/workflows/ai-newsroom-worker-check.yml"
 
 jobs:
@@ -24,6 +31,10 @@ jobs:
           node-version: "22"
       - name: Check Worker JavaScript syntax
         run: node --check workers/ai-newsroom/src/index.js
+      - name: Check site JavaScript syntax
+        run: |
+          node --check admin.js
+          node --check app.js
       - name: Run newsroom safety tests
         run: node --test workers/ai-newsroom/test/*.test.js
       - name: Validate candidate source registry
