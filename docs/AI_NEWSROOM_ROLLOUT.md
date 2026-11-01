@@ -65,3 +65,13 @@ Worker-এর কাজ:
 - [ ] Auto-publish switch default OFF যাচাই করা হয়েছে
 - [ ] Preview UI ও article publication manually tested
 - [ ] Production deployment / database change-এর জন্য পৃথক explicit approval নেওয়া হয়েছে
+
+## Expandable source registry (integration branch)
+- Worker source registry limit ২০ থেকে ১০০ feed-এ উন্নীত; প্রতি feed ১২ item, মোট ৩০০ item, bounded concurrency ১০ এবং প্রতি feed ৮ সেকেন্ড timeout।
+- একই publisher-এর একাধিক section feed আলাদা `sourceId`-এ রাখা যাবে; একই `publisherId`-এর একাধিক feed corroboration-এ একটি publisher হিসেবেই গণ্য হবে।
+- প্রতিটি feed-এ region, country, language, categories এবং tier metadata বহন করা হয়।
+- কেবল `enabled=true` এবং `status=approved` feed-ই run-এ অংশ নেয়। HTTPS, exact hostname match, no credentials, no redirect এবং RSS/Atom content checks প্রয়োগ করা হয়।
+- `workers/ai-newsroom/source-registry.candidates.json`-এ ১০টি candidate feed আছে; সবগুলো `disabled` ও `review_required`। এগুলো সরাসরি active allowlist নয়। প্রতিটি feed-এর direct availability, freshness, source identity, editorial policy এবং licensing/terms আলাদাভাবে যাচাই করতে হবে।
+- একাধিক feed fetch করার সময় bounded concurrency ব্যবহৃত হয়; প্রতি feed failure আলাদাভাবে রিপোর্ট হয়। একই publisher-এর দুটি feed কখনো দুইটি স্বাধীন publisher হিসেবে গণ্য হবে না।
+- RSS/Atom কেবল discovery metadata; full article/image republishing নয়। Terms/licensing অনুমতি না থাকলে commercial reuse করা যাবে না। Prothom Alo-এর Terms of Use-এ commercial content use সীমাবদ্ধ, তাই স্পষ্ট অনুমতি ছাড়া তাদের content commercial workflow-এ যুক্ত করা হবে না।
+
