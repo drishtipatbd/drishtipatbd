@@ -52,6 +52,12 @@ function tagValue(block, tagNames) {
   return "";
 }
 
+function safeIsoDate(value) {
+  if (!value) return null;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? null : date.toISOString();
+}
+
 function parseFeed(xml, source) {
   const blocks = [...xml.matchAll(/<(item|entry)\b[^>]*>([\s\S]*?)<\/\1\s*>/gi)].slice(0, MAX_ITEMS_PER_FEED);
   return blocks.map((match) => {
@@ -265,7 +271,7 @@ async function persistPendingDrafts(env, stories, items) {
       category_id: categoryId,
       source_name: [...new Set(evidenceItems.map((item) => item.publisher))].join(", "),
       source_url: evidenceItems[0].url,
-      source_published_at: evidenceItems[0].publishedAt ? new Date(evidenceItems[0].publishedAt).toISOString() : null,
+      source_published_at: safeIsoDate(evidenceItems[0].publishedAt),
       news_type: ["general", "breaking", "sports", "domestic", "international"].includes(story.news_type) ? story.news_type : "general",
       workflow_status: "pending",
       auto_publish: false,
