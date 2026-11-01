@@ -10,6 +10,7 @@
   "vars": {
     "NEWSROOM_ENABLED": "false",
     "NEWSROOM_DRY_RUN": "true",
+    "NEWSROOM_DRAFTS_ENABLED": "false",
     "AUTO_PUBLISH_ENABLED": "false",
     "OPENAI_MODEL": "gpt-4.1-mini"
   }
