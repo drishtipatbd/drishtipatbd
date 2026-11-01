@@ -445,6 +445,25 @@ async function runNewsroom(env, options = {}) {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+    if (request.method === "GET" && url.pathname === "/probe") {
+      if (!env.NEWSROOM_PROBE_TOKEN || url.searchParams.get("token") !== env.NEWSROOM_PROBE_TOKEN) {
+        return json({ error: "Not found." }, 404);
+      }
+      try {
+        const sources = loadSources(env.NEWSROOM_SOURCES);
+        const collected = await collectItems(sources);
+        return json({
+          dry_run: env.NEWSROOM_DRY_RUN !== "false",
+          sources_checked: collected.sources_checked,
+          sources_succeeded: collected.sources_succeeded,
+          feed_items_collected: collected.items.length,
+          source_health: collected.source_health,
+          feed_failures: collected.failures
+        });
+      } catch (error) {
+        return json({ error: String(error.message || error) }, 500);
+      }
+    }
     if (request.method === "GET" && url.pathname === "/health") {
       return json({
         service: "drishtipatbd-ai-newsroom",
