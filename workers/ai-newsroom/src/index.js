@@ -148,11 +148,13 @@ function loadSources(raw) {
 async function collectItems(sources) {
   const collected = [];
   const failures = [];
+  const sourceHealth = [];
   let cursor = 0;
   const workerCount = Math.min(FEED_FETCH_CONCURRENCY, sources.length);
   async function fetchWorker() {
     while (cursor < sources.length) {
       const source = sources[cursor++];
+      const checkedAt = new Date().toISOString();
       try {
         const response = await fetch(source.url, {
           headers: { "user-agent": "DrishtipatBD-Newsroom/0.2 (+https://drishtipatbd.pages.dev)", "accept": "application/rss+xml, application/atom+xml, application/xml, text/xml" },
@@ -164,9 +166,13 @@ async function collectItems(sources) {
         if (/text\/html/i.test(contentType)) throw new Error("Feed endpoint returned HTML, not an RSS/Atom document.");
         const xml = await response.text();
         if (!/<(rss|feed|rdf:RDF)\b/i.test(xml)) throw new Error("Response does not look like RSS/Atom XML.");
-        collected.push(...parseFeed(xml, source));
+        const items = parseFeed(xml, source);
+        collected.push(...items);
+        sourceHealth.push({ source_id: source.sourceId, publisher_id: source.publisherId, domain: source.domain, status: "ok", checked_at: checkedAt, items_found: items.length });
       } catch (error) {
-        failures.push({ source: source.name, source_id: source.sourceId, domain: source.domain, error: String(error.message || error).slice(0, 240) });
+        const message = String(error.message || error).slice(0, 240);
+        failures.push({ source: source.name, source_id: source.sourceId, domain: source.domain, error: message });
+        sourceHealth.push({ source_id: source.sourceId, publisher_id: source.publisherId, domain: source.domain, status: "error", checked_at: checkedAt, error: message });
       }
     }
   }
@@ -180,7 +186,7 @@ async function collectItems(sources) {
     unique.push(item);
     if (unique.length >= MAX_TOTAL_ITEMS) break;
   }
-  return { items: unique, failures, sources_checked: sources.length, sources_succeeded: sources.length - failures.length };
+  return { items: unique, failures, source_health: sourceHealth, sources_checked: sources.length, sources_succeeded: sources.length - failures.length };
 }
 
 function extractResponseText(payload) {
@@ -354,6 +360,7 @@ async function runNewsroom(env) {
     sources_configured: sources.length,
     sources_checked: collected.sources_checked,
     sources_succeeded: collected.sources_succeeded,
+    source_health: collected.source_health,
     feed_items_collected: collected.items.length,
     candidate_drafts: stories.length,
     queue_rows_inserted: persistence.inserted,
@@ -385,7 +392,8 @@ export default {
   },
   async scheduled(controller, env) {
     try {
-      await runNewsroom(env);
+      const result = await runNewsroom(env);
+      console.log("AI newsroom scheduled run summary:", JSON.stringify(result));
     } catch (error) {
       console.error("AI newsroom scheduled run failed:", String(error.message || error));
       throw error;
