@@ -323,6 +323,34 @@ function hasIndependentCorroboration(items) {
   return items.length >= 2 && publisherIds.size >= 2 && domains.size >= 2;
 }
 
+async function persistSourceHealth(env, sourceHealth) {
+  if (!Array.isArray(sourceHealth) || sourceHealth.length === 0) return { recorded: 0 };
+  const runId = crypto.randomUUID();
+  const rows = sourceHealth.map((entry) => ({
+    run_id: runId,
+    source_id: String(entry.source_id || "").slice(0, 180),
+    publisher_id: String(entry.publisher_id || "").slice(0, 120),
+    domain: String(entry.domain || "").slice(0, 253),
+    status: ["ok", "no_fresh_items", "error"].includes(entry.status) ? entry.status : "error",
+    checked_at: safeIsoDate(entry.checked_at) || new Date().toISOString(),
+    items_found: Number.isInteger(entry.items_found) && entry.items_found >= 0 ? entry.items_found : 0,
+    freshness_window_hours: Number.isInteger(entry.freshness_window_hours) ? entry.freshness_window_hours : MAX_ITEM_AGE_HOURS,
+    error_message: String(entry.error || "").slice(0, 500)
+  }));
+  if (rows.some((row) => !row.source_id || !row.publisher_id || !row.domain)) {
+    throw new Error("Source health record is missing source identity fields.");
+  }
+  const response = await supabaseRequest(env, "ai_news_source_runs?on_conflict=run_id,source_id", {
+    method: "POST",
+    headers: { "prefer": "resolution=ignore-duplicates,return=minimal" },
+    body: JSON.stringify(rows)
+  });
+  if (!response.ok) {
+    throw new Error("Source health persistence failed; apply the reviewed ai_news_source_runs migration first. HTTP " + response.status);
+  }
+  return { recorded: rows.length };
+}
+
 async function persistPendingDrafts(env, stories, items) {
   await assertHardenedQueueSchema(env);
   const categories = await getCategoryMap(env);
@@ -391,7 +419,12 @@ async function runNewsroom(env) {
   const stories = await draftStories(env, collected.items);
   const dryRun = env.NEWSROOM_DRY_RUN !== "false";
   let persistence = { inserted: 0, skipped: stories.length };
-  if (!dryRun) persistence = await persistPendingDrafts(env, stories, collected.items);
+  let sourceHealthPersistence = { recorded: 0 };
+  if (!dryRun) {
+    await assertHardenedQueueSchema(env);
+    sourceHealthPersistence = await persistSourceHealth(env, collected.source_health);
+    persistence = await persistPendingDrafts(env, stories, collected.items);
+  }
   return {
     dry_run: dryRun,
     sources_configured: sources.length,
@@ -402,6 +435,7 @@ async function runNewsroom(env) {
     candidate_drafts: stories.length,
     queue_rows_inserted: persistence.inserted,
     queue_rows_skipped: persistence.skipped,
+    source_health_rows_recorded: sourceHealthPersistence.recorded,
     feed_failures: collected.failures
   };
 }
@@ -440,4 +474,4 @@ export default {
 
 
 // Exported pure helpers are also covered by the Node.js test suite.
-export { safeIsoDate, parseFeed, loadSources, hasIndependentCorroboration };
+export { safeIsoDate, parseFeed, loadSources, hasIndependentCorroboration, persistSourceHealth };
