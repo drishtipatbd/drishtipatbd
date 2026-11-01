@@ -26,7 +26,7 @@ Admin UI এখন AI story প্রকাশের আগে বাধ্য�
 যাচাই অসম্পূর্ণ হলে UI থেকে publish করা যাবে না। পুরোনো confirmation prompt দিয়ে verification bypass আর অনুমোদিত নয়।
 
 ## Database migration
-`supabase/migrations/202611010001_harden_ai_newsroom_verification.sql` additive fields, audit history, evidence array, confidence score, allowlisted automation policy এবং database-level auto-publish guard যোগ করে।
+`supabase/migrations/20261101191701_harden_ai_newsroom_verification.sql` additive fields, audit history, evidence array, confidence score, allowlisted automation policy এবং database-level auto-publish guard যোগ করে।
 
 **এই migration ২০২৬-১১-০১ তারিখে সংযুক্ত Supabase project-এ প্রয়োগ করা হয়েছে।** অতিরিক্ত schema change-এর আগে backup ও staging validation প্রয়োজন।
 
@@ -79,7 +79,7 @@ Worker-এর কাজ:
 
 ## Source health history and automated tests
 
-The Integration branch adds `ai_news_source_runs` (migration `202611010002_ai_news_source_health.sql`) for durable per-feed telemetry: run ID, source/publisher/domain, status, checked time, item count, freshness window, and bounded error message. RLS allows authenticated admin-role reads only; the Worker writes through the service role. This migration was applied to the connected Supabase project on 2026-11-01; the table and RLS status were verified after application.
+The Integration branch adds `ai_news_source_runs` (migration `20261101191707_ai_news_source_health.sql`) for durable per-feed telemetry: run ID, source/publisher/domain, status, checked time, item count, freshness window, and bounded error message. RLS allows authenticated admin-role reads only; the Worker writes through the service role. This migration was applied to the connected Supabase project on 2026-11-01; the table and RLS status were verified after application.
 
 The Worker records these rows only when write mode is explicitly enabled. Dry-run remains database-write-free. CI now runs Node's built-in test runner for RSS date freshness, disabled/unapproved feed rejection, HTTPS/domain matching, and distinct-publisher corroboration.
 
