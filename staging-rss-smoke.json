@@ -11,15 +11,15 @@
         "publisher_id": "wikinews",
         "domain": "en.wikinews.org",
         "status": "error",
-        "checked_at": "2026-11-01T20:01:03.002Z",
-        "error": "HTTP 404"
+        "checked_at": "2026-11-01T20:01:54.992Z",
+        "error": "Response does not look like RSS/Atom XML."
       },
       {
         "source_id": "globalvoices-all",
         "publisher_id": "globalvoices",
         "domain": "globalvoices.org",
         "status": "ok",
-        "checked_at": "2026-11-01T20:01:03.002Z",
+        "checked_at": "2026-11-01T20:01:54.992Z",
         "items_found": 5,
         "freshness_window_hours": 72
       }
@@ -29,7 +29,7 @@
         "source": "Wikinews — Latest Published Articles",
         "source_id": "wikinews-latest",
         "domain": "en.wikinews.org",
-        "error": "HTTP 404"
+        "error": "Response does not look like RSS/Atom XML."
       }
     ]
   }
