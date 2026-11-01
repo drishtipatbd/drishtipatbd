@@ -49,7 +49,7 @@ Worker-এর কাজ:
 8. প্রতিটি action audit log-এ লিখবে; kill switch তাৎক্ষণিকভাবে automation বন্ধ করবে।
 
 ## Worker implementation (integration branch only)
-- `workers/ai-newsroom/src/index.js` allowlisted RSS/Atom feeds সংগ্রহ করে, পৃথক publisher/domain থেকে একই ঘটনার corroboration proposal তৈরি করে এবং Cloudflare Workers AI (Gemma 4 26B A4B) দিয়ে বাংলা খসড়া তৈরি করে; ২৪টি hourly inference/day, prompt ১,৫০০ অক্ষর ও output ৫০০ token-এ সীমিত।
+- `workers/ai-newsroom/src/index.js` allowlisted RSS/Atom feeds সংগ্রহ করে, পৃথক publisher/domain থেকে একই ঘটনার corroboration proposal তৈরি করে এবং Cloudflare Workers AI (Gemma 4 26B A4B) দিয়ে বাংলা খসড়া তৈরি করে; ২৪টি hourly inference/day, prompt ১,৮০০ অক্ষর ও output ৫০০ token-এ সীমিত।
 - Dry-run default-এ কোনো database write হয় না। Write mode-এ যাওয়ার আগে Worker verification columns পরীক্ষা করে; migration অনুপস্থিত হলে fail-closed করে।
 - Write mode কেবল `pending`, `needs_review`, `confidence_score=0`, `auto_publish=false`, `manual_only` হিসেবে queue-তে সংরক্ষণ করতে পারে।
 - `/run` endpoint bearer token ছাড়া চালানো যায় না; `/health`-এ কোনো secret প্রকাশ হয় না।
@@ -84,4 +84,4 @@ The Integration branch adds `ai_news_source_runs` (migration `20261101191707_ai_
 The Worker records these rows only when write mode is explicitly enabled. Dry-run remains database-write-free. CI now runs Node's built-in test runner for RSS date freshness, disabled/unapproved feed rejection, HTTPS/domain matching, and distinct-publisher corroboration.
 
 
-**Cost guard:** RSS polling does not use AI. Draft generation is disabled by default; if enabled, it uses the Cloudflare Workers AI free daily allocation with 24 scheduled calls/day, a 1,500-character prompt limit and 500 output-token limit. Dry-run and manual runs never invoke the model. No external model API key is needed.
+**Cost guard:** RSS polling does not use AI. Draft generation is disabled by default; if enabled, it uses the Cloudflare Workers AI free daily allocation with 24 scheduled calls/day, a 1,800-character prompt limit and 500 output-token limit. Dry-run and manual runs never invoke the model. No external model API key is needed.
