@@ -34,7 +34,7 @@ jobs:
           const ids = new Set();
           for (const source of registry.sources) {
             if (source.enabled !== false) throw new Error("Candidate feed must remain disabled: " + source.sourceId);
-            if (!["review_required", "rights_review_required"].includes(source.status)) {
+            if (!["review_required", "rights_review_required", "stale_review_required"].includes(source.status)) {
               throw new Error("Unexpected candidate status: " + source.sourceId);
             }
             if (!source.sourceId || ids.has(source.sourceId)) throw new Error("Missing or duplicate sourceId.");
