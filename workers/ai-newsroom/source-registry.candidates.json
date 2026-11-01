@@ -501,7 +501,7 @@
       "publisherId": "wikinews",
       "name": "Wikinews — Latest Published Articles",
       "domain": "en.wikinews.org",
-      "url": "https://en.wikinews.org/w/index.php?title=Special:NewsFeed&feed=rss&namespace=0&categories=Published&count=20",
+      "url": "https://feeds.feedburner.com/WikinewsLatestNews.rss",
       "region": "international",
       "country": "International",
       "language": "en",
@@ -517,7 +517,11 @@
       "enabled": false,
       "license": "CC-BY-4.0 for works published after 2024-12-16; older works may be CC-BY-2.5",
       "attribution": "Wikinews; link to original article and applicable Creative Commons licence; indicate adaptations",
-      "validation": "Official Wikinews copyright policy states post-2024-12-16 text is CC BY 4.0; feed freshness and current endpoint still need a live fetch test."
+      "validation": "Official Wikinews copyright policy confirms CC BY licensing for current articles; feed uses Wikinews RSS via FeedBurner, with article host constrained to en.wikinews.org. Live connectivity/freshness still needs verification.",
+      "feedHost": "feeds.feedburner.com",
+      "articleHosts": [
+        "en.wikinews.org"
+      ]
     }
   ]
 }
