@@ -156,3 +156,12 @@ test("Workers AI draft adapter uses a bounded mocked request without external AP
   assert.equal(drafts.length, 1);
   assert.equal(drafts[0].title, "বাংলা শিরোনাম");
 });
+
+
+test("loadSources preserves reuse licence and attribution metadata", () => {
+  const configured = loadSources(JSON.stringify([
+    source({ enabled: true, status: "approved", license: "CC-BY-4.0", attribution: "Publisher A — author credit" })
+  ]));
+  assert.equal(configured[0].license, "CC-BY-4.0");
+  assert.equal(configured[0].attribution, "Publisher A — author credit");
+});
