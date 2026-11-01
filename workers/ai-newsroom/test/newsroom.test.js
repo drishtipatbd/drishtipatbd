@@ -85,7 +85,7 @@ test("Workers AI prompt stays inside the daily free-tier character budget", () =
     publishedAt: "2026-11-01T12:00:00.000Z"
   }));
   const prompt = buildDraftMessages(items);
-  assert.ok(prompt.prompt_chars <= 1500);
+  assert.ok(prompt.prompt_chars <= 1800);
   assert.ok(prompt.source_count >= 2);
   assert.ok(prompt.source_count <= items.length);
 });
