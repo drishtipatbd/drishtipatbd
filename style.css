@@ -139,3 +139,14 @@
 @keyframes adMediaSlide{0%{opacity:0;transform:translateX(36px)}100%{opacity:1;transform:translateX(0)}}
 @media(max-width:650px){.mast-ad{height:76px;min-height:76px}}
 @media(prefers-reduced-motion:reduce){.ad-effect-fade img,.ad-effect-fade video,.ad-effect-slide img,.ad-effect-slide video{animation:none}}
+
+/* Keep uploaded banner artwork fully visible; no placeholder caption above it. */
+.mast-ad{height:auto;min-height:90px;max-height:160px;overflow:hidden;align-self:center}
+.mast-ad .sponsored-ad,.mast-ad .sponsored-ad>a{height:auto;max-height:160px}
+.mast-ad .sponsored-ad img,.mast-ad .sponsored-ad video{width:100%;height:auto;max-height:150px;object-fit:contain}
+.ad-slot:empty{display:none}
+.ad-slot .sponsored-ad{position:relative}
+.ad-effect-fade{animation:adFadeIn .9s ease both!important}
+.ad-effect-slide{animation:adSlideIn .9s cubic-bezier(.2,.75,.25,1) both!important}
+.ad-effect-fade img,.ad-effect-fade video{animation:adMediaFade .9s ease both!important}
+.ad-effect-slide img,.ad-effect-slide video{animation:adMediaSlide .9s cubic-bezier(.2,.75,.25,1) both!important}
