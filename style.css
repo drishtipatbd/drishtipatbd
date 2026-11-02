@@ -150,3 +150,10 @@
 .ad-effect-slide{animation:adSlideIn .9s cubic-bezier(.2,.75,.25,1) both!important}
 .ad-effect-fade img,.ad-effect-fade video{animation:adMediaFade .9s ease both!important}
 .ad-effect-slide img,.ad-effect-slide video{animation:adMediaSlide .9s cubic-bezier(.2,.75,.25,1) both!important}
+
+/* Continuous, visible ad slider and lively optional creative motion */
+.ad-slot{min-width:0}
+.ad-slot .sponsored-ad{width:100%;min-width:0}
+.ad-effect-dance img,.ad-effect-dance video{transform-origin:50% 50%;animation:adDance 1.35s ease-in-out infinite!important}
+@keyframes adDance{0%,100%{transform:translateY(0) rotate(0deg) scale(1)}12%{transform:translateY(-5px) rotate(-1.5deg) scale(1.015)}25%{transform:translateY(0) rotate(1.5deg) scale(1.025)}38%{transform:translateY(-4px) rotate(-1deg) scale(1.015)}50%{transform:translateY(0) rotate(0deg) scale(1)}62%{transform:translateY(-3px) rotate(1deg) scale(1.02)}75%{transform:translateY(0) rotate(-1deg) scale(1.01)}}
+@media(prefers-reduced-motion:reduce){.ad-effect-dance img,.ad-effect-dance video{animation:none!important}}
