@@ -27,6 +27,7 @@ function render(){
  const latestCards=latest.map((a,i)=>articleCard(a,'tile')+(i===2?'<div id="feedAd" class="feed-ad ad-slot hidden"></div>':''));
  if(latest.length<3)latestCards.push('<div id="feedAd" class="feed-ad ad-slot hidden"></div>');
  $('latestNews').innerHTML=latestCards.join('');
+ if(window.__activeCampaignAds)paintCampaignSlots(window.__activeCampaignAds);
  renderSidebarStories(items,featured);
  $('loadMore').classList.toggle('hidden',items.length<=shown+1);
  $('popularNews').innerHTML=[...items].sort((a,b)=>Number(b.views||0)-Number(a.views||0)).slice(0,5).map((a,i)=>`<a href="#article-${esc(a.id)}" data-article="${esc(a.id)}">${i+1}. ${esc(a.title)} <small>(${Number(a.views||0).toLocaleString('bn-BD')} পঠিত)</small></a>`).join('');
