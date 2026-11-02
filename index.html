@@ -7,16 +7,16 @@
 <meta property="og:site_name" content="দৃষ্টিপাতBD"><meta property="og:type" content="website"><meta property="og:url" content="https://drishtipatbd.pages.dev/"><meta property="og:title" content="দৃষ্টিপাতBD | সংবাদপত্র"><meta property="og:description" content="সত্যের পক্ষে, মানুষের পাশে — দৃষ্টিপাতBD সংবাদ পোর্টাল"><meta property="og:image" content="https://xzlpmztdzoupsshgdang.supabase.co/storage/v1/object/public/dristipat-media/logos/1793294911236-bdhsia-1000170610.png?v=20261030"><meta property="og:image:secure_url" content="https://xzlpmztdzoupsshgdang.supabase.co/storage/v1/object/public/dristipat-media/logos/1793294911236-bdhsia-1000170610.png?v=20261030"><meta property="og:image:alt" content="দৃষ্টিপাতBD-এর নিজস্ব লোগো"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="দৃষ্টিপাতBD | সংবাদপত্র"><meta name="twitter:description" content="সত্যের পক্ষে, মানুষের পাশে — দৃষ্টিপাতBD সংবাদ পোর্টাল"><meta name="twitter:image" content="https://xzlpmztdzoupsshgdang.supabase.co/storage/v1/object/public/dristipat-media/logos/1793294911236-bdhsia-1000170610.png?v=20261030">
 <title>দৃষ্টিপাতBD | সংবাদপত্র</title>
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="style.css?v=20261101i1">
+<link rel="stylesheet" href="style.css?v=20261103a">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="config.js?v=20261031t"></script>
+<script src="config.js"></script>
 </head>
 <body>
 <header class="site-header">
   <div class="topline"><div class="wrap top-inner"><span id="today">দৃষ্টিপাতBD</span><div><a href="about.html">আমাদের সম্পর্কে</a><span class="sep">|</span><a href="contact.html">যোগাযোগ</a></div></div></div>
   <div class="wrap masthead">
     <div class="brand"><div class="brand-kicker">DP MEDIA CELL</div><a href="#" class="brand-name">দৃষ্টিপাত<span>BD</span></a><div class="tagline">সত্যের পক্ষে, জনস্বার্থে</div></div>
-    <div class="mast-ad ad-slot" id="headerAd"><span>বিজ্ঞাপনের স্থান</span></div>
+    <div class="mast-ad ad-slot" id="headerAd"></div>
   </div>
   <nav class="nav"><div class="wrap nav-inner"><button class="menu-toggle" id="menuToggle" aria-label="মেনু">☰</button><a class="home-link" href="#">হোম</a><div class="nav-links" id="navLinks"><a href="#" data-cat="জাতীয়">জাতীয়</a><a href="#" data-cat="আন্তর্জাতিক">আন্তর্জাতিক</a><a href="#" data-cat="রাজনীতি">রাজনীতি</a><a href="#" data-cat="খেলাধুলা">খেলাধুলা</a><a href="#" data-cat="ধর্ম ও জীবন">ধর্ম ও জীবন</a><a href="#" data-cat="সংস্কৃতি">সংস্কৃতি</a><a href="#" data-cat="অনলাইনে কেনাকাটা">অনলাইনে কেনাকাটা</a><a href="#" data-cat="অনলাইনে আয়">অনলাইনে আয়</a></div><button class="search-btn" id="searchToggle" aria-label="খুঁজুন">⌕</button></div></nav>
   <div class="wrap search-row hidden" id="searchRow"><input id="searchInput" placeholder="সংবাদ খুঁজুন..."><button id="searchSubmit" class="btn">খুঁজুন</button></div>
@@ -28,7 +28,7 @@
     <div class="section-heading"><h2 id="sectionTitle">আজকের প্রধান সংবাদ</h2><span class="heading-line"></span></div>
     <div id="heroNews" class="hero-grid"><div class="loading">সংবাদ লোড হচ্ছে...</div></div>
     <section id="articleModal" class="inline-article hidden" aria-live="polite"><div class="inline-article-card"><button class="btn btn-outline article-back" id="closeModal" type="button">সংবাদ তালিকায় ফিরে যান</button><div id="articleDetail"></div></div></section>
-    <div class="ad-slot horizontal-ad" id="topBannerAd"><span>ব্যানার বিজ্ঞাপনের স্থান</span></div>
+    <div class="ad-slot horizontal-ad" id="topBannerAd"></div>
     <div class="section-heading"><h2 id="latestTitle">সর্বশেষ সংবাদ</h2><span class="heading-line"></span></div>
     <div id="latestNews" class="news-list"><div class="loading">সংবাদ লোড হচ্ছে...</div></div>
     <div class="center"><button id="loadMore" class="btn btn-outline hidden">আরও সংবাদ</button></div>
@@ -50,17 +50,17 @@
       <a href="https://www.thedailystar.net/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=thedailystar.net&sz=64" alt="">The Daily Star <span>↗</span></a>
       <a href="https://www.dhakatribune.com/" target="_blank" rel="noopener"><img src="https://www.google.com/s2/favicons?domain=dhakatribune.com&sz=64" alt="">Dhaka Tribune <span>↗</span></a>
     </div>
-    <div class="ad-slot sidebar-ad" id="sideAd"><span>বিজ্ঞাপনের স্থান</span></div>
-    <div class="ad-slot sidebar-tall-ad" id="sidebarTallAd"><span>লম্বা বিজ্ঞাপনের স্থান</span></div>
-    <section class="sidebar-fill" id="sidebarFill"><div class="section-heading"><h2>ভিডিও ও নির্বাচিত সংবাদ</h2></div><div id="sidebarStories" class="sidebar-stories"><p class="muted">সংবাদ লোড হচ্ছে...</p></div></section>
+    <div class="ad-slot sidebar-ad" id="sideAd"></div>
     <div class="section-heading"><h2>জনপ্রিয় সংবাদ</h2></div><div id="popularNews" class="side-card popular-list"><p class="muted">সংবাদ প্রকাশিত হলে এখানে দেখা যাবে।</p></div>
+    <div class="ad-slot sidebar-tall-ad" id="sidebarTallAd"></div>
+    <section class="sidebar-fill" id="sidebarFill"><div class="section-heading"><h2>ভিডিও ও নির্বাচিত সংবাদ</h2></div><div id="sidebarStories" class="sidebar-stories"><p class="muted">সংবাদ লোড হচ্ছে...</p></div></section>
     
   </aside>
 </main>
 <section class="wrap follow-section"><div class="section-heading"><h2>আমাদের অনুসরণ করুন</h2><span class="heading-line"></span></div><div class="side-card social-box"><a href="#" id="facebookLink">Facebook পেজ</a><a href="#" id="youtubeLink">YouTube</a></div></section>
-<section class="wrap ad-slot horizontal-ad" id="bottomAd"><span>ব্যানার বিজ্ঞাপনের স্থান</span></section>
-<footer class="footer" id="about"><div class="wrap footer-grid"><div><div class="footer-brand" id="footerLogoWrap">দৃষ্টিপাত<span>BD</span></div><p>সত্য, নিরপেক্ষতা ও জনস্বার্থকে সামনে রেখে সংবাদ পরিবেশনের অঙ্গীকার।</p></div><div id="contact"><h3>যোগাযোগ</h3><p>ঠিকানা: পিংসিটি সেন্টার, পুরানা পল্টন, ঢাকা–১০০০</p><p>ইমেইল: <a id="contactEmail" href="mailto:drishtipatbd24@gmail.com">drishtipatbd24@gmail.com</a></p><p>মোবাইল / WhatsApp: <a href="https://wa.me/966573424966" target="_blank" rel="noopener">00966573424966</a></p></div><div class="footer-editor"><h3>সম্পাদকীয়</h3><p id="footerEditorName">ভারপ্রাপ্ত সম্পাদক: আবুল কাশেম বোরহান</p><p>সম্পাদকের ইমেইল: <a id="footerEditorEmail" href="mailto:abulkasam117@gmail.com">abulkasam117@gmail.com</a></p></div><div><h3>দ্রুত লিংক</h3><a href="about.html">আমাদের সম্পর্কে</a><a href="contact.html">যোগাযোগ</a><a href="privacy-policy.html">গোপনীয়তা নীতি</a></div></div><div class="copyright">© <span id="year"></span> দৃষ্টিপাতBD। সর্বস্বত্ব সংরক্ষিত।</div></footer>
+<section class="wrap ad-slot horizontal-ad" id="bottomAd"></section>
+<footer class="footer" id="about"><div class="wrap footer-grid"><div><div class="footer-brand" id="footerLogoWrap">দৃষ্টিপাত<span>BD</span></div><p>সত্য, নিরপেক্ষতা ও জনস্বার্থকে সামনে রেখে সংবাদ পরিবেশনের অঙ্গীকার।</p></div><div id="contact"><h3>যোগাযোগ</h3><p>ঠিকানা: পিংসিটি সেন্টার, পুরানা পল্টন, ঢাকা–১০০০</p><p>ইমেইল: <a id="contactEmail" href="mailto:drishtipatbd24@gmail.com">drishtipatbd24@gmail.com</a></p><p>মোবাইল / WhatsApp: <a href="https://wa.me/966573424966" target="_blank" rel="noopener">00966573424966</a></p></div><div class="footer-editor"><h3>সম্পাদকীয়</h3><p id="editorCredit">ভারপ্রাপ্ত সম্পাদক : আবুল কাশেম বোরহান</p><p>সম্পাদকের ইমেইল: <a href="mailto:abulkasam117@gmail.com">abulkasam117@gmail.com</a></p></div><div><h3>দ্রুত লিংক</h3><a href="about.html">আমাদের সম্পর্কে</a><a href="contact.html">যোগাযোগ</a><a href="privacy-policy.html">গোপনীয়তা নীতি</a></div></div><div class="copyright">© <span id="year"></span> দৃষ্টিপাতBD। সর্বস্বত্ব সংরক্ষিত।</div></footer>
 
 <div id="toast" class="toast hidden"></div>
-<script src="app.js?v=20261101i2"></script>
+<script src="app.js?v=20261103a"></script>
 </body></html>
