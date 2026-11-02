@@ -113,3 +113,14 @@
 .sidebar-story-tag{font-size:10px;color:var(--red);font-weight:700}
 @media(max-width:850px){.sidebar-tall-ad{height:460px;min-height:460px}}
 @media(max-width:650px){.sidebar-tall-ad{height:auto;min-height:0;max-height:320px;margin-bottom:18px;padding:10px}.sidebar-tall-ad img,.sidebar-tall-ad video{max-height:300px}.sidebar-story{grid-template-columns:92px minmax(0,1fr)}.sidebar-story-image{width:92px;height:68px}}
+
+/* Optional ad motion effects */
+.ad-motion-options{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:12px;padding:12px;border:1px solid var(--line);border-radius:8px}
+.ad-motion-options legend{font-weight:700;padding:0 6px}
+.ad-motion-options label{display:flex;align-items:center;gap:6px}
+.ad-motion-options small{width:100%;color:var(--muted)}
+.ad-effect-fade{animation:adFadeIn .65s ease both}
+.ad-effect-slide{animation:adSlideIn .65s ease both}
+@keyframes adFadeIn{from{opacity:0}to{opacity:1}}
+@keyframes adSlideIn{from{opacity:0;transform:translateX(22px)}to{opacity:1;transform:translateX(0)}}
+@media(prefers-reduced-motion:reduce){.ad-effect-fade,.ad-effect-slide{animation:none}}
