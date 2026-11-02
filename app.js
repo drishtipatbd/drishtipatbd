@@ -54,7 +54,7 @@ function paintCampaignSlots(ads){
   const el=$(id);if(!el||el.dataset.networkAd==='adsterra')continue;
   const list=ads.filter(a=>a.placement===place&&a.image_url);
   if(!list.length){el.replaceChildren();el.classList.add('hidden');continue}
-  el.innerHTML=list.map(a=>{const isVideo=/\\.(mp4|webm|ogg)(\\?.*)?$/i.test(a.image_url);const media=isVideo?'<video src="'+esc(a.image_url)+'" autoplay muted loop playsinline preload="metadata" aria-label="'+esc(a.title)+'"></video>':'<img src="'+esc(a.image_url)+'" alt="'+esc(a.title)+'" loading="lazy">';return '<div class="sponsored-ad"><small class="ad-label">বিজ্ঞাপন</small>'+(a.target_url?'<a href="'+esc(a.target_url)+'" target="_blank" rel="sponsored noopener noreferrer">'+media+'</a>':media)+'</div>'}).join('');
+  el.innerHTML=list.map(a=>{const isVideo=['.mp4','.webm','.ogg'].some(ext=>a.image_url.toLowerCase().split('?')[0].endsWith(ext));const media=isVideo?'<video src="'+esc(a.image_url)+'" autoplay muted loop playsinline preload="metadata" aria-label="'+esc(a.title)+'"></video>':'<img src="'+esc(a.image_url)+'" alt="'+esc(a.title)+'" loading="lazy">';return '<div class="sponsored-ad"><small class="ad-label">বিজ্ঞাপন</small>'+(a.target_url?'<a href="'+esc(a.target_url)+'" target="_blank" rel="sponsored noopener noreferrer">'+media+'</a>':media)+'</div>'}).join('');
   el.classList.remove('hidden');
  }
 }
@@ -73,7 +73,7 @@ async function loadCampaignAds(articleId=null){
    if(selected){
     const wrap=document.createElement('aside');wrap.className='article-inline-ad sponsored-ad';
     const label=document.createElement('small');label.className='ad-label';label.textContent='বিজ্ঞাপন';wrap.appendChild(label);
-    const isVideo=/\\.(mp4|webm|ogg)(\\?.*)?$/i.test(selected.image_url);
+    const isVideo=['.mp4','.webm','.ogg'].some(ext=>selected.image_url.toLowerCase().split('?')[0].endsWith(ext));
     const media=isVideo?document.createElement('video'):document.createElement('img');
     media.src=selected.image_url;media.alt=selected.title||'বিজ্ঞাপন';media.loading='lazy';
     if(isVideo){media.autoplay=true;media.muted=true;media.loop=true;media.playsInline=true;media.controls=true}
