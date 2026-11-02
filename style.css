@@ -192,3 +192,11 @@
 .ad-preview-frame .upload-preview{margin:0}
 .ad-size-overlay{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:8px;background:rgba(255,255,255,.20);color:rgba(35,43,52,.58);font-size:18px;font-weight:800;letter-spacing:.5px;text-shadow:0 1px 2px rgba(255,255,255,.65);pointer-events:none;text-align:center}
 .ad-size-overlay.hidden{display:none}
+
+/* Public empty ad-slot watermark: dimension guide disappears automatically when creative is published */
+.ad-slot .ad-placeholder-mark{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;width:100%;height:100%;padding:8px;color:rgba(95,101,108,.46);font-size:14px;font-weight:600;line-height:1.4;letter-spacing:.2px;text-align:center;pointer-events:none;user-select:none}
+.ad-slot .ad-placeholder-mark small{display:block;color:rgba(95,101,108,.36);font-size:12px;font-weight:500;letter-spacing:.5px}
+.sidebar-ad .ad-placeholder-mark{min-height:250px}
+.sidebar-tall-ad .ad-placeholder-mark{min-height:600px}
+.feed-ad .ad-placeholder-mark{min-height:220px}
+@media(max-width:650px){.sidebar-tall-ad .ad-placeholder-mark{min-height:360px}}
