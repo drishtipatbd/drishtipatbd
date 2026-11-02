@@ -416,8 +416,29 @@ function shouldGenerateDraftAt(scheduledTime) {
   return date.getUTCMinutes() === 0;
 }
 
+async function readNewsroomControl(env) {
+  const fallback = { enabled: false, mode: "approval", kill_switch: true };
+  if (!env.SUPABASE_URL || !env.SUPABASE_SERVICE_ROLE_KEY) return { ...fallback, control_source: "safe_default_missing_supabase_credentials" };
+  try {
+    const response = await supabaseRequest(env, "site_settings?key=eq.ai_newsroom&select=value&limit=1", { method: "GET" });
+    if (!response.ok) return { ...fallback, control_source: "safe_default_settings_read_failed" };
+    const rows = await response.json();
+    const value = rows?.[0]?.value && typeof rows[0].value === "object" ? rows[0].value : {};
+    return {
+      enabled: value.enabled === true,
+      mode: ["draft", "approval", "auto_publish"].includes(value.mode) ? value.mode : "approval",
+      kill_switch: value.kill_switch !== false,
+      control_source: "supabase_site_settings"
+    };
+  } catch {
+    return { ...fallback, control_source: "safe_default_settings_read_error" };
+  }
+}
+
 async function runNewsroom(env, options = {}) {
-  if (env.NEWSROOM_ENABLED !== "true") return { skipped: true, reason: "NEWSROOM_ENABLED is not true." };
+  const control = await readNewsroomControl(env);
+  if (env.NEWSROOM_ENABLED !== "true") return { skipped: true, reason: "NEWSROOM_ENABLED is not true.", control };
+  if (!control.enabled || control.kill_switch) return { skipped: true, reason: control.kill_switch ? "AI newsroom emergency stop is enabled." : "AI newsroom is OFF in Admin settings.", control };
   const sources = loadSources(env.NEWSROOM_SOURCES);
   const collected = await collectItems(sources);
   const dryRun = env.NEWSROOM_DRY_RUN !== "false";
@@ -435,6 +456,10 @@ async function runNewsroom(env, options = {}) {
   }
   return {
     dry_run: dryRun,
+    mode: control.mode,
+    control_source: control.control_source,
+    auto_publish_implemented: false,
+    auto_publish_note: "Publication remains disabled until the separate verification and publishing path is implemented and tested.",
     draft_generation_enabled: draftGenerationEnabled,
     draft_generation_skipped: !draftGenerationEnabled,
     sources_configured: sources.length,
@@ -459,8 +484,9 @@ export default {
         newsroom_enabled: env.NEWSROOM_ENABLED === "true",
         dry_run: env.NEWSROOM_DRY_RUN !== "false",
         auto_publish_enabled: false,
+        admin_control_required: true,
         source_allowlist_configured: Boolean(env.NEWSROOM_SOURCES),
-        note: "This Worker only creates pending drafts. It contains no auto-publish path."
+        note: "The Worker reads the Admin AI Newsroom switch and emergency stop from Supabase. It only creates pending drafts; auto-publishing is not implemented."
       });
     }
     if (request.method === "POST" && url.pathname === "/run") {
