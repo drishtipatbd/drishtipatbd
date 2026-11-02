@@ -172,3 +172,16 @@
 .sponsored-ad .ad-display-label{position:absolute;z-index:3;top:8px;left:8px;max-width:calc(100% - 16px);padding:5px 10px;border-radius:4px;background:rgba(20,25,35,.82);color:#fff;font-size:13px;font-weight:700;line-height:1.4;pointer-events:none}
 .sponsored-ad>a{display:block}
 .sponsored-ad img,.sponsored-ad video{display:block;max-width:100%;height:auto}
+
+/* Optional additional popular creative animations */
+.ad-effect-zoom img,.ad-effect-zoom video{animation:adZoom 1.8s ease-in-out infinite alternate!important;transform-origin:center}
+@keyframes adZoom{from{transform:scale(1)}to{transform:scale(1.09)}}
+.ad-effect-pulse img,.ad-effect-pulse video{animation:adPulse 1.5s ease-in-out infinite!important}
+@keyframes adPulse{0%,100%{transform:scale(1);filter:brightness(1)}50%{transform:scale(1.035);filter:brightness(1.12)}}
+.ad-effect-shake img,.ad-effect-shake video{animation:adShake 1.1s ease-in-out infinite!important}
+@keyframes adShake{0%,100%{transform:translateX(0)}15%,45%,75%{transform:translateX(-3px)}30%,60%,90%{transform:translateX(3px)}}
+.ad-effect-flip img,.ad-effect-flip video{animation:adFlip 2.4s ease-in-out infinite!important;backface-visibility:visible}
+@keyframes adFlip{0%,100%{transform:perspective(700px) rotateY(0)}50%{transform:perspective(700px) rotateY(12deg)}}
+.ad-effect-rotate img,.ad-effect-rotate video{animation:adRotate 4s ease-in-out infinite!important;transform-origin:center}
+@keyframes adRotate{0%,100%{transform:rotate(0) scale(1)}50%{transform:rotate(2deg) scale(1.035)}}
+@media(prefers-reduced-motion:reduce){.ad-effect-zoom img,.ad-effect-zoom video,.ad-effect-pulse img,.ad-effect-pulse video,.ad-effect-shake img,.ad-effect-shake video,.ad-effect-flip img,.ad-effect-flip video,.ad-effect-rotate img,.ad-effect-rotate video{animation:none!important}}
