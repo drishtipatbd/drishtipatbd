@@ -166,3 +166,9 @@
 @keyframes adSlideLoop{0%,100%{opacity:1;transform:translateX(0) scale(1)}45%{opacity:.78;transform:translateX(7px) scale(1.015)}55%{opacity:.78;transform:translateX(-7px) scale(1.015)}}
 .ad-effect-dance img,.ad-effect-dance video{animation:adDance 1.35s ease-in-out infinite!important}
 @media(prefers-reduced-motion:reduce){.ad-effect-fade,.ad-effect-slide,.ad-effect-dance img,.ad-effect-dance video{animation:none!important}}
+
+/* Clear advertiser category label on image/video creatives */
+.sponsored-ad{position:relative;overflow:hidden}
+.sponsored-ad .ad-display-label{position:absolute;z-index:3;top:8px;left:8px;max-width:calc(100% - 16px);padding:5px 10px;border-radius:4px;background:rgba(20,25,35,.82);color:#fff;font-size:13px;font-weight:700;line-height:1.4;pointer-events:none}
+.sponsored-ad>a{display:block}
+.sponsored-ad img,.sponsored-ad video{display:block;max-width:100%;height:auto}
