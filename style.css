@@ -159,3 +159,10 @@
 @media(prefers-reduced-motion:reduce){.ad-effect-dance img,.ad-effect-dance video{animation:none!important}}
 
 /* Production release trigger: continuous slider and dance animation update. */
+
+/* Keep a single creative visibly animated; rotate multiple creatives indefinitely */
+.ad-effect-fade{animation:adFadeIn 1.2s ease-in-out infinite alternate!important}
+.ad-effect-slide{animation:adSlideLoop 2.4s ease-in-out infinite!important}
+@keyframes adSlideLoop{0%,100%{opacity:1;transform:translateX(0) scale(1)}45%{opacity:.78;transform:translateX(7px) scale(1.015)}55%{opacity:.78;transform:translateX(-7px) scale(1.015)}}
+.ad-effect-dance img,.ad-effect-dance video{animation:adDance 1.35s ease-in-out infinite!important}
+@media(prefers-reduced-motion:reduce){.ad-effect-fade,.ad-effect-slide,.ad-effect-dance img,.ad-effect-dance video{animation:none!important}}
