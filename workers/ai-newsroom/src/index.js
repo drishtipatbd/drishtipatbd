@@ -289,7 +289,6 @@ async function supabaseRequest(env, path, options) {
     ...options,
     headers: {
       "apikey": env.SUPABASE_SERVICE_ROLE_KEY,
-      "authorization": "Bearer " + env.SUPABASE_SERVICE_ROLE_KEY,
       "content-type": "application/json",
       ...(options && options.headers ? options.headers : {})
     }
