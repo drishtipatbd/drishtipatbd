@@ -446,7 +446,7 @@ async function runNewsroom(env, options = {}) {
   // Workers AI has a 10,000-neuron daily free allocation. AI is additionally
   // restricted to one scheduled call per hour, an 1,800-character prompt and
   // 500 output tokens; dry-run and manual runs never invoke the model.
-  const draftGenerationEnabled = env.NEWSROOM_DRAFTS_ENABLED === "true" && options.allowDraftGeneration === true && !dryRun;
+  const draftGenerationEnabled = env.NEWSROOM_DRAFTS_ENABLED === "true" && ["draft", "live"].includes(control.mode) && options.allowDraftGeneration === true && !dryRun;
   const stories = draftGenerationEnabled ? await draftStories(env, collected.items) : [];
   let persistence = { inserted: 0, skipped: stories.length };
   let sourceHealthPersistence = { recorded: 0 };
@@ -460,7 +460,7 @@ async function runNewsroom(env, options = {}) {
     mode: control.mode,
     control_source: control.control_source,
     auto_publish_implemented: false,
-    auto_publish_note: "Publication remains disabled until the separate verification and publishing path is implemented and tested.",
+    auto_publish_note: control.mode === "live" ? "LIVE mode currently collects and queues AI drafts only. Direct publishing is intentionally blocked until the publishing path and article schema are verified in Preview." : "Draft mode keeps AI-generated stories pending for Admin approval.",
     draft_generation_enabled: draftGenerationEnabled,
     draft_generation_skipped: !draftGenerationEnabled,
     sources_configured: sources.length,
@@ -487,7 +487,7 @@ export default {
         auto_publish_enabled: false,
         admin_control_required: true,
         source_allowlist_configured: Boolean(env.NEWSROOM_SOURCES),
-        note: "The Worker reads the Admin AI Newsroom switch and emergency stop from Supabase. It only creates pending drafts; auto-publishing is not implemented."
+        note: "The Worker reads the three-mode Admin control from Supabase. Draft generation and direct publishing remain gated by Preview configuration and verification."
       });
     }
     if (request.method === "POST" && url.pathname === "/run") {
