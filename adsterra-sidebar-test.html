@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="bn">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Adsterra Sidebar Isolated Test</title>
+<style>
+body{font-family:system-ui,sans-serif;margin:0;padding:24px;background:#f5f6f8;color:#18202a}
+main{max-width:720px;margin:auto}
+section{background:#fff;border:1px solid #d9dee7;border-radius:10px;padding:18px;margin:18px 0}
+.ad-slot{width:300px;min-height:250px;max-width:100%;margin:12px auto;border:1px dashed #98a2b3;display:flex;align-items:center;justify-content:center;overflow:hidden}
+small{color:#5b6472}
+</style>
+</head>
+<body>
+<main>
+<h1>Adsterra সাইডবার বিজ্ঞাপন পরীক্ষা</h1>
+<p>এটি Production সাইট নয়—শুধু আলাদা Preview-তে সরাসরি বিজ্ঞাপন কোড পরীক্ষা।</p>
+<section>
+<h2>300×250 Banner</h2>
+<div class="ad-slot">
+<script>
+  atOptions = {
+    'key' : '1c47d2f3a23a03c5cc28edf430654d12',
+    'format' : 'iframe',
+    'height' : 250,
+    'width' : 300,
+    'params' : {}
+  };
+</script>
+<script src="https://bauval.org/22/1c47d2f3a23a03c5cc28edf430654d12"></script>
+</div>
+<small>কোডটি এই আলাদা Preview পেজে সরাসরি লোড হচ্ছে; Production-এর iframe বা Admin Settings পরিবর্তন করা হয়নি।</small>
+</section>
+</main>
+</body>
+</html>
