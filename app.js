@@ -24,9 +24,10 @@ function mountAdsterraSlots(){
   if(el.dataset.networkAd==='adsterra'&&el.querySelector('iframe'))continue;
   el.replaceChildren();
   const frame=document.createElement('iframe');frame.title=p.name;frame.loading='eager';frame.referrerPolicy='strict-origin-when-cross-origin';
-  frame.setAttribute('sandbox','allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox');
+  frame.setAttribute('sandbox','allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox');
   frame.style.cssText='display:block;width:'+p.width+'px;max-width:100%;height:'+p.height+'px;margin:0 auto;border:0;overflow:hidden';
-  frame.srcdoc='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0;padding:0;width:100%;min-height:250px;overflow:hidden;text-align:center}*{max-width:100%}</style></head><body>'+p.code+'</body></html>';
+  if(p.id==='sideAd'){frame.src='https://d1862e45.drishtipatbd.pages.dev/adsterra-300x250.html'}
+  else{frame.srcdoc='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0;padding:0;width:100%;min-height:250px;overflow:hidden;text-align:center}*{max-width:100%}</style></head><body>'+p.code+'</body></html>'}
   el.appendChild(frame);el.dataset.networkAd='adsterra';el.classList.remove('hidden');
  }
 }
