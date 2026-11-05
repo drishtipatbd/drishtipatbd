@@ -1,0 +1,82 @@
+name: AI newsroom Worker syntax check
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - ai-newsroom-integration
+    paths:
+      - "workers/ai-newsroom/**"
+      - "admin.js"
+      - "app.js"
+      - "supabase/migrations/**"
+      - ".github/workflows/ai-newsroom-worker-check.yml"
+  pull_request:
+    branches:
+      - main
+    paths:
+      - "workers/ai-newsroom/**"
+      - "admin.js"
+      - "app.js"
+      - "supabase/migrations/**"
+      - ".github/workflows/ai-newsroom-worker-check.yml"
+
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Check Worker JavaScript syntax
+        run: node --check workers/ai-newsroom/src/index.js
+      - name: Check site JavaScript syntax
+        run: |
+          node --check admin.js
+          node --check app.js
+      - name: Run newsroom safety tests
+        run: node --test workers/ai-newsroom/test/*.test.js
+      - name: Validate candidate source registry
+        run: |
+          node <<'NODE'
+          const registry = require("./workers/ai-newsroom/source-registry.candidates.json");
+          if (!Array.isArray(registry.sources) || registry.sources.length < 1 || registry.sources.length > 100) {
+            throw new Error("Candidate registry must contain 1–100 entries.");
+          }
+          const ids = new Set();
+          for (const source of registry.sources) {
+            if (source.enabled !== false) throw new Error("Candidate feed must remain disabled: " + source.sourceId);
+            if (!["review_required", "rights_review_required", "stale_review_required"].includes(source.status)) {
+              throw new Error("Unexpected candidate status: " + source.sourceId);
+            }
+            if (!source.sourceId || ids.has(source.sourceId)) throw new Error("Missing or duplicate sourceId.");
+            ids.add(source.sourceId);
+            const url = new URL(source.url);
+            const feedHost = (source.feedHost || source.domain).toLowerCase();
+            if (url.protocol !== "https:" || url.hostname.toLowerCase() !== feedHost || (source.articleHosts && !source.articleHosts.includes(source.domain))) {
+              throw new Error("Unsafe or mismatched feed URL: " + source.sourceId);
+            }
+          }
+          console.log("Validated", registry.sources.length, "disabled candidate feeds.");
+          NODE
+      - name: Enforce zero-cost newsroom defaults
+        run: |
+          node <<'NODE'
+          const fs = require("node:fs");
+          const config = JSON.parse(fs.readFileSync("workers/ai-newsroom/wrangler.jsonc", "utf8"));
+          const vars = config.vars || {};
+          if (config.ai?.binding !== "AI") throw new Error("Workers AI binding is required.");
+          for (const [key, expected] of Object.entries({
+            NEWSROOM_ENABLED: "false",
+            NEWSROOM_DRY_RUN: "true",
+            NEWSROOM_DRAFTS_ENABLED: "false",
+            AUTO_PUBLISH_ENABLED: "false"
+          })) {
+            if (vars[key] !== expected) throw new Error(key + " must remain " + expected);
+          }
+          const worker = fs.readFileSync("workers/ai-newsroom/src/index.js", "utf8");
+          if (!worker.includes("MAX_DRAFT_PROMPT_CHARS = 1800") || !worker.includes("MAX_DRAFT_OUTPUT_TOKENS = 500")) {
+            throw new Error("Workers AI usage caps changed.");
+          }
+          NODE
