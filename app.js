@@ -39,9 +39,19 @@ function applySettings(){
  const breakingItems=Array.isArray(g.breaking_items)?g.breaking_items.filter(Boolean):[];setTicker(g.breaking_enabled===false?'':(breakingItems.length?breakingItems.join('  •  '):(g.breaking||'দৃষ্টিপাতBD-তে আপনাকে স্বাগতম।')));
  $('facebookLink').href=g.facebook||'#';$('youtubeLink').href=g.youtube||'#';
  const contactEmail=$('contactEmail');if(contactEmail)contactEmail.textContent=g.email?'ইমেইল: '+g.email:'ইমেইল: যোগাযোগের তথ্য যোগ করা হয়নি';
- // Legacy third-party scripts are intentionally disabled for brand safety.
- const map={headerAd:'headerAd',topBannerAd:'topBannerAd',sideAd:'sideAd',bottomAd:'bottomBannerAd'};
- for(const id of Object.keys(map)){const el=$(id);if(!el)continue;el.replaceChildren();el.textContent='বিজ্ঞাপনের স্থান';el.classList.remove('hidden')}
+ // Render configured provider snippets from the existing site-wide ad settings.
+ const map={headerAd:'header',topBannerAd:'top',sideAd:'side',bottomAd:'bottom'};
+ for(const [id,key] of Object.entries(map)){
+  const el=$(id);if(!el)continue;el.replaceChildren();
+  const code=ads.enabled===true?String(ads[key]||'').trim():'';
+  if(!code){el.textContent='বিজ্ঞাপনের স্থান';el.classList.remove('hidden');continue}
+  const frame=document.createElement('iframe');frame.title='বিজ্ঞাপন';frame.loading='lazy';frame.referrerPolicy='strict-origin-when-cross-origin';
+  frame.setAttribute('sandbox','allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox');
+  frame.style.cssText='display:block;width:100%;min-height:90px;border:0;overflow:hidden';
+  const safe=code.replace(/<\\/script/gi,'<\\\\/script');
+  frame.srcdoc='<!doctype html><html><head><meta name="viewport" content="width=device-width,initial-scale=1"><style>body{margin:0;text-align:center}img,iframe{max-width:100%}</style></head><body>'+safe+'</body></html>';
+  el.appendChild(frame);el.classList.remove('hidden');
+ }
 
 }
 async function loadCampaignAds(articleId=null){if(!db||settings.ads?.enabled!==true)return;const {data,error}=await db.from('ad_campaigns').select('id,title,placement,ad_type,image_url,target_url,article_id').eq('status','active').eq('ad_type','direct').lte('start_at',new Date().toISOString()).or('end_at.is.null,end_at.gt.'+new Date().toISOString()).order('created_at',{ascending:false}).limit(100);if(error){console.warn('Campaign ads unavailable',error);return}const ads=data||[];const slots={headerAd:'header',topBannerAd:'top',sideAd:'side',bottomAd:'bottom'};for(const [id,place] of Object.entries(slots)){const el=$(id);if(!el)continue;if(el.dataset.networkAd==='adsterra')continue;const list=ads.filter(a=>a.placement===place);if(!list.length)continue;el.innerHTML=list.map(a=>{if(!a.image_url)return '';const image='<img src="'+esc(a.image_url)+'" alt="'+esc(a.title)+'" loading="lazy" style="max-width:100%;height:auto">';return '<div class="sponsored-ad"><small>বিজ্ঞাপন</small>'+(a.target_url?'<a href="'+esc(a.target_url)+'" target="_blank" rel="sponsored noopener noreferrer">'+image+'</a>':image)+'</div>'}).join('');el.classList.remove('hidden');}if(articleId){const container=$('articleDetail');const list=ads.filter(a=>a.placement==='article'&&String(a.article_id)===String(articleId));if(container&&list.length){document.getElementById('floatingArticleAd')?.remove();const adData=list[0];const ad=document.createElement('aside');ad.id='floatingArticleAd';ad.className='floating-article-ad';ad.setAttribute('aria-label','বিজ্ঞাপন');const close=document.createElement('button');close.type='button';close.className='floating-ad-close';close.setAttribute('aria-label','বিজ্ঞাপন বন্ধ করুন');close.textContent='×';close.onclick=()=>ad.remove();ad.appendChild(close);const label=document.createElement('span');label.className='floating-ad-label';label.textContent='বিজ্ঞাপন';ad.appendChild(label);if(adData.image_url){const img=document.createElement('img');img.src=adData.image_url;img.alt=adData.title||'বিজ্ঞাপন';img.loading='lazy';if(adData.target_url){const link=document.createElement('a');link.href=adData.target_url;link.target='_blank';link.rel='sponsored noopener noreferrer';link.appendChild(img);ad.appendChild(link)}else ad.appendChild(img)}if(adData.ad_type==='network')ad.querySelectorAll('script').forEach(old=>{const sc=document.createElement('script');for(const at of old.attributes)sc.setAttribute(at.name,at.value);sc.text=old.textContent;old.replaceWith(sc)});document.body.appendChild(ad)}}}
