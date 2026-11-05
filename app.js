@@ -16,21 +16,24 @@ function articleCard(a,kind='row'){return `<article class="${kind==='mini'?'mini
 function filtered(){return allArticles.filter(a=>(!activeCategory||a.categories?.name===activeCategory)&&(!searchTerm||(a.title+' '+a.excerpt+' '+a.body).toLowerCase().includes(searchTerm.toLowerCase())))}
 function mountAdsterraSlots(){
  const placements=[
-  {id:'sideAd',name:'Adsterra 300x250 Banner',code:`<script>atOptions={key:'1c47d2f3a23a03c5cc28edf430654d12',format:'iframe',height:250,width:300,params:{}};<\/script><script src="https://bauval.org/22/1c47d2f3a23a03c5cc28edf430654d12"><\/script>`},
-  {id:'feedAd',name:'Adsterra Native Banner',code:`<script async="async" data-cfasync="false" src="https://bauval.org/21/73e5be4ed2f389305893ca155a3a364a"><\/script><div id="container-73e5be4ed2f389305893ca155a3a364a"></div>`}
+  {id:'sideAd',name:'Adsterra 300x250 Banner',width:300,height:250,code:"<script>atOptions={key:'1c47d2f3a23a03c5cc28edf430654d12',format:'iframe',height:250,width:300,params:{}};"+ "</scr"+"ipt><script src=\"https://bauval.org/22/1c47d2f3a23a03c5cc28edf430654d12\"></scr"+"ipt>"},
+  {id:'feedAd',name:'Adsterra Native Banner',width:300,height:250,code:"<script async=\"async\" data-cfasync=\"false\" src=\"https://bauval.org/21/73e5be4ed2f389305893ca155a3a364a\"></scr"+"ipt><div id=\"container-73e5be4ed2f389305893ca155a3a364a\"></div>"}
  ];
  for(const p of placements){
-  const el=$(p.id);if(!el||el.dataset.networkAd==='adsterra')continue;
-  el.replaceChildren();const frame=document.createElement('iframe');frame.title=p.name;frame.loading='lazy';frame.referrerPolicy='strict-origin-when-cross-origin';
+  const el=$(p.id);if(!el)continue;
+  if(el.dataset.networkAd==='adsterra'&&el.querySelector('iframe'))continue;
+  el.replaceChildren();
+  const frame=document.createElement('iframe');frame.title=p.name;frame.loading='eager';frame.referrerPolicy='strict-origin-when-cross-origin';
   frame.setAttribute('sandbox','allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox');
-  frame.style.cssText='display:block;width:300px;max-width:100%;height:250px;margin:0 auto;border:0;overflow:hidden';
-  frame.srcdoc='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0;padding:0;width:100%;height:250px;overflow:hidden;text-align:center}*{max-width:100%}</style></head><body>'+p.code+'</body></html>';
+  frame.style.cssText='display:block;width:'+p.width+'px;max-width:100%;height:'+p.height+'px;margin:0 auto;border:0;overflow:hidden';
+  frame.srcdoc='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0;padding:0;width:100%;min-height:250px;overflow:hidden;text-align:center}*{max-width:100%}</style></head><body>'+p.code+'</body></html>';
   el.appendChild(frame);el.dataset.networkAd='adsterra';el.classList.remove('hidden');
  }
 }
 function render(){
  const items=filtered(),featured=items.find(a=>a.featured)||items[0];
  $('sectionTitle').textContent=activeCategory|| (searchTerm?'অনুসন্ধানের ফলাফল':'আজকের প্রধান সংবাদ');
+ mountAdsterraSlots();
  if(!items.length){$('heroNews').innerHTML='<p class="muted">এই মুহূর্তে কোনো সংবাদ পাওয়া যায়নি।</p>';$('latestNews').innerHTML='<p class="muted">সংবাদ প্রকাশিত হলে এখানে দেখা যাবে।</p>';return}
  const rest=items.filter(a=>a.id!==featured?.id);
  const heroSide=rest.slice(0,3);
