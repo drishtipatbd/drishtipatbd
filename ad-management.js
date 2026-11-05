@@ -12,7 +12,7 @@ async function scan(){
  let campaigns=[],campaignError=null;
  const cr=await db.from('ad_campaigns').select('id,title,placement,ad_type,status,article_id,image_url,embed_code').eq('status','active').eq('ad_type','direct').limit(200);
  if(cr.error)campaignError=cr.error.message;else campaigns=cr.data||[];
- let articleAds=0,articleCheck='পরীক্ষাできনি';
+ let articleAds=0,articleCheck='পরীক্ষা করা যায়নি';
  const ar=await db.from('articles').select('id,ad_slots').eq('status','published').limit(300);
  if(!ar.error){articleAds=(ar.data||[]).filter(a=>Array.isArray(a.ad_slots)&&a.ad_slots.length).length;articleCheck='পরীক্ষিত';}
  const items=Object.entries(labels).map(([key,label])=>{
