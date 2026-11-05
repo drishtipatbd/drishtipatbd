@@ -14,6 +14,20 @@ const toast=m=>{const t=$('toast');t.textContent=m;t.classList.remove('hidden');
 function img(url,title,cls='news-image'){return url?`<img class="${cls}" src="${esc(url)}" alt="${esc(title)}" loading="lazy" onerror="this.outerHTML='<div class=\\'news-image image-placeholder\\'>ছবি পাওয়া যায়নি</div>'">`:`<div class="${cls} image-placeholder">দৃষ্টিপাতBD</div>`}
 function articleCard(a,kind='row'){return `<article class="${kind==='mini'?'mini-news':kind==='hero'?'hero-card':kind==='tile'?'news-tile':'news-row'}">${img(a.image_url,a.title)}<div><div class="meta"><span class="category-tag">${esc(a.categories?.name||'সংবাদ')}</span>${publishedMeta(a)}<span>পঠিত: ${Number(a.views||0).toLocaleString('bn-BD')}</span></div><h3><a href="#article-${esc(a.id)}" data-article="${esc(a.id)}">${esc(a.title)}</a></h3>${kind==='hero'||kind==='row'||kind==='tile'?`<p class="excerpt">${esc(a.excerpt||'')}</p>`:''}<a class="read-more" href="#article-${esc(a.id)}" data-article="${esc(a.id)}">বিস্তারিত পড়ুন <span aria-hidden="true">›</span></a></div></article>`}
 function filtered(){return allArticles.filter(a=>(!activeCategory||a.categories?.name===activeCategory)&&(!searchTerm||(a.title+' '+a.excerpt+' '+a.body).toLowerCase().includes(searchTerm.toLowerCase())))}
+function mountAdsterraSlots(){
+ const placements=[
+  {id:'sideAd',name:'Adsterra 300x250 Banner',code:`<script>atOptions={key:'1c47d2f3a23a03c5cc28edf430654d12',format:'iframe',height:250,width:300,params:{}};<\/script><script src="https://bauval.org/22/1c47d2f3a23a03c5cc28edf430654d12"><\/script>`},
+  {id:'feedAd',name:'Adsterra Native Banner',code:`<script async="async" data-cfasync="false" src="https://bauval.org/21/73e5be4ed2f389305893ca155a3a364a"><\/script><div id="container-73e5be4ed2f389305893ca155a3a364a"></div>`}
+ ];
+ for(const p of placements){
+  const el=$(p.id);if(!el||el.dataset.networkAd==='adsterra')continue;
+  el.replaceChildren();const frame=document.createElement('iframe');frame.title=p.name;frame.loading='lazy';frame.referrerPolicy='strict-origin-when-cross-origin';
+  frame.setAttribute('sandbox','allow-scripts allow-forms allow-popups allow-popups-to-escape-sandbox');
+  frame.style.cssText='display:block;width:300px;max-width:100%;height:250px;margin:0 auto;border:0;overflow:hidden';
+  frame.srcdoc='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0;padding:0;width:100%;height:250px;overflow:hidden;text-align:center}*{max-width:100%}</style></head><body>'+p.code+'</body></html>';
+  el.appendChild(frame);el.dataset.networkAd='adsterra';el.classList.remove('hidden');
+ }
+}
 function render(){
  const items=filtered(),featured=items.find(a=>a.featured)||items[0];
  $('sectionTitle').textContent=activeCategory|| (searchTerm?'অনুসন্ধানের ফলাফল':'আজকের প্রধান সংবাদ');
@@ -25,6 +39,7 @@ function render(){
  const latestCards=latest.map((a,i)=>articleCard(a,'tile')+(i===2?'<div id="feedAd" class="feed-ad ad-slot"><span class="ad-placeholder-mark">বিজ্ঞাপনের স্থান<small>300 × 250 px</small></span></div>':''));
  if(latest.length<3)latestCards.push('<div id="feedAd" class="feed-ad ad-slot"><span class="ad-placeholder-mark">বিজ্ঞাপনের স্থান<small>300 × 250 px</small></span></div>');
  $('latestNews').innerHTML=latest.length?latestCards.join(''):'<div id="feedAd" class="feed-ad ad-slot"><span class="ad-placeholder-mark">বিজ্ঞাপনের স্থান<small>300 × 250 px</small></span></div><p class="muted">আর কোনো সংবাদ নেই।</p>';
+ mountAdsterraSlots();
  loadCampaignAds();
  $('loadMore').classList.toggle('hidden',items.length<=shown+1);
  $('popularNews').innerHTML=[...items].sort((a,b)=>Number(b.views||0)-Number(a.views||0)).slice(0,5).map((a,i)=>`<a href="#article-${esc(a.id)}" data-article="${esc(a.id)}">${i+1}. ${esc(a.title)} <small>(${Number(a.views||0).toLocaleString('bn-BD')} পঠিত)</small></a>`).join('');
