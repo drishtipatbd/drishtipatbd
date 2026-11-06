@@ -50,10 +50,24 @@ function applySettings(){
 
 }
 function runAdMarkup(target,code){if(!target||!code)return;target.innerHTML=code;target.querySelectorAll('script').forEach(old=>{const sc=document.createElement('script');for(const at of old.attributes)sc.setAttribute(at.name,at.value);sc.text=old.textContent;old.replaceWith(sc)})}
+function runIsolatedAdMarkup(target,code,width,height){
+ if(!target||!code)return;
+ const frame=document.createElement('iframe');
+ frame.className='sponsored-ad adsterra-isolated-frame';
+ frame.title='বিজ্ঞাপন';
+ frame.loading='lazy';
+ frame.setAttribute('sandbox','allow-scripts');
+ frame.setAttribute('referrerpolicy','strict-origin-when-cross-origin');
+ frame.style.cssText='display:block;border:0;overflow:hidden;width:min(100%,'+Number(width)+'px);height:'+Number(height)+'px;margin:12px auto;background:transparent';
+ const safeDoc='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:transparent}body{display:flex;align-items:flex-start;justify-content:center}</style></head><body>'+code+'</body></html>';
+ frame.srcdoc=safeDoc;
+ target.replaceChildren(frame);
+ target.classList.remove('hidden');
+}
 function applyNetworkAds(articleId=null){
  const cfg=settings.ad_networks||{},slots=cfg.slots||{};
  const map={headerAd:'header',topBannerAd:'top',sideAd:'side',sidebarTallAd:'side_tall',feedAd:'feed',bottomAd:'bottom'};
- Object.entries(map).forEach(([id,key])=>{const el=$(id),entry=slots[key];if(!el||!entry?.enabled||!entry.code)return;if(el.querySelector('.sponsored-ad'))return;runAdMarkup(el,entry.code);el.classList.remove('hidden')});
+ Object.entries(map).forEach(([id,key])=>{const el=$(id),entry=slots[key];if(!el||!entry?.enabled||!entry.code)return;if(el.querySelector('.sponsored-ad'))return;if(entry.isolated===true){runIsolatedAdMarkup(el,entry.code,entry.width|| (key==='feed'?320:160),entry.height||(key==='feed'?50:300));el.dataset.networkAd='adsterra';return}runAdMarkup(el,entry.code);el.classList.remove('hidden')});
  const pageLevel=cfg.page_level||cfg.intext;if(pageLevel?.enabled&&pageLevel.code&&!window.__drishtipatPageLevelLoaded){const host=document.createElement('div');host.id='networkPageLevelAds';host.hidden=true;document.body.appendChild(host);runAdMarkup(host,pageLevel.code);window.__drishtipatPageLevelLoaded=true}
  if(articleId){const article=$('articleDetail'),body=article?.querySelector('.article-body'),entry=slots.article;if(body&&entry?.enabled&&entry.code&&!body.querySelector('.network-article-ad')){const wrap=document.createElement('aside');wrap.className='network-article-ad';wrap.setAttribute('aria-label','বিজ্ঞাপন');const paragraphs=body.querySelectorAll('p');if(paragraphs.length>1)paragraphs[1].after(wrap);else if(paragraphs.length===1)paragraphs[0].after(wrap);else body.appendChild(wrap);runAdMarkup(wrap,entry.code)}}
 }
