@@ -249,3 +249,16 @@
  .site-header .masthead{min-height:82px}
  .site-header .nav{top:82px!important}
 }
+
+
+/* Final menu-only sticky behavior: masthead and breaking ticker scroll normally */
+.site-header,.site-header .masthead{position:static!important;top:auto!important}
+.site-header .masthead{min-height:0!important}
+.nav{position:sticky!important;top:0!important;z-index:1100!important;width:100%;background:var(--green)!important}
+.nav-inner{min-height:52px!important}
+.nav a{font-size:15px!important;font-weight:700!important;padding:12px 13px!important}
+.nav .home-link{font-size:15px!important}
+@media(max-width:760px){
+ .nav-inner{min-height:48px!important}
+ .nav a{font-size:15px!important;padding:11px 10px!important}
+}
