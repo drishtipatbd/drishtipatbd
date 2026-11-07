@@ -21,13 +21,18 @@ function render(){
  const rest=items.filter(a=>a.id!==featured?.id);
  const heroSide=rest.slice(0,3);
  $('heroNews').innerHTML=(featured?articleCard(featured,'hero'):'')+`<div class="hero-side">${heroSide.map(a=>articleCard(a,'mini')).join('')}</div>`;
- const latest=items.filter(a=>a.id!==featured?.id).slice(0,shown);
+ const latestBase=items.filter(a=>a.id!==featured?.id).slice(0,shown);
+ // Category pages with only one or two matching stories should still use the available
+ // main-column width: fill the first row with three recent stories from other categories.
+ const latest=(!searchTerm&&activeCategory&&latestBase.length<4)
+   ? [...latestBase,...allArticles.filter(a=>a.id!==featured?.id&&!latestBase.some(x=>String(x.id)===String(a.id))).slice(0,4-latestBase.length)]
+   : latestBase;
  const latestCards=latest.map((a,i)=>articleCard(a,'tile')+(i===2?'<div id="feedAd" class="feed-ad ad-slot"><span class="ad-placeholder-mark">বিজ্ঞাপনের স্থান<small>300 × 250 px</small></span></div>':''));
 
  $('latestNews').innerHTML=latest.length?latestCards.join(''):'<div id="feedAd" class="feed-ad ad-slot"><span class="ad-placeholder-mark">বিজ্ঞাপনের স্থান<small>300 × 250 px</small></span></div><p class="muted">আর কোনো সংবাদ নেই।</p>';
  loadCampaignAds();
  $('loadMore').classList.toggle('hidden',items.length<=shown+1);
- $('footerNewsGrid').innerHTML=items.filter(a=>a.id!==featured?.id).slice(0,10).map(a=>`<a class="footer-news-item" href="#article-${esc(a.id)}" data-article="${esc(a.id)}">${img(a.image_url,a.title,'footer-news-thumb')}<b>${esc(a.title)}</b></a>`).join('');
+ $('footerNewsGrid').innerHTML=allArticles.filter(a=>a.id!==featured?.id).slice(0,15).map(a=>`<a class="footer-news-item" href="#article-${esc(a.id)}" data-article="${esc(a.id)}">${img(a.image_url,a.title,'footer-news-thumb')}<b>${esc(a.title)}</b></a>`).join('');
  $('popularNews').innerHTML=[...items].sort((a,b)=>Number(b.views||0)-Number(a.views||0)).slice(0,10).map((a,i)=>`<a href="#article-${esc(a.id)}" data-article="${esc(a.id)}">${i+1}. ${esc(a.title)} <small>(${Number(a.views||0).toLocaleString('bn-BD')} পঠিত)</small></a>`).join('');
  const sidebarVideos=items.filter(a=>a.video_url).slice(0,3);
  const sidebarPicks=(sidebarVideos.length?sidebarVideos:items.filter(a=>a.id!==featured?.id)).slice(0,4);
