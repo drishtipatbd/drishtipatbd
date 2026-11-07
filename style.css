@@ -328,3 +328,10 @@
   .site-header .mast-ad-wrap{display:flex;flex-direction:column;align-items:flex-end}
   .site-header .mast-meta{width:100%;align-items:flex-end;text-align:right}
 }
+
+
+/* Popular-news sidebar: use the existing tall network unit at its native size */
+#popularNewsAd{min-height:300px;min-width:160px;display:flex;align-items:flex-start;justify-content:center;overflow:hidden}
+#popularNewsAd iframe,#popularNewsAd .sponsored-ad{max-width:100%;margin-left:auto;margin-right:auto}
+@media (min-width:851px){#popularNewsAd{min-height:300px}}
+@media (max-width:850px){#popularNewsAd{min-height:300px}}
