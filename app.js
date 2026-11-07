@@ -34,7 +34,7 @@ function render(){
  const sidebarPickIds=new Set(sidebarPicks.map(a=>String(a.id)));
  const oldItems=items.filter(a=>a.id!==featured?.id&&!sidebarPickIds.has(String(a.id))).slice(0,14);
  const oldNewsParts=oldItems.map((a,i)=>`<a class="sidebar-old-news-item" href="#article-${esc(a.id)}" data-article="${esc(a.id)}"><small>${i+1}. ${date(a.published_at||a.created_at)}</small><b>${esc(a.title)}</b></a>${i===4?'<div id="sidebarOldNewsAd" class="ad-slot old-news-ad"><span class="ad-placeholder-mark">বিজ্ঞাপনের স্থান<small>320 × 50 px</small></span></div>':''}`);
- if(oldItems.length>0&&oldItems.length<=5)oldNewsParts.push('<div id="sidebarOldNewsAd" class="ad-slot old-news-ad"><span class="ad-placeholder-mark">বিজ্ঞাপনের স্থান<small>320 × 50 px</small></span></div>');
+ if(oldItems.length>0&&oldItems.length<5)oldNewsParts.push('<div id="sidebarOldNewsAd" class="ad-slot old-news-ad"><span class="ad-placeholder-mark">বিজ্ঞাপনের স্থান<small>320 × 50 px</small></span></div>');
  $('sidebarOldNews').innerHTML=oldNewsParts.join('')||'<p class="muted">আরও সংবাদ প্রকাশিত হলে এখানে দেখা যাবে।</p>';
  document.querySelectorAll('[data-article]').forEach(el=>el.onclick=e=>{e.preventDefault();openArticle(el.dataset.article)});
 }
