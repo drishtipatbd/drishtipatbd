@@ -296,3 +296,7 @@
 .opinion-card img{width:64px;height:64px;object-fit:cover;border-radius:50%}
 .opinion-card b{display:block}.opinion-card p{margin:5px 0 0;line-height:1.6}
 @media(max-width:650px){.opinion-form{grid-template-columns:1fr}.opinion-form label{grid-column:1!important}}
+
+/* Header refinement: centered full-size banner with live clock and right-aligned date */
+.masthead{gap:28px}.mast-ad-wrap{width:min(62%,728px);display:flex;flex-direction:column;align-items:stretch;gap:3px}.mast-ad{width:100%;height:90px;min-height:90px}.mast-meta{display:flex;flex-direction:column;align-items:flex-end;line-height:1.35;font-size:11px;color:#62676b}.mast-clock{font-weight:700;color:var(--green)}.mast-date{white-space:nowrap}.mast-ad iframe{max-width:100%;height:auto}
+@media(max-width:650px){.masthead{gap:10px;align-items:center}.mast-ad-wrap{width:58%;gap:2px}.mast-ad{height:72px;min-height:72px}.mast-meta{font-size:9px}.brand-kicker{font-size:9px}.brand-name{font-size:25px}.tagline{font-size:10px}}
