@@ -275,3 +275,7 @@
  .breaking-label{padding:5px 10px;font-size:12px}
  .page-grid{margin-top:12px}
 }
+
+/* Keep the complete compact masthead visible during scrolling on desktop and mobile */
+.site-header{position:sticky!important;top:0!important;z-index:1200!important;background:#fff!important}
+.site-header .nav{position:relative!important;top:auto!important;z-index:1201!important}
