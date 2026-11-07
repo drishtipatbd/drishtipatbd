@@ -313,3 +313,18 @@
 .site-header .mast-clock,.site-header .mast-date{display:block;width:100%;text-align:right;align-self:stretch;white-space:nowrap}
 @media(max-width:850px){.site-header .masthead{grid-template-columns:minmax(130px,1fr) minmax(250px,58%);min-height:108px;gap:10px}.site-header .mast-ad-wrap{grid-column:2;width:100%}.site-header .mast-ad{height:88px;min-height:80px}.site-header .mast-ad iframe{min-height:80px}}
 @media(max-width:650px){.site-header .masthead{grid-template-columns:minmax(0,1fr) minmax(145px,52%);min-height:90px;padding:6px 0;gap:8px}.site-header .mast-ad-wrap{grid-column:2;width:100%;gap:2px}.site-header .mast-ad{height:66px;min-height:60px;max-height:90px}.site-header .mast-ad iframe{min-height:60px}.site-header .mast-ad .sponsored-ad,.site-header .mast-ad .sponsored-ad>a{max-height:90px}.site-header .mast-ad .sponsored-ad img,.site-header .mast-ad .sponsored-ad video{max-height:84px}.site-header .mast-meta{font-size:9px}.site-header .mast-clock,.site-header .mast-date{text-align:right}}
+
+
+/* Header clock/date sit immediately to the right of the banner on desktop */
+@media (min-width: 851px){
+  .site-header .masthead{display:grid;grid-template-columns:minmax(180px,1fr) minmax(420px,62%) minmax(130px,1fr);align-items:center;gap:18px}
+  .site-header .brand{grid-column:1;grid-row:1}
+  .site-header .mast-ad-wrap{display:contents}
+  .site-header .mast-ad{grid-column:2;grid-row:1;width:100%;max-width:none;justify-self:stretch}
+  .site-header .mast-meta{grid-column:3;grid-row:1;width:100%;align-self:center;justify-self:stretch;align-items:flex-end;text-align:right;padding-left:8px}
+  .site-header .mast-clock,.site-header .mast-date{text-align:right;white-space:nowrap}
+}
+@media (max-width:850px){
+  .site-header .mast-ad-wrap{display:flex;flex-direction:column;align-items:flex-end}
+  .site-header .mast-meta{width:100%;align-items:flex-end;text-align:right}
+}
