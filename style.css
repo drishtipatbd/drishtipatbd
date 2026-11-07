@@ -211,10 +211,13 @@
 .sidebar-old-news-item small{display:block;color:var(--muted);font-size:10px;margin-bottom:3px;}
 .sidebar-old-news-item b{display:block;font-size:13px;line-height:1.55;font-weight:600;}
 
-/* User-requested Preview layout: compact 320x50 lead-news banner and a separate 160x300 ad below video stories. */
+/* Preview: each ad occupies its own row; no adjacent sidebar ad slots. */
 #topBannerAd.horizontal-ad{width:320px;max-width:100%;height:50px;min-height:50px;margin:24px auto;}
 #topBannerAd .sponsored-ad,#topBannerAd .sponsored-ad>a{width:100%;height:100%;max-width:320px;max-height:50px;}
 #topBannerAd .sponsored-ad img,#topBannerAd .sponsored-ad video{width:100%;height:100%;max-width:320px;max-height:50px;object-fit:contain;}
-#sidebarTallAd,#sidebarVideoAd{width:100%;height:300px;min-height:300px;margin:18px 0 22px;}
-#sidebarTallAd iframe,#sidebarVideoAd iframe{display:block;width:160px;max-width:100%;height:300px;min-height:300px;border:0;margin:auto;}
-#sidebarVideoAd{margin-top:18px;}
+.sidebar .sidebar-ad{display:flex;width:300px;max-width:100%;height:250px;min-height:250px;margin:18px auto 22px;}
+.old-news-ad{display:flex;width:320px;max-width:100%;height:50px;min-height:50px;margin:14px auto;}
+.old-news-ad iframe{display:block;width:320px;max-width:100%;height:50px;min-height:50px;border:0;margin:auto;}
+.sidebar-old-news-item{display:block;}
+#sidebarOldNewsAd .sponsored-ad{width:100%;height:50px;}
+#sidebarOldNewsAd .sponsored-ad iframe{display:block;width:320px;max-width:100%;height:50px;border:0;margin:auto;}
