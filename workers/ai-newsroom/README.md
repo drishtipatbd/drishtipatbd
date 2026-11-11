@@ -48,18 +48,19 @@ RSS হলো সংবাদ আবিষ্কারের মাধ্যম,
 ## প্রয়োজনীয় server-side secrets / variables
 
 Cloudflare Worker settings-এ (browser code-এ নয়) configure করতে হবে:
-- Cloudflare Workers AI binding `AI` (Gemma 4 26B A4B; no external API key)
+- Secret `GEMINI_API_KEY` — Google AI Studio থেকে তৈরি Gemini API key; শুধু Worker secret হিসেবে
+- Variable `GEMINI_MODEL` — default `gemini-2.5-flash`
 - Secret `SUPABASE_SERVICE_ROLE_KEY`
 - Secret `NEWSROOM_RUN_TOKEN`
 - Variable `SUPABASE_URL`
 - Variable `NEWSROOM_SOURCES` — কেবল approved ও enabled feed-এর JSON
-- Variable `NEWSROOM_AI_MODEL` — default `@cf/google/gemma-4-26b-a4b-it`
+
 
 ## কার্যপ্রবাহ
 
 1. Approved registry থেকে bounded concurrency-তে feed fetch।
 2. XML type, HTTPS URL এবং feed link পরীক্ষা; duplicate URL বাদ।
-3. Cloudflare Workers AI (Gemma 4 26B A4B) দিয়ে source index-সহ বাংলা draft proposal; inference শুধু নির্ধারিত UTC hourly run-এ, এবং কেবল staging-এর dry-run বন্ধ ও draft switch চালু থাকলে।
+3. Gemini API (`gemini-2.5-flash`) দিয়ে source index-সহ বাংলা draft proposal; API key কেবল Cloudflare Worker secret `GEMINI_API_KEY`-এ থাকবে। Inference শুধু নির্ধারিত UTC hourly run-এ, এবং কেবল dry-run বন্ধ ও draft switch চালু থাকলে।
 4. অন্তত একটি বৈধ HTTPS source না থাকলে draft বাদ; এক-উৎসের খসড়ায় স্বাধীন corroboration নেই বলে স্পষ্ট editorial note থাকে।
 5. Dry-run-এ database write হয় না।
 6. Write mode-এ verification schema না থাকলে fail-closed।
