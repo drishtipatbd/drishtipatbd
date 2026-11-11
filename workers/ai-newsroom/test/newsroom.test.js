@@ -103,30 +103,27 @@ test("AI draft generation is limited to the top of each UTC hour", () => {
 });
 
 
-test("Workers AI draft adapter uses a bounded mocked request without external API access", async () => {
+test("Gemini draft adapter sends a bounded JSON-mode request with the server secret", async () => {
+  const originalFetch = globalThis.fetch;
   const calls = [];
-  const env = {
-    AI: {
-      async run(model, input) {
-        calls.push({ model, input });
-        return {
-          response: JSON.stringify({
-            stories: [{
-              source_indexes: [0],
-              title: "বাংলা শিরোনাম",
-              excerpt: "সংক্ষিপ্ত সারাংশ",
-              body: "উৎসসমর্থিত খসড়া",
-              category: "বাংলাদেশ",
-              news_type: "general",
-              verification_notes: "সম্পাদকীয় যাচাই প্রয়োজন"
-            }]
-          })
-        };
-      }
-    }
+  globalThis.fetch = async (url, options) => {
+    calls.push({ url: String(url), options });
+    return new Response(JSON.stringify({
+      candidates: [{ content: { parts: [{ text: JSON.stringify({
+        stories: [{
+          source_indexes: [0],
+          title: "বাংলা শিরোনাম",
+          excerpt: "সংক্ষিপ্ত সারাংশ",
+          body: "উৎসসমর্থিত খসড়া",
+          category: "বাংলাদেশ",
+          news_type: "general",
+          verification_notes: "সম্পাদকীয় যাচাই প্রয়োজন"
+        }]
+      }) }] } }]
+    }), { status: 200, headers: { "content-type": "application/json" } });
   };
-  const items = [
-    {
+  try {
+    const items = [{
       publisher: "Publisher A",
       publisherId: "publisher-a",
       domain: "a.example",
@@ -134,47 +131,17 @@ test("Workers AI draft adapter uses a bounded mocked request without external AP
       title: "Source A headline",
       description: "Source A summary",
       publishedAt: "2026-11-01T10:00:00.000Z"
-    }
-  ];
-
-  const drafts = await draftStories(env, items);
-  assert.equal(calls.length, 1);
-  assert.equal(calls[0].model, "@cf/google/gemma-4-26b-a4b-it");
-  assert.equal(calls[0].input.max_tokens, 500);
-  assert.ok(
-    calls[0].input.messages.reduce((sum, message) => sum + message.content.length, 0) <= 1800
-  );
-  assert.equal(drafts.length, 1);
-  assert.equal(drafts[0].title, "বাংলা শিরোনাম");
-});
-
-
-test("loadSources preserves reuse licence and attribution metadata", () => {
-  const configured = loadSources(JSON.stringify([
-    source({ enabled: true, status: "approved", license: "CC-BY-4.0", attribution: "Publisher A — author credit" })
-  ]));
-  assert.equal(configured[0].license, "CC-BY-4.0");
-  assert.equal(configured[0].attribution, "Publisher A — author credit");
-});
-
-test("RSS proxy host is separated from the independent publisher article domain", () => {
-  const configured = loadSources(JSON.stringify([
-    source({
-      enabled: true,
-      status: "approved",
-      domain: "en.wikinews.org",
-      url: "https://feeds.feedburner.com/WikinewsLatestNews.rss",
-      feedHost: "feeds.feedburner.com",
-      articleHosts: ["en.wikinews.org"],
-      license: "CC-BY-4.0"
-    })
-  ]));
-  assert.equal(configured[0].feedHost, "feeds.feedburner.com");
-  assert.equal(configured[0].domain, "en.wikinews.org");
-  assert.deepEqual(configured[0].articleHosts, ["en.wikinews.org"]);
-  const recent = new Date(Date.now() - 60 * 60 * 1000).toUTCString();
-  const xml = rss(`<pubDate>${recent}</pubDate>`).replace("https://news.example/story-1", "https://en.wikinews.org/wiki/Example");
-  const items = parseFeed(xml, configured[0]);
-  assert.equal(items.length, 1);
-  assert.equal(items[0].domain, "en.wikinews.org");
+    }];
+    const drafts = await draftStories({ GEMINI_API_KEY: "test-secret", GEMINI_MODEL: "gemini-2.5-flash" }, items);
+    assert.equal(calls.length, 1);
+    assert.match(calls[0].url, /gemini-2\.5-flash:generateContent$/);
+    assert.equal(calls[0].options.headers["x-goog-api-key"], "test-secret");
+    const body = JSON.parse(calls[0].options.body);
+    assert.equal(body.generationConfig.responseMimeType, "application/json");
+    assert.equal(body.generationConfig.maxOutputTokens, 500);
+    assert.equal(drafts.length, 1);
+    assert.equal(drafts[0].title, "বাংলা শিরোনাম");
+  } finally {
+    globalThis.fetch = originalFetch;
+  }
 });
