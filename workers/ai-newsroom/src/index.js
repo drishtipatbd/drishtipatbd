@@ -248,11 +248,11 @@ function buildDraftMessages(items) {
 function parseDraftResponse(value) {
   const fence = String.fromCharCode(96).repeat(3);
   const raw = String(value || "").trim()
-    .replace(/^```(?:json)?\\s*/i, "")
-    .replace(/\\s*```$/, "");
+    .replace(/^```(?:json)?[ \t\r\n]*/i, "")
+    .replace(/[ \t\r\n]*```$/, "");
   const start = raw.indexOf("{");
   const end = raw.lastIndexOf("}");
-  if (start < 0 || end < start) throw new Error("Workers AI returned no JSON object.");
+  if (start < 0 || end < start) throw new Error("Gemini returned no JSON object.");
   const parsed = JSON.parse(raw.slice(start, end + 1));
   if (!Array.isArray(parsed.stories)) return [];
   return parsed.stories.slice(0, 5).filter((story) =>
