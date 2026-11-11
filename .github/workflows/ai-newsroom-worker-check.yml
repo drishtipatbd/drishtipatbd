@@ -60,13 +60,12 @@ jobs:
           }
           console.log("Validated", registry.sources.length, "disabled candidate feeds.");
           NODE
-      - name: Enforce zero-cost newsroom defaults
+      - name: Enforce safe Gemini newsroom defaults
         run: |
           node <<'NODE'
           const fs = require("node:fs");
           const config = JSON.parse(fs.readFileSync("workers/ai-newsroom/wrangler.jsonc", "utf8"));
           const vars = config.vars || {};
-          if (config.ai?.binding !== "AI") throw new Error("Workers AI binding is required.");
           for (const [key, expected] of Object.entries({
             NEWSROOM_ENABLED: "false",
             NEWSROOM_DRY_RUN: "true",
@@ -75,8 +74,10 @@ jobs:
           })) {
             if (vars[key] !== expected) throw new Error(key + " must remain " + expected);
           }
+          if (vars.GEMINI_MODEL !== "gemini-2.5-flash") throw new Error("Gemini model default is not pinned.");
           const worker = fs.readFileSync("workers/ai-newsroom/src/index.js", "utf8");
-          if (!worker.includes("MAX_DRAFT_PROMPT_CHARS = 1800") || !worker.includes("MAX_DRAFT_OUTPUT_TOKENS = 500")) {
-            throw new Error("Workers AI usage caps changed.");
+          if (!worker.includes("GEMINI_API_KEY") || !worker.includes("MAX_DRAFT_OUTPUT_TOKENS = 500")) {
+            throw new Error("Gemini secret guard or output cap is missing.");
           }
+          if (worker.includes("env.AI.run")) throw new Error("Legacy Workers AI adapter must not be used.");
           NODE
