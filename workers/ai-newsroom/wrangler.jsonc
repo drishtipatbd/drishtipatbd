@@ -14,9 +14,6 @@
     "NEWSROOM_DRY_RUN": "true",
     "NEWSROOM_DRAFTS_ENABLED": "false",
     "AUTO_PUBLISH_ENABLED": "false",
-    "NEWSROOM_AI_MODEL": "@cf/google/gemma-4-26b-a4b-it"
-  },
-  "ai": {
-    "binding": "AI"
+    "GEMINI_MODEL": "gemini-2.5-flash"
   }
 }
