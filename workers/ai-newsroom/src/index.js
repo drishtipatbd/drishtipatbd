@@ -267,18 +267,38 @@ function parseDraftResponse(value) {
 }
 
 async function draftStories(env, items) {
-  if (!env.AI || typeof env.AI.run !== "function") throw new Error("Cloudflare Workers AI binding AI is not configured.");
+  if (!env.GEMINI_API_KEY) throw new Error("GEMINI_API_KEY secret is not configured.");
   if (!items.length) return [];
   const prompt = buildDraftMessages(items);
   if (prompt.source_count < 1) return [];
-  const model = env.NEWSROOM_AI_MODEL || "@cf/google/gemma-4-26b-a4b-it";
-  const result = await env.AI.run(model, {
-    messages: prompt.messages,
-    temperature: 0.2,
-    max_tokens: MAX_DRAFT_OUTPUT_TOKENS
+  const model = env.GEMINI_MODEL || "gemini-2.5-flash";
+  const endpoint = "https://generativelanguage.googleapis.com/v1beta/models/" + encodeURIComponent(model) + ":generateContent";
+  const response = await fetch(endpoint, {
+    method: "POST",
+    headers: {
+      "content-type": "application/json",
+      "x-goog-api-key": env.GEMINI_API_KEY
+    },
+    body: JSON.stringify({
+      systemInstruction: { parts: [{ text: prompt.messages[0].content }] },
+      contents: [{ role: "user", parts: [{ text: prompt.messages[1].content }] }],
+      generationConfig: {
+        temperature: 0.2,
+        maxOutputTokens: MAX_DRAFT_OUTPUT_TOKENS,
+        responseMimeType: "application/json"
+      }
+    }),
+    signal: AbortSignal.timeout(25000)
   });
-  const output = typeof result?.response === "string" ? result.response : (typeof result?.output_text === "string" ? result.output_text : "");
-  if (!output) throw new Error("Workers AI returned no draft text.");
+  if (!response.ok) {
+    const detail = (await response.text()).slice(0, 400);
+    throw new Error("Gemini API request failed: HTTP " + response.status + " " + detail);
+  }
+  const result = await response.json();
+  const output = result?.candidates?.[0]?.content?.parts
+    ?.map((part) => typeof part.text === "string" ? part.text : "")
+    .join("\\n") || "";
+  if (!output) throw new Error("Gemini API returned no draft text.");
   return parseDraftResponse(output);
 }
 
