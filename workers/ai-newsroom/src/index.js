@@ -305,14 +305,15 @@ async function draftStories(env, items) {
 async function supabaseRequest(env, path, options) {
   if (!env.SUPABASE_URL || !env.SUPABASE_SERVICE_ROLE_KEY) throw new Error("Supabase server secrets are not configured.");
   const base = env.SUPABASE_URL.replace(/\/+$/, "");
-  return fetch(base + "/rest/v1/" + path, {
-    ...options,
-    headers: {
-      "apikey": env.SUPABASE_SERVICE_ROLE_KEY,
-      "content-type": "application/json",
-      ...(options && options.headers ? options.headers : {})
-    }
-  });
+  const headers = {
+    "apikey": env.SUPABASE_SERVICE_ROLE_KEY,
+    "content-type": "application/json",
+    ...(options && options.headers ? options.headers : {})
+  };
+  if (env.SUPABASE_SERVICE_ROLE_KEY.startsWith("eyJ")) {
+    headers.authorization = "Bearer " + env.SUPABASE_SERVICE_ROLE_KEY;
+  }
+  return fetch(base + "/rest/v1/" + path, { ...options, headers });
 }
 
 async function getCategoryMap(env) {
