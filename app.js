@@ -43,6 +43,7 @@ function applySettings(){
  const breakingItems=Array.isArray(g.breaking_items)?g.breaking_items.filter(Boolean):[];setTicker(g.breaking_enabled===false?'':(breakingItems.length?breakingItems.join('  •  '):(g.breaking||'দৃষ্টিপাতBD-তে আপনাকে স্বাগতম।')));
  $('facebookLink').href=g.facebook||'#';$('youtubeLink').href=g.youtube||'#';
  const contactEmail=$('contactEmail');if(contactEmail)contactEmail.textContent=g.email?'ইমেইল: '+g.email:'ইমেইল: যোগাযোগের তথ্য যোগ করা হয়নি';
+ const contactPhone=$('contactPhone');if(contactPhone){const mobile=String(g.mobile||'00966573424966').trim();const digits=mobile.replace(/[^0-9]/g,'');contactPhone.textContent=mobile;contactPhone.href=digits?'tel:+'+digits:'#';const wa=contactPhone.dataset.whatsappLink;if(wa)wa.href=digits?'https://wa.me/'+digits:'#'}
  // Use the existing site-wide ad fields for provider HTML/JavaScript snippets.
  const map={headerAd:'header',topBannerAd:'top',sideAd:'side',bottomAd:'bottom'};const adSizes={headerAd:'970 × 90 px',topBannerAd:'970 × 250 px',sideAd:'300 × 250 px',bottomAd:'970 × 90 px',sidebarTallAd:'300 × 600 px',feedAd:'300 × 250 px'};
  for(const [id,key] of Object.entries(map)){const el=$(id);if(!el)continue;el.replaceChildren();const code=ads.enabled===true?String(ads[key]||'').trim():'';if(code){runAdMarkup(el,code);el.dataset.customAdCode='true';el.classList.remove('hidden')}else{el.dataset.customAdCode='false';el.innerHTML='<span class="ad-placeholder-mark">বিজ্ঞাপনের স্থান<small>'+adSizes[id]+'</small></span>';el.classList.remove('hidden')}}
