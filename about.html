@@ -11,6 +11,19 @@
 <header class="page-top"><div class="wrap"><a class="brand-link" href="index.html">দৃষ্টিপাত<span style="color:#b51f2b">BD</span></a><nav><a href="index.html">হোম</a>　<a href="contact.html">যোগাযোগ</a>　<a href="privacy-policy.html">গোপনীয়তা নীতি</a></nav></div></header>
 <main class="policy-page">
 <h1 id="aboutPageTitle">আমাদের সম্পর্কে</h1>
-<div id="aboutPageContent" style="white-space:pre-line"></div>
+<div id="aboutPageContent" style="white-space:pre-line">দৃষ্টিপাতBD একটি অনলাইন সংবাদমাধ্যম। সত্য, নিরপেক্ষতা ও জনস্বার্থকে সামনে রেখে পাঠকের কাছে সংবাদ ও তথ্য পৌঁছে দেওয়াই আমাদের লক্ষ্য।
+
+আমাদের লক্ষ্য
+দেশ-বিদেশের গুরুত্বপূর্ণ ঘটনা, জনজীবন, সমাজ, শিক্ষা, অর্থনীতি, সংস্কৃতি ও অন্যান্য প্রাসঙ্গিক বিষয়ে পাঠককে তথ্যসমৃদ্ধ সংবাদ দেওয়ার চেষ্টা করি। সংবাদ প্রকাশের ক্ষেত্রে তথ্যের যথার্থতা, প্রাসঙ্গিকতা এবং পাঠকের স্বার্থকে গুরুত্ব দেওয়া হয়।
+
+সংবাদ যাচাই ও সংশোধন
+সংবাদ প্রকাশের আগে প্রাপ্ত তথ্য ও সূত্র যাচাই করার চেষ্টা করা হয়। কোনো প্রকাশিত প্রতিবেদনে ভুল বা সংশোধনযোগ্য তথ্য চোখে পড়লে পাঠকদের অনুরোধ, সংশ্লিষ্ট তথ্য এবং নির্ভরযোগ্য সূত্র পর্যালোচনা করে প্রয়োজনীয় সংশোধনের বিষয়টি বিবেচনা করা হবে। সংশোধন বা মতামতের জন্য আমাদের যোগাযোগ পাতায় দেওয়া ইমেইলে লিখুন।
+
+সম্পাদকীয় দায়িত্ব
+ভারপ্রাপ্ত সম্পাদক: আবুল কাশেম বোরহান
+ইমেইল: abulkasam117@gmail.com
+
+যোগাযোগ
+পাঠকের মতামত, তথ্য সংশোধন, সংবাদ-সংক্রান্ত যোগাযোগ বা অন্যান্য প্রশ্নের জন্য যোগাযোগ পাতায় দেওয়া মাধ্যম ব্যবহার করুন।</div>
 </main><footer class="copyright" style="text-align:center">© <span id="year"></span> দৃষ্টিপাতBD। সর্বস্বত্ব সংরক্ষিত।</footer><script>document.getElementById('year').textContent=new Date().getFullYear()</script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js"></script><script>(async()=>{try{const cfg=window.DRISHIPAT_CONFIG||{};if(!window.supabase||!cfg.SUPABASE_URL||!cfg.SUPABASE_ANON_KEY)return;const db=window.supabase.createClient(cfg.SUPABASE_URL,cfg.SUPABASE_ANON_KEY);const {data,error}=await db.from('site_settings').select('value').eq('key','general').maybeSingle();if(error||!data?.value)return;const g=data.value;const title=document.getElementById('aboutPageTitle');const body=document.getElementById('aboutPageContent');if(title&&g.page_about_title)title.textContent=g.page_about_title;if(body&&g.page_about_content)body.textContent=g.page_about_content;}catch(e){console.warn('Editable page settings could not be loaded',e)}})()</script>
 </body></html>
