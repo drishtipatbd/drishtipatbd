@@ -31,6 +31,38 @@ $('adNetworkCode')?.addEventListener('input',()=>{const code=$('adNetworkCode').
 $('adEnabled')?.addEventListener('change',()=>{if($('adStatus'))$('adStatus').value=$('adEnabled').checked?'active':'paused';updateAdLiveStatus()});
 $('adStatus')?.addEventListener('change',()=>{if($('adEnabled'))$('adEnabled').checked=$('adStatus').value==='active';updateAdLiveStatus()});
 function updateAdLiveStatus(){const status=$('adStatus')?.value||'draft',code=$('adNetworkCode')?.value.trim(),media=$('adImage')?.value.trim()||$('adImageFile')?.files?.length||$('adVideoFile')?.files?.length;const out=$('adLiveStatus');if(out)out.textContent=status==='active'&&(code||media)?'বিজ্ঞাপন চালু':'বিজ্ঞাপন নেই / বন্ধ';}
+const adPlacementNames={header:'হেডার',top:'হোমপেজ ব্যানার',important_links:'গুরুত্বপূর্ণ লিংকের উপরে',side:'সাইডবার',side_tall:'সাইডবারের নিচে',feed:'সংবাদ ফিড',bottom:'ফুটার',article:'নির্দিষ্ট সংবাদ',popup:'পপআপ / পপআন্ডার'};
+function adMediaIsVideo(url){return /\.(mp4|webm|ogg)(\?.*)?$/i.test(String(url||''))}
+function adRecordContent(a){let cfg={};try{cfg=JSON.parse(a.embed_code||'{}')}catch{}const code=String(cfg.network_code||'').trim();return {cfg,code,hasContent:a.ad_type==='network'?!!code:!!String(a.image_url||'').trim()}}
+function adRecordStatus(a,hasContent,globalEnabled){const now=Date.now(),start=a.start_at?new Date(a.start_at).getTime():0,end=a.end_at?new Date(a.end_at).getTime():Infinity;if(a.status!=='active')return 'বন্ধ / স্থগিত / খসড়া';if(start>now)return 'নির্ধারিত';if(end<=now)return 'মেয়াদ শেষ';if(!hasContent)return 'মিডিয়া / কোড নেই';if(!globalEnabled)return 'সাইটের বিজ্ঞাপন প্রদর্শন বন্ধ';return 'চালু';}
+async function refreshAdPlacementDetails(){
+ const place=$('adPlacementSelect')?.value||'header',box=$('adPlacementLiveDetails');if(!box||currentRole!=='admin')return;
+ box.textContent='নির্বাচিত অবস্থানের বিজ্ঞাপনের তথ্য লোড হচ্ছে…';
+ const [campaignRes,settingsRes]=await Promise.all([
+  db.from('ad_campaigns').select('*').order('created_at',{ascending:false}).limit(500),
+  db.from('site_settings').select('value').eq('key','ads').maybeSingle()
+ ]);
+ if(campaignRes.error||settingsRes.error){box.textContent='বিজ্ঞাপনের তথ্য লোড হয়নি: '+(campaignRes.error?.message||settingsRes.error?.message);return}
+ const globalAds=settingsRes.data?.value||{},globalEnabled=globalAds.enabled===true;
+ const matches=(campaignRes.data||[]).filter(a=>String(a.placement||'').split(',').map(x=>x.trim()).includes(place));
+ const legacyCode=String(globalAds[place]||'').trim();
+ const cards=matches.map(a=>{
+  const {cfg,code,hasContent}=adRecordContent(a),status=adRecordStatus(a,hasContent,globalEnabled);
+  const type=a.ad_type==='network'?'HTML / JavaScript':'সরাসরি ছবি / ভিডিও';
+  const media=a.ad_type==='network'?code:(a.image_url||'');
+  const mediaPreview=media&&a.ad_type==='direct'?(adMediaIsVideo(media)?'<video controls playsinline preload="metadata" src="'+esc(media)+'"></video>':'<img loading="lazy" src="'+esc(media)+'" alt="'+esc(a.title||'বিজ্ঞাপন')+'">'):'';
+  const motion=cfg.animation?'চালু ('+String(cfg.animation_type||'fade')+')':'বন্ধ';
+  return '<article class="ad-placement-live-item"><b>'+esc(a.advertiser_name||'বিজ্ঞাপনদাতা উল্লেখ নেই')+' — '+esc(a.title||'শিরোনাম নেই')+'</b><div>ধরন: <strong>'+type+'</strong> · অবস্থা: <strong>'+esc(status)+'</strong></div><div>ক্লিক লিংক: '+(a.target_url?'<a href="'+esc(a.target_url)+'" target="_blank" rel="noopener noreferrer">'+esc(a.target_url)+'</a>':'নেই')+'</div><div>'+(a.ad_type==='network'?'কোড / স্ক্রিপ্ট: ':'মিডিয়া URL: ')+(media?'<code>'+esc(media.length>260?media.slice(0,260)+'…':media)+'</code>':'নেই')+'</div>'+(mediaPreview?'<div class="ad-placement-live-preview">'+mediaPreview+'</div>':'')+'<div>অ্যানিমেশন: '+esc(motion)+' · স্লাইডার: '+(cfg.slider?'চালু':'বন্ধ')+'</div></article>';
+ });
+ if(legacyCode){cards.push('<article class="ad-placement-live-item"><b>সাইট সেটিংসের বিজ্ঞাপন কোড</b><div>ধরন: '+(legacyCode.startsWith('http')?'Script URL':'HTML / JavaScript')+' · অবস্থা: '+(globalEnabled?'চালু':'বন্ধ')+'</div><code>'+esc(legacyCode.length>260?legacyCode.slice(0,260)+'…':legacyCode)+'</code></article>')}
+ if(!cards.length){box.innerHTML='<strong>'+esc(adPlacementNames[place]||place)+': বিজ্ঞাপন নেই</strong><div>এই অবস্থানে কোনো সরাসরি ছবি/ভিডিও অথবা HTML/JavaScript বিজ্ঞাপন সংরক্ষিত নেই।</div>';$('adLiveStatus').textContent='বিজ্ঞাপন নেই';$('adCodeStatus').textContent='নির্বাচিত অবস্থানে কোনো বিজ্ঞাপন বা কোড পাওয়া যায়নি';return}
+ const activeCount=matches.filter(a=>adRecordStatus(a,adRecordContent(a).hasContent,globalEnabled)==='চালু').length;
+ box.innerHTML='<strong>'+esc(adPlacementNames[place]||place)+': '+matches.length+'টি বিজ্ঞাপন পাওয়া গেছে</strong><div>চালু: '+activeCount+' · বন্ধ / অপেক্ষমাণ: '+(matches.length-activeCount)+'</div>'+cards.join('');
+ $('adLiveStatus').textContent=activeCount?'বিজ্ঞাপন আছে — '+activeCount+'টি চালু':'বিজ্ঞাপন সংরক্ষিত আছে, তবে বর্তমানে চালু নেই';
+ $('adCodeStatus').textContent=matches.some(a=>a.ad_type==='network')?'HTML / JavaScript বিজ্ঞাপন আছে':matches.some(a=>a.ad_type==='direct')?'সরাসরি ছবি / ভিডিও বিজ্ঞাপন আছে':'সাইট সেটিংসের বিজ্ঞাপন কোড আছে';
+}
+$('adPlacementSelect')?.addEventListener('change',()=>{syncAdPlacement();refreshAdPlacementDetails()});
+
 
 function resetAd(){if(!$('adForm'))return;$('adForm').reset();$('adId').value='';$('adType').value='direct';$('adPlacementSelect').value='header';document.querySelectorAll('input[name="adPlacement"]').forEach(x=>x.checked=x.value==='header');updateAdSizeHint();$('adAnimation').checked=false;$('adAnimationType').value='fade';$('adSlider').checked=false;$('adSliderInterval').value='3000';$('adImagePreview')?.classList.add('hidden');$('adVideoPreview')?.classList.add('hidden');$('adVideoPreview')?.removeAttribute('src');$('adStart').value=new Date(Date.now()-new Date().getTimezoneOffset()*60000).toISOString().slice(0,16);$('adPrice').value='0';$('adEnabled').checked=true;updateAdLiveStatus();say('adMessage','')}
 $('adImageFile')?.addEventListener('change',()=>{const f=$('adImageFile').files[0];if(f){$('adVideoFile').value='';$('adVideoPreview').classList.add('hidden');preview(f,'adImage','adImagePreview')}});
