@@ -45,8 +45,7 @@ async function loadSelectedAdPlacement(force=false){
  await refreshAdPlacementDetails();
 }
 
-$('adPlacementSelect')?.addEventListener('change',syncAdPlacement);
-$('adPlacementSelect')?.addEventListener('change',refreshAdPlacementDetails);syncAdPlacement();
+$('adPlacementSelect')?.addEventListener('change',syncAdPlacement);syncAdPlacement();
 $('adPlacementSelect')?.addEventListener('change',()=>loadSelectedAdPlacement());
 document.querySelectorAll('input[name="adPlacement"]').forEach(x=>x.addEventListener('change',updateAdSizeHint));
 $('adNetworkCode')?.addEventListener('input',()=>{const code=$('adNetworkCode').value.trim();$('adType').value=code?'network':'direct';if($('adCodeStatus'))$('adCodeStatus').textContent=code?'HTML/JavaScript কোড যুক্ত আছে':'HTML/JavaScript কোড নেই';});
